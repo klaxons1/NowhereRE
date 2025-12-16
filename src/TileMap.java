@@ -1,4 +1,4 @@
-final class Class_64 {
+final class TileMap {
    protected int var_64;
    protected int var_77;
    protected int var_bc;
@@ -11,11 +11,11 @@ final class Class_64 {
    protected int var_1f9;
    protected int var_254;
    protected int var_29e;
-   protected Class_de var_2d1;
+   protected Sprite var_2d1;
    protected short[] var_2f3;
    protected int[] var_344;
 
-   public Class_64(int var1, int var2, Class_de var3, int var4, int var5) {
+   public TileMap(int var1, int var2, Sprite var3, int var4, int var5) {
       this.var_2d1 = var3;
       this.var_2f3 = new short[var1 * var2];
       this.var_344 = new int[12];

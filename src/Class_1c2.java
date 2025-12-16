@@ -566,7 +566,7 @@ final class Class_1c2 extends Class_1ac {
    }
 
    public final int sub_2d1() {
-      int var5 = GameEngine.var_44f.nextInt() & 255;
+      int var5 = GameEngine.random.nextInt() & 255;
       if ((super.var_824 & 8) != 0 && (super.var_824 & 2) == 0) {
          if ((this.var_1b4 & 65536) != 0) {
             this.sub_48a(7);

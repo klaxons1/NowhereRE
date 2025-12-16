@@ -70,7 +70,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       Class_17f.sub_14a(Class_17f.var_21, Class_17f.var_67, false);
       GameEngine.sub_45f(var_22, Class_17f.var_21, Class_17f.var_67, 36, 36, 1);
       GameEngine.sub_b07(Class_17f.sub_ac4(437), (int[])null, (int[])null);
-      GameEngine.var_1b9 = var_5e;
+      GameEngine.playerListener = var_5e;
       Class_201.sub_167e();
       Class_17f.sub_3d7(1);
       Class_17f.sub_485(0, 50, 473);
@@ -88,7 +88,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       sub_157();
       sub_1ef();
       GameEngine.sub_4a7();
-      GameEngine.var_224 = null;
+      GameEngine.directGraphics = null;
       var_12d = true;
       var_5e = null;
       var_9d = null;
@@ -228,7 +228,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
          }
 
          if (!var_12d) {
-            GameEngine.var_224 = DirectUtils.getDirectGraphics(var1);
+            GameEngine.directGraphics = DirectUtils.getDirectGraphics(var1);
             var1.setClip(0, 0, Class_17f.var_21, Class_17f.var_67);
             if (sub_23e(var1) == 0) {
                if (var_205 < 13) {
@@ -365,7 +365,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       }
 
       if (var1 == -50) {
-         GameEngine.var_4c1 = false;
+         GameEngine.useAlternateKeys = false;
       }
 
       if ((var_278 & 8) == 0) {

@@ -203,7 +203,7 @@ class Class_1ac {
             if ((this.var_53d & 1 << var20) != 0) {
                int var7 = this.var_11[var5 + 0] & 255;
                int var8 = this.var_11[var5 + 1] & 255;
-               Class_de var24 = (Class_de)Class_17f.var_c27[this.var_11[1 + var7]];
+               Sprite var24 = (Sprite)Class_17f.var_c27[this.var_11[1 + var7]];
                byte[] var23 = (byte[])Class_17f.var_c27[this.var_11[1 + var8]];
                int var9 = (this.var_11[var5 + 5] & 255) << 2;
                int var10 = (var23[var9] & 255) << 1;

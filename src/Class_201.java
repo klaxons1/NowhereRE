@@ -5,12 +5,12 @@ final class Class_201 {
    static int var_1c = -1;
    private static int var_3e = -1;
    private static int var_4e = 0;
-   static Class_de var_9f;
-   static Class_de var_b7;
+   static Sprite var_9f;
+   static Sprite var_b7;
    static Class_1ac var_111;
    static int var_11d;
-   static Class_de var_15b;
-   static Class_de var_204;
+   static Sprite var_15b;
+   static Sprite var_204;
    static int[] var_228;
    static short[] var_240;
    static int var_26c;
@@ -32,7 +32,7 @@ final class Class_201 {
    static char[] var_634;
    static int[] var_64b;
    static Class_1ac[] var_670;
-   static Class_de[] var_686;
+   static Sprite[] var_686;
    static int[] var_6a4;
    static int[] var_6be;
    static int[] var_6d1;
@@ -59,7 +59,7 @@ final class Class_201 {
    static int var_ac5;
    static int var_aed;
    static int var_b02;
-   static Class_de[] var_b22;
+   static Sprite[] var_b22;
    static int var_b72;
    static char[] var_bd6;
    static int[] var_c04;
@@ -78,7 +78,7 @@ final class Class_201 {
    static int var_e4f;
    static int var_eab;
    static int[] var_ec9;
-   static Class_de var_f1b;
+   static Sprite var_f1b;
    static int var_f43;
    static int var_f6b;
    static int var_f7e;
@@ -107,7 +107,7 @@ final class Class_201 {
       if (var0 != -1) {
          var_1c = var0;
          var_4e |= 1;
-         GameEngine.var_18a = (var1 & 2) != 0;
+         GameEngine.isLoopEnabled = (var1 & 2) != 0;
          if ((var1 & 4) != 0) {
             var_3e = -1;
          }
@@ -119,7 +119,7 @@ final class Class_201 {
    }
 
    static boolean sub_50() {
-      if ((var_4e & 1) != 0 && var_1c != -1 && (!GameEngine.var_18a || var_1c != var_3e)) {
+      if ((var_4e & 1) != 0 && var_1c != -1 && (!GameEngine.isLoopEnabled || var_1c != var_3e)) {
          var_4e &= -2;
          var_3e = var_1c;
          GameEngine.sub_41e();
@@ -133,7 +133,7 @@ final class Class_201 {
 
    static void sub_a7() {
       GameEngine.sub_41e();
-      GameEngine.var_18a = false;
+      GameEngine.isLoopEnabled = false;
       var_3e = -1;
       var_1c = -1;
       var_4e &= -2;
@@ -307,7 +307,7 @@ final class Class_201 {
          }
 
          if ((var_228[3] & 8) != 0) {
-            var_b7 = (var_228[3] & 1073741824) != 0 ? (Class_de) GameEngine.sub_2ae(Class_1d4.var_22, var_1311 == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : GameEngine.sub_b1(var_228[6]);
+            var_b7 = (var_228[3] & 1073741824) != 0 ? (Sprite) GameEngine.sub_2ae(Class_1d4.var_22, var_1311 == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : GameEngine.sub_b1(var_228[6]);
             if ((var_228[3] & 128) != 0) {
                var_228[10] = -var_b7.var_8a[0].getHeight();
             }
@@ -1153,7 +1153,7 @@ final class Class_201 {
    }
 
    private static void sub_54c() {
-      var_686 = new Class_de[3];
+      var_686 = new Sprite[3];
       var_6a4 = new int[4];
       var_6be = new int[16];
       var_670 = new Class_1ac[17];
@@ -2132,7 +2132,7 @@ final class Class_201 {
       Class_17f.sub_52a(265);
       var_bd6 = Class_17f.var_51a;
       var_c04 = Class_17f.var_543;
-      var_b22 = new Class_de[var_5ab.length];
+      var_b22 = new Sprite[var_5ab.length];
       sub_15d4(0);
       Class_1d4.var_278 &= -16385;
       var_c45 = 0;
@@ -3618,9 +3618,9 @@ final class Class_201 {
                ++var0;
                int var1;
                if ((var1 = (Class_17f.var_b49[var0] | 32) - 97) != 13 && var1 != 25 && var1 < var_b22.length && var_b22[var1] == null) {
-                  Class_de[] var10000;
+                  Sprite[] var10000;
                   int var10001;
-                  Class_de var10002;
+                  Sprite var10002;
                   if (var_5ab[var1] != -1) {
                      var10000 = var_b22;
                      var10001 = var1;
@@ -4216,7 +4216,7 @@ final class Class_201 {
 
    private static boolean sub_170f() {
       GameEngine.sub_b47(var_102a);
-      GameEngine.var_46b = 0;
+      GameEngine.bitPosition = 0;
       byte var0 = (byte) GameEngine.sub_b95(8);
       byte var1 = (byte) GameEngine.sub_b95(8);
       byte var2 = (byte) GameEngine.sub_b95(8);
@@ -4231,7 +4231,7 @@ final class Class_201 {
 
    private static void sub_1757(int var0, int var1) {
       GameEngine.sub_b47(var_102a);
-      GameEngine.var_46b = 8 + var0 * var_1068 << 3;
+      GameEngine.bitPosition = 8 + var0 * var_1068 << 3;
       int var2;
       if (var1 == 0) {
          for(var2 = 0; var2 < var_1068; ++var2) {
@@ -4251,19 +4251,19 @@ final class Class_201 {
 
    private static int sub_179c(int var0, int var1, int var2) {
       GameEngine.sub_b47(var_102a);
-      GameEngine.var_46b = 8 + var0 * var_1068 + var1 << 3;
+      GameEngine.bitPosition = 8 + var0 * var_1068 + var1 << 3;
       return GameEngine.sub_b95(var2);
    }
 
    private static void sub_17a9(int var0, int var1, int var2, int var3) {
       GameEngine.sub_b47(var_102a);
-      GameEngine.var_46b = 8 + var0 * var_1068 + var1 << 3;
+      GameEngine.bitPosition = 8 + var0 * var_1068 + var1 << 3;
       GameEngine.sub_bb3(var2, var3);
    }
 
    private static void sub_17b7() {
       GameEngine.sub_b47(var_102a);
-      GameEngine.var_46b = 0;
+      GameEngine.bitPosition = 0;
       GameEngine.sub_bb3(1, 8);
       GameEngine.sub_bb3(22, 8);
       GameEngine.sub_bb3(-127, 8);
@@ -4292,19 +4292,19 @@ final class Class_201 {
 
    private static boolean sub_1882(int var0) {
       GameEngine.sub_b47(var_fc7);
-      GameEngine.var_46b = (6 + var_114a * 4 << 3) + (var0 - 262);
+      GameEngine.bitPosition = (6 + var_114a * 4 << 3) + (var0 - 262);
       return GameEngine.sub_b95(1) != 0;
    }
 
    private static int sub_1890(int var0, int var1) {
       GameEngine.sub_b47(var_fc7);
-      GameEngine.var_46b = 6 + var0 * 2 << 3;
+      GameEngine.bitPosition = 6 + var0 * 2 << 3;
       return var1 + GameEngine.sub_b95(16);
    }
 
    private static int sub_18c9(int var0, int var1) {
       GameEngine.sub_b47(var_fc7);
-      GameEngine.var_46b = 6 + var_114a * 2 + var0 * 2 << 3;
+      GameEngine.bitPosition = 6 + var_114a * 2 + var0 * 2 << 3;
       return var1 + GameEngine.sub_b95(16);
    }
 

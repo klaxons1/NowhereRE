@@ -17,30 +17,30 @@ import javax.microedition.midlet.MIDlet;
 import javax.microedition.rms.RecordStore;
 
 final class GameEngine {
-   private static int[] var_13 = null;
-   private static byte[] var_70 = null;
-   private static int[] var_98;
-   protected static Player var_dc = null;
-   protected static boolean var_126 = true;
-   protected static boolean var_18a = false;
-   protected static PlayerListener var_1b9 = null;
-   protected static int var_1e0;
-   protected static int var_209;
-   protected static DirectGraphics var_224;
-   private static Class_de var_236 = null;
-   private static DirectGraphics var_294 = null;
-   private static Class_de var_2d6 = null;
-   private static Graphics var_314 = null;
-   private static int var_35e;
-   private static int var_396;
-   private static int[] var_3f3 = null;
-   protected static Random var_44f = null;
-   protected static int var_46b;
-   protected static byte[] var_493;
-   public static boolean var_4c1;
+   private static int[] resourceOffsets = null;
+   private static byte[] resourceData = null;
+   private static int[] crcTable;
+   protected static Player musicPlayer = null;
+   protected static boolean isSoundMuted = true;
+   protected static boolean isLoopEnabled = false;
+   protected static PlayerListener playerListener = null;
+   protected static int screenWidth;
+   protected static int screenHeight;
+   protected static DirectGraphics directGraphics;
+   private static Sprite tileBuffer = null;
+   private static DirectGraphics tilebufferGraphics = null;
+   private static Sprite mapBackBuffer = null;
+   private static Graphics backBufferGraphics = null;
+   private static int backBufferWidth;
+   private static int backBufferHeight;
+   private static int[] sinTable = null;
+   protected static Random random = null;
+   protected static int bitPosition;
+   protected static byte[] bitBuffer;
+   public static boolean useAlternateKeys;
 
    private static boolean loadResourceFile(MIDlet var0) {
-      if (var_70 == null) {
+      if (resourceData == null) {
          DataInputStream var1 = new DataInputStream(var0.getClass().getResourceAsStream("/d"));
 
          try {
@@ -51,21 +51,21 @@ final class GameEngine {
             boolean var2 = false;
             int var6 = (var1.readByte() & 255) + ((var1.readByte() & 255) << 8) + ((var1.readByte() & 255) << 16) + ((var1.readByte() & 255) << 24);
             ++var6;
-            var_13 = new int[var6];
+            resourceOffsets = new int[var6];
 
-            for(var6 = 0; var6 < var_13.length; ++var6) {
-               var_13[var6] = (var1.readByte() & 255) + ((var1.readByte() & 255) << 8) + ((var1.readByte() & 255) << 16) + ((var1.readByte() & 255) << 24);
+            for(var6 = 0; var6 < resourceOffsets.length; ++var6) {
+               resourceOffsets[var6] = (var1.readByte() & 255) + ((var1.readByte() & 255) << 8) + ((var1.readByte() & 255) << 16) + ((var1.readByte() & 255) << 24);
             }
 
-            var_70 = new byte[var_13[var6 - 1] - var_13[0]];
+            resourceData = new byte[resourceOffsets[var6 - 1] - resourceOffsets[0]];
             int var3 = 0;
             boolean var4 = false;
 
             int var7;
             do {
-               var7 = var1.read(var_70, var3, var_70.length - var3);
+               var7 = var1.read(resourceData, var3, resourceData.length - var3);
                var3 += var7;
-            } while(var7 != -1 && var3 < var_70.length);
+            } while(var7 != -1 && var3 < resourceData.length);
          } catch (IOException var5) {
          }
 
@@ -76,13 +76,13 @@ final class GameEngine {
    }
 
    private static void unloadResources() {
-      var_13 = null;
-      var_70 = null;
+      resourceOffsets = null;
+      resourceData = null;
    }
 
-   public static Class_de sub_b1(int var0) {
+   public static Sprite sub_b1(int var0) {
       Object[] var2 = sub_1de(var0);
-      Class_de var1 = new Class_de(var2.length);
+      Sprite var1 = new Sprite(var2.length);
 
       for(int var4 = 0; var4 < var2.length; ++var4) {
          if (var2[var4] != null) {
@@ -159,32 +159,32 @@ final class GameEngine {
       int[] var10000;
       int var10001;
       byte var10002;
-      if (var_13[var0 + 1] == 0) {
-         var10000 = var_13;
+      if (resourceOffsets[var0 + 1] == 0) {
+         var10000 = resourceOffsets;
          var10001 = var0;
          var10002 = 2;
       } else {
-         var10000 = var_13;
+         var10000 = resourceOffsets;
          var10001 = var0;
          var10002 = 1;
       }
 
-      return var10000[var10001 + var10002] - var_13[var0];
+      return var10000[var10001 + var10002] - resourceOffsets[var0];
    }
 
    private static byte[] sub_237(int var0) {
       byte[] var1 = new byte[sub_1ff(var0)];
-      System.arraycopy(var_70, var_13[var0] - var_13[0], var1, 0, var1.length);
+      System.arraycopy(resourceData, resourceOffsets[var0] - resourceOffsets[0], var1, 0, var1.length);
       return var1;
    }
 
    protected static byte[] sub_28f(int var0) {
-      int var2 = var_13[var0] - var_13[0];
-      int var3 = (var_70[var2++] & 255) + ((var_70[var2++] & 255) << 8) + ((var_70[var2++] & 255) << 16) + ((var_70[var2++] & 255) << 24);
+      int var2 = resourceOffsets[var0] - resourceOffsets[0];
+      int var3 = (resourceData[var2++] & 255) + ((resourceData[var2++] & 255) << 8) + ((resourceData[var2++] & 255) << 16) + ((resourceData[var2++] & 255) << 24);
       var2 += (1 + var3 + 1) * 4;
       var2 += 33;
-      byte[] var4 = new byte[((var_70[var2] & 255) << 24) + ((var_70[var2 + 1] & 255) << 16) + ((var_70[var2 + 2] & 255) << 8) + (var_70[var2 + 3] & 255)];
-      System.arraycopy(var_70, var2 + 8, var4, 0, var4.length);
+      byte[] var4 = new byte[((resourceData[var2] & 255) << 24) + ((resourceData[var2 + 1] & 255) << 16) + ((resourceData[var2 + 2] & 255) << 8) + (resourceData[var2 + 3] & 255)];
+      System.arraycopy(resourceData, var2 + 8, var4, 0, var4.length);
       return var4;
    }
 
@@ -208,7 +208,7 @@ final class GameEngine {
    }
 
    private static void sub_2f2() {
-      var_98 = new int[256];
+      crcTable = new int[256];
 
       for(int var0 = 0; var0 < 256; ++var0) {
          int var1 = var0;
@@ -217,7 +217,7 @@ final class GameEngine {
             var1 = (var1 & 1) == 1 ? var1 >>> 1 ^ -306674912 : var1 >>> 1;
          }
 
-         var_98[var0] = var1;
+         crcTable[var0] = var1;
       }
 
    }
@@ -232,66 +232,66 @@ final class GameEngine {
          }
 
          int var4 = var3 >>> 8;
-         int var5 = var_98[(var3 ^ var0[var1++]) & 255];
+         int var5 = crcTable[(var3 ^ var0[var1++]) & 255];
          var10000 = var4 ^ var5;
       }
    }
 
    public static boolean sub_31a() {
-      return var_126;
+      return isSoundMuted;
    }
 
    public static boolean sub_37d() {
-      return sub_38b(!var_126);
+      return sub_38b(!isSoundMuted);
    }
 
    public static synchronized boolean sub_38b(boolean var0) {
       try {
          if (var0) {
-            var_126 = true;
-            if (!var_18a) {
+            isSoundMuted = true;
+            if (!isLoopEnabled) {
                sub_41e();
-            } else if (var_dc != null) {
-               var_dc.stop();
+            } else if (musicPlayer != null) {
+               musicPlayer.stop();
             }
          } else {
-            var_126 = false;
-            if (var_18a) {
-               var_dc.prefetch();
-               var_dc.setLoopCount(-1);
-               ((VolumeControl)var_dc.getControl("VolumeControl")).setLevel(50);
-               var_dc.start();
+            isSoundMuted = false;
+            if (isLoopEnabled) {
+               musicPlayer.prefetch();
+               musicPlayer.setLoopCount(-1);
+               ((VolumeControl) musicPlayer.getControl("VolumeControl")).setLevel(50);
+               musicPlayer.start();
             }
          }
       } catch (Exception var2) {
       }
 
-      return var_126;
+      return isSoundMuted;
    }
 
    public static synchronized void sub_3e6(MIDlet var0, String var1) {
       try {
-         if (!var_126 && (var_dc == null || var_dc.getState() == 0 || var_dc.getState() == 300)) {
+         if (!isSoundMuted && (musicPlayer == null || musicPlayer.getState() == 0 || musicPlayer.getState() == 300)) {
             sub_41e();
-            var_dc = Manager.createPlayer(var0.getClass().getResourceAsStream(var1), "audio/midi");
-            if (var_1b9 != null) {
-               var_dc.addPlayerListener(var_1b9);
+            musicPlayer = Manager.createPlayer(var0.getClass().getResourceAsStream(var1), "audio/midi");
+            if (playerListener != null) {
+               musicPlayer.addPlayerListener(playerListener);
             }
 
-            var_dc.prefetch();
+            musicPlayer.prefetch();
             Player var10000;
             byte var10001;
-            if (var_18a) {
-               var10000 = var_dc;
+            if (isLoopEnabled) {
+               var10000 = musicPlayer;
                var10001 = -1;
             } else {
-               var10000 = var_dc;
+               var10000 = musicPlayer;
                var10001 = 1;
             }
 
             var10000.setLoopCount(var10001);
-            ((VolumeControl)var_dc.getControl("VolumeControl")).setLevel(50);
-            var_dc.start();
+            ((VolumeControl) musicPlayer.getControl("VolumeControl")).setLevel(50);
+            musicPlayer.start();
          }
 
       } catch (Exception var3) {
@@ -299,49 +299,49 @@ final class GameEngine {
    }
 
    public static synchronized void sub_41e() {
-      if (var_dc != null) {
+      if (musicPlayer != null) {
          try {
-            var_dc.stop();
+            musicPlayer.stop();
          } catch (Exception var3) {
          }
 
          try {
-            var_dc.deallocate();
+            musicPlayer.deallocate();
          } catch (Exception var2) {
          }
 
          try {
-            var_dc.close();
+            musicPlayer.close();
          } catch (Exception var1) {
          }
 
          try {
-            if (var_1b9 != null) {
-               var_dc.removePlayerListener(var_1b9);
+            if (playerListener != null) {
+               musicPlayer.removePlayerListener(playerListener);
             }
          } catch (Exception var0) {
          }
 
-         var_dc = null;
+         musicPlayer = null;
       }
 
    }
 
    public static void sub_45f(MIDlet var0, int var1, int var2, int var3, int var4, int var5) {
       if (loadResourceFile(var0)) {
-         var_44f = new Random();
+         random = new Random();
          sub_2f2();
-         var_1e0 = var1;
-         var_209 = var2;
+         screenWidth = var1;
+         screenHeight = var2;
          sub_5db(var3, var4);
       }
    }
 
    public static void sub_4a7() {
       sub_41e();
-      var_44f = null;
-      var_493 = null;
-      var_98 = null;
+      random = null;
+      bitBuffer = null;
+      crcTable = null;
       sub_63c();
       unloadResources();
    }
@@ -383,7 +383,7 @@ final class GameEngine {
       }
    }
 
-   public static void sub_58f(Graphics var0, Class_de var1, int var2, int var3, int var4, int var5, int var6, int var7, int var8, int var9) {
+   public static void sub_58f(Graphics var0, Sprite var1, int var2, int var3, int var4, int var5, int var6, int var7, int var8, int var9) {
       int var10 = var0.getClipX();
       int var11 = var0.getClipY();
       int var12 = var0.getClipWidth();
@@ -405,13 +405,13 @@ final class GameEngine {
             var15 = var1.var_8a[0].getHeight() - (var6 + var8);
          }
 
-         var_224.drawImage(var1.var_8a[0], var2 - var14, var3 - var15, var4, var17);
+         directGraphics.drawImage(var1.var_8a[0], var2 - var14, var3 - var15, var4, var17);
       }
 
       var0.setClip(var10, var11, var12, var13);
    }
 
-   private static void sub_5b1(DirectGraphics var0, Class_de var1, int var2, int var3, int var4, int var5, int var6) {
+   private static void sub_5b1(DirectGraphics var0, Sprite var1, int var2, int var3, int var4, int var5, int var6) {
       int var7 = var2;
       int var8 = var3;
       int var10 = 0;
@@ -429,36 +429,36 @@ final class GameEngine {
    }
 
    private static void sub_5db(int var0, int var1) {
-      if (var_2d6 == null) {
-         var_236 = sub_852(var0, var1);
-         var_294 = DirectUtils.getDirectGraphics(var_236.var_8a[0].getGraphics());
-         var_35e = (var_1e0 / var0 + 2 + (var_1e0 % var0 > 0 ? 1 : 0)) * var0;
-         var_396 = (var_209 / var1 + 2 + (var_209 % var1 > 0 ? 1 : 0)) * var1;
-         var_2d6 = sub_852(var_35e, var_396);
-         var_314 = var_2d6.var_8a[0].getGraphics();
+      if (mapBackBuffer == null) {
+         tileBuffer = sub_852(var0, var1);
+         tilebufferGraphics = DirectUtils.getDirectGraphics(tileBuffer.var_8a[0].getGraphics());
+         backBufferWidth = (screenWidth / var0 + 2 + (screenWidth % var0 > 0 ? 1 : 0)) * var0;
+         backBufferHeight = (screenHeight / var1 + 2 + (screenHeight % var1 > 0 ? 1 : 0)) * var1;
+         mapBackBuffer = sub_852(backBufferWidth, backBufferHeight);
+         backBufferGraphics = mapBackBuffer.var_8a[0].getGraphics();
       }
 
    }
 
    private static void sub_63c() {
-      sub_828(var_2d6);
-      var_2d6 = null;
-      sub_828(var_236);
-      var_236 = null;
-      var_294 = null;
+      sub_828(mapBackBuffer);
+      mapBackBuffer = null;
+      sub_828(tileBuffer);
+      tileBuffer = null;
+      tilebufferGraphics = null;
    }
 
-   public static void sub_687(Class_64 var0) {
+   public static void sub_687(TileMap var0) {
       var0.var_2f3 = null;
       var0.var_344 = null;
       var0.var_2d1 = null;
    }
 
-   public static void sub_69e(Class_64 var0, int var1, int var2, int var3, int var4, boolean var5) {
+   public static void sub_69e(TileMap var0, int var1, int var2, int var3, int var4, boolean var5) {
       var0.var_2f3[var2 * var0.var_344[0] + var1] = (short)((var4 & 255) << 8 | var3 & 255);
       if (var5 && var3 != 0) {
-         int var8 = var_2d6.var_8a[0].getWidth();
-         int var9 = var_2d6.var_8a[0].getHeight();
+         int var8 = mapBackBuffer.var_8a[0].getWidth();
+         int var9 = mapBackBuffer.var_8a[0].getHeight();
          int var10 = var0.var_344[2];
          int var11 = var0.var_344[3];
          var1 *= var10;
@@ -471,13 +471,13 @@ final class GameEngine {
       }
    }
 
-   public static void sub_6b1(Class_64 var0, int var1, int var2, int var3, int var4) {
-      if (var3 > var_1e0) {
-         var3 = var_1e0;
+   public static void sub_6b1(TileMap var0, int var1, int var2, int var3, int var4) {
+      if (var3 > screenWidth) {
+         var3 = screenWidth;
       }
 
-      if (var4 > var_209) {
-         var4 = var_209;
+      if (var4 > screenHeight) {
+         var4 = screenHeight;
       }
 
       if (var0.var_344[10] != Integer.MAX_VALUE) {
@@ -492,7 +492,7 @@ final class GameEngine {
       sub_74c(var0);
    }
 
-   public static void sub_6d7(Class_64 var0, Graphics var1, int var2, int var3) {
+   public static void sub_6d7(TileMap var0, Graphics var1, int var2, int var3) {
       if (var0.var_344[4] + var0.var_344[6] > 0 && var0.var_344[4] < var0.var_344[8] && var0.var_344[5] + var0.var_344[7] > 0 && var0.var_344[5] < var0.var_344[9]) {
          if (var0.var_344[4] < 0) {
             var2 -= var0.var_344[4];
@@ -503,30 +503,30 @@ final class GameEngine {
          }
 
          if (var0.var_bc > 0 && var0.var_e2 > 0) {
-            sub_58f(var1, var_2d6, var2, var3, 20, var0.var_64, var0.var_77, var0.var_bc, var0.var_e2, 0);
+            sub_58f(var1, mapBackBuffer, var2, var3, 20, var0.var_64, var0.var_77, var0.var_bc, var0.var_e2, 0);
          }
 
          if (var0.var_bc > 0 && var0.var_14f > 0) {
-            sub_58f(var1, var_2d6, var2, var3 + var0.var_e2, 20, var0.var_64, 0, var0.var_bc, var0.var_14f, 0);
+            sub_58f(var1, mapBackBuffer, var2, var3 + var0.var_e2, 20, var0.var_64, 0, var0.var_bc, var0.var_14f, 0);
          }
 
          if (var0.var_121 > 0 && var0.var_14f > 0) {
-            sub_58f(var1, var_2d6, var2 + var0.var_bc, var3 + var0.var_e2, 20, 0, 0, var0.var_121, var0.var_14f, 0);
+            sub_58f(var1, mapBackBuffer, var2 + var0.var_bc, var3 + var0.var_e2, 20, 0, 0, var0.var_121, var0.var_14f, 0);
          }
 
          if (var0.var_121 > 0 && var0.var_e2 > 0) {
-            sub_58f(var1, var_2d6, var2 + var0.var_bc, var3, 20, 0, var0.var_77, var0.var_121, var0.var_e2, 0);
+            sub_58f(var1, mapBackBuffer, var2 + var0.var_bc, var3, 20, 0, var0.var_77, var0.var_121, var0.var_e2, 0);
          }
 
       }
    }
 
-   public static void sub_6fd(Class_64 var0, int var1, int var2) {
+   public static void sub_6fd(TileMap var0, int var1, int var2) {
       var0.var_254 = var1;
       var0.var_29e = var2;
    }
 
-   private static void sub_74c(Class_64 var0) {
+   private static void sub_74c(TileMap var0) {
       int var8 = var0.var_344[2];
       int var9 = var0.var_344[3];
       int var1 = var0.var_344[4];
@@ -572,7 +572,7 @@ final class GameEngine {
       }
    }
 
-   private static void sub_76e(Class_64 var0, int var1, int var2, int var3, int var4) {
+   private static void sub_76e(TileMap var0, int var1, int var2, int var3, int var4) {
       int var15 = var0.var_344[2];
       int var16 = var0.var_344[3];
       int var6 = var1 / var15;
@@ -608,7 +608,7 @@ final class GameEngine {
       var0.var_1f9 = (var2 + var4 + ((var2 + var4) % var16 > 0 ? var16 : 0)) / var16 * var16;
    }
 
-   private static void sub_79e(Class_64 var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
+   private static void sub_79e(TileMap var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
       int var10;
       int var11;
       int var13;
@@ -629,12 +629,12 @@ final class GameEngine {
          var21 = false;
          var10 = var0.var_344[2];
          var11 = var0.var_344[3];
-         var0.var_64 = (var0.var_64 + var1 + var_35e) % var_35e;
-         var0.var_77 = (var0.var_77 + var2 + var_396) % var_396;
+         var0.var_64 = (var0.var_64 + var1 + backBufferWidth) % backBufferWidth;
+         var0.var_77 = (var0.var_77 + var2 + backBufferHeight) % backBufferHeight;
          if (var1 > 0) {
             var20 = var3 >= var0.var_1d1 - var5 && (var7 & 2) == 0;
             var15 = (var3 + var5) / var10;
-            var10000 = (var0.var_64 + var5 + var_35e) % var_35e;
+            var10000 = (var0.var_64 + var5 + backBufferWidth) % backBufferWidth;
          } else {
             if (var1 >= 0) {
                break label115;
@@ -652,9 +652,9 @@ final class GameEngine {
       int var9;
       short var12;
       int var10001;
-      Class_64 var22;
+      TileMap var22;
       if (var1 != 0) {
-         var0.var_bc = var_35e - var0.var_64;
+         var0.var_bc = backBufferWidth - var0.var_64;
          if (var0.var_bc >= var5) {
             var0.var_bc = var5;
             var22 = var0;
@@ -675,7 +675,7 @@ final class GameEngine {
                var12 = var0.var_2f3[var9 + var15];
                sub_7b1(var0, var13, var14, var12 & 255, (var12 & '\uff00') >> 8);
                var9 += var0.var_344[0];
-               var14 = (var14 + var11 + var_396) % var_396;
+               var14 = (var14 + var11 + backBufferHeight) % backBufferHeight;
             }
 
             var19 = true;
@@ -686,7 +686,7 @@ final class GameEngine {
          if (var2 > 0) {
             var21 = var4 >= var0.var_1f9 - var6 && (var7 & 4) == 0;
             var17 = (var4 + var6) / var11;
-            var10000 = (var0.var_77 + var6 + var_396) % var_396;
+            var10000 = (var0.var_77 + var6 + backBufferHeight) % backBufferHeight;
          } else {
             if (var2 >= 0) {
                break label89;
@@ -701,7 +701,7 @@ final class GameEngine {
       }
 
       if (var2 != 0) {
-         var0.var_e2 = var_396 - var0.var_77;
+         var0.var_e2 = backBufferHeight - var0.var_77;
          if (var0.var_e2 >= var6) {
             var0.var_e2 = var6;
             var22 = var0;
@@ -721,7 +721,7 @@ final class GameEngine {
             for(var8 = var15; var8 <= var16; ++var8) {
                var12 = var0.var_2f3[var9 + var8];
                sub_7b1(var0, var13, var14, var12 & 255, (var12 & '\uff00') >> 8);
-               var13 = (var13 + var10 + var_35e) % var_35e;
+               var13 = (var13 + var10 + backBufferWidth) % backBufferWidth;
             }
 
             var19 = true;
@@ -737,7 +737,7 @@ final class GameEngine {
 
    }
 
-   private static void sub_7b1(Class_64 var0, int var1, int var2, int var3, int var4) {
+   private static void sub_7b1(TileMap var0, int var1, int var2, int var3, int var4) {
       if (var3 - 1 >= 0) {
          --var3;
          int var8 = var0.var_344[2];
@@ -747,16 +747,16 @@ final class GameEngine {
          int var5 = var0.var_2d1.var_8a[0].getWidth() / var8;
          int var6 = var3 / var5 * var8;
          int var7 = var3 % var5 * var9;
-         sub_5b1(var_294, var0.var_2d1, var7, var6, var8, var9, var4);
-         var_314.drawImage(var_236.var_8a[0], var1, var2, 20);
+         sub_5b1(tilebufferGraphics, var0.var_2d1, var7, var6, var8, var9, var4);
+         backBufferGraphics.drawImage(tileBuffer.var_8a[0], var1, var2, 20);
       }
    }
 
-   private static void sub_7ce(Class_de var0, int var1, Image var2) {
+   private static void sub_7ce(Sprite var0, int var1, Image var2) {
       var0.var_8a[var1] = var2;
    }
 
-   public static void sub_828(Class_de var0) {
+   public static void sub_828(Sprite var0) {
       if (var0 != null && var0.var_8a != null) {
          for(int var1 = 0; var1 < var0.var_8a.length; ++var1) {
             var0.var_8a[var1] = null;
@@ -767,25 +767,25 @@ final class GameEngine {
 
    }
 
-   private static Class_de sub_852(int var0, int var1) {
-      Class_de var2;
-      sub_7ce(var2 = new Class_de(1), 0, Image.createImage(var0, var1));
+   private static Sprite sub_852(int var0, int var1) {
+      Sprite var2;
+      sub_7ce(var2 = new Sprite(1), 0, Image.createImage(var0, var1));
       return var2;
    }
 
-   private static Class_de sub_885(byte[] var0, int var1, int var2) {
-      Class_de var3;
-      sub_7ce(var3 = new Class_de(1), 0, Image.createImage(var0, var1, var2));
+   private static Sprite sub_885(byte[] var0, int var1, int var2) {
+      Sprite var3;
+      sub_7ce(var3 = new Sprite(1), 0, Image.createImage(var0, var1, var2));
       return var3;
    }
 
-   public static byte[] sub_8a1(Class_de var0) {
+   public static byte[] sub_8a1(Sprite var0) {
       return sub_28f(var0.var_3b);
    }
 
-   public static Class_de sub_8fb(Class_de var0, byte[] var1, int var2) {
+   public static Sprite sub_8fb(Sprite var0, byte[] var1, int var2) {
       try {
-         Class_de var7 = new Class_de(var0.var_8a.length);
+         Sprite var7 = new Sprite(var0.var_8a.length);
          Object[] var3 = sub_1de(var0.var_3b);
 
          for(int var6 = 0; var6 < var0.var_8a.length; ++var6) {
@@ -862,7 +862,7 @@ final class GameEngine {
    }
 
    public static int sub_a1a() {
-      return var_44f.nextInt();
+      return random.nextInt();
    }
 
    private static int sub_a6b(int var0) {
@@ -870,7 +870,7 @@ final class GameEngine {
          var0 = 256 - var0;
       }
 
-      return var0 > 64 ? -var_3f3[128 - var0] : var_3f3[var0];
+      return var0 > 64 ? -sinTable[128 - var0] : sinTable[var0];
    }
 
    public static int sub_aa2(int var0) {
@@ -886,25 +886,25 @@ final class GameEngine {
    }
 
    protected static void sub_b07(int[] var0, int[] var1, int[] var2) {
-      var_3f3 = var0;
+      sinTable = var0;
    }
 
    public static void sub_b47(byte[] var0) {
-      var_493 = var0;
-      var_46b = 0;
+      bitBuffer = var0;
+      bitPosition = 0;
    }
 
    public static void sub_b51(int var0) {
-      var_46b = var0;
+      bitPosition = var0;
    }
 
    public static int sub_b95(int var0) {
       int var1 = 0;
 
       for(int var2 = 1; var2 <= var0; ++var2) {
-         int var3 = var_46b >> 3;
-         var1 += (var_493[var3] >> 7 - (var_46b - (var3 << 3)) & 1) << var0 - var2;
-         ++var_46b;
+         int var3 = bitPosition >> 3;
+         var1 += (bitBuffer[var3] >> 7 - (bitPosition - (var3 << 3)) & 1) << var0 - var2;
+         ++bitPosition;
       }
 
       return var1;
@@ -915,23 +915,23 @@ final class GameEngine {
       boolean var3 = false;
 
       for(int var4 = 1; var4 <= var1; ++var4) {
-         int var5 = var_46b >> 3;
-         byte var6 = (byte)(1 << 7 - (var_46b - (var5 << 3)));
+         int var5 = bitPosition >> 3;
+         byte var6 = (byte)(1 << 7 - (bitPosition - (var5 << 3)));
          byte[] var10000;
          int var10001;
          int var10002;
          if ((var0 & 1 << var1 - var4) != 0) {
-            var10000 = var_493;
+            var10000 = bitBuffer;
             var10001 = var5;
-            var10002 = var_493[var5] | var6;
+            var10002 = bitBuffer[var5] | var6;
          } else {
-            var10000 = var_493;
+            var10000 = bitBuffer;
             var10001 = var5;
-            var10002 = var_493[var5] & (byte)(255 ^ var6);
+            var10002 = bitBuffer[var5] & (byte)(255 ^ var6);
          }
 
          var10000[var10001] = (byte)var10002;
-         ++var_46b;
+         ++bitPosition;
       }
 
    }
@@ -986,7 +986,7 @@ final class GameEngine {
          var10000 = 48;
          break;
       case 42:
-         var10000 = var_4c1 ? 6 : var1;
+         var10000 = useAlternateKeys ? 6 : var1;
          break;
       case 53:
       case 8364:

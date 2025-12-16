@@ -22,14 +22,14 @@ final class Class_17f {
    static int var_43a;
    public static int var_481 = 0;
    public static char[] var_4bb;
-   public static Class_de var_4f0;
+   public static Sprite var_4f0;
    static char[] var_51a;
    static int[] var_543;
    static int var_563;
    static int var_56e;
    static boolean var_5a1;
    static int var_5d5;
-   static Class_de[] var_61d;
+   static Sprite[] var_61d;
    static Object[] var_671;
    static int var_696;
    static int var_6e3;
@@ -54,8 +54,8 @@ final class Class_17f {
    protected static Object[] var_c27 = null;
    static int var_c77;
    static int[] var_cb6;
-   static Class_64[] var_cd8;
-   static Class_de[] var_d07;
+   static TileMap[] var_cd8;
+   static Sprite[] var_d07;
    static int var_d50;
    static int var_d6b;
    static byte[] var_dcb;
@@ -75,7 +75,7 @@ final class Class_17f {
    static int var_10eb;
    public static int var_1129;
 
-   static void sub_3b(Graphics var0, Class_de var1, byte var2) {
+   static void sub_3b(Graphics var0, Sprite var1, byte var2) {
       int var10000;
       int var3;
       int var5;
@@ -121,7 +121,7 @@ final class Class_17f {
       var0.drawImage(var1.var_8a[0], var5, var6, 20);
    }
 
-   static void sub_7f(Graphics var0, int var1, int var2, int var3, int var4, Class_de var5, int var6, int var7, int var8) {
+   static void sub_7f(Graphics var0, int var1, int var2, int var3, int var4, Sprite var5, int var6, int var7, int var8) {
       var1 += var_104;
       var2 += var_13c;
       var6 *= var7;
@@ -211,7 +211,7 @@ final class Class_17f {
    }
 
    static int sub_cd(int var0, int var1) {
-      int var2 = GameEngine.var_44f.nextInt();
+      int var2 = GameEngine.random.nextInt();
       return var0 + Math.abs(var2) % (var1 - var0 + 1);
    }
 
@@ -377,7 +377,7 @@ final class Class_17f {
             if ((var5 & 1 << var13) != 0) {
                int var17 = var8[var10 + 0] & 255;
                int var18 = var8[var10 + 1] & 255;
-               Class_de var29 = (Class_de)var_c27[var8[1 + var17]];
+               Sprite var29 = (Sprite)var_c27[var8[1 + var17]];
                byte[] var28 = (byte[])var_c27[var8[1 + var18]];
                byte var16 = var8[var10 + 2];
                var13 = (var8[var10 + 5] & 255) << 2;
@@ -508,7 +508,7 @@ final class Class_17f {
    }
 
    static void sub_3d7(int var0) {
-      var_61d = new Class_de[var0];
+      var_61d = new Sprite[var0];
       var_671 = new Object[var0];
       var_4bb = new char[10];
       var_56e = 0;
@@ -1459,7 +1459,7 @@ final class Class_17f {
       }
 
       var6 = sub_a31();
-      Class_de var10;
+      Sprite var10;
       switch(var2) {
       case 0:
          var_c27[var6] = GameEngine.sub_b1(var0);
@@ -1552,7 +1552,7 @@ final class Class_17f {
                   byte var5 = var2[var4];
                   byte var6 = var2[var4 + 1];
                   if (var5 > var0) {
-                     GameEngine.sub_828((Class_de)var_c27[var5]);
+                     GameEngine.sub_828((Sprite)var_c27[var5]);
                      var_c06[var5] = -1;
                      var_c27[var5] = null;
                   }
@@ -1564,7 +1564,7 @@ final class Class_17f {
                }
             }
          } else {
-            GameEngine.sub_828((Class_de)var_c27[var0]);
+            GameEngine.sub_828((Sprite)var_c27[var0]);
          }
 
          var_c06[var0] = -1;
@@ -1931,8 +1931,8 @@ final class Class_17f {
             return false;
          }
 
-         var_cd8 = new Class_64[var_c77 * 1];
-         var_d07 = new Class_de[var_c77 * 2];
+         var_cd8 = new TileMap[var_c77 * 1];
+         var_d07 = new Sprite[var_c77 * 2];
          var_cb6 = new int[var_c77 * 23];
       } else {
          var17 = var_e25 & '\uffff';
@@ -1952,7 +1952,7 @@ final class Class_17f {
             var17 += 2;
             var_cb6[var6 * 23 + 22] = var7 - 88;
             int var9;
-            Class_de var13 = GameEngine.sub_b1(var9 = var_dcb[var17++] & 255);
+            Sprite var13 = GameEngine.sub_b1(var9 = var_dcb[var17++] & 255);
             byte[] var10000;
             if ((var5 & 1) == 0 && var2 == -1) {
                var_d07[var6 * 2] = var13;
@@ -2015,7 +2015,7 @@ final class Class_17f {
       }
    }
 
-   private static boolean sub_e55(int var0, int var1, Class_de var2) {
+   private static boolean sub_e55(int var0, int var1, Sprite var2) {
       int var19 = var0 * 23;
       int var20 = var0 * 1;
       BinaryReader var21;
@@ -2051,7 +2051,7 @@ final class Class_17f {
          var_cb6[var19 + 16] = 0;
          var_cb6[var19 + 10] = 0;
          var_cb6[var19 + 11] = 0;
-         var_cd8[var20] = new Class_64(var5, var6, var2, var7, var8);
+         var_cd8[var20] = new TileMap(var5, var6, var2, var7, var8);
          boolean var12 = false;
          boolean var11 = false;
          int[] var10000;
