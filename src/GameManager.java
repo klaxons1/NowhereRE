@@ -1510,10 +1510,10 @@ final class GameManager {
       for(var1 = 0; var1 < var_8e2.length; ++var1) {
          if ((var_8e2[var1] & 1) == 0 && (var_8e2[var1] & 2) != 0 && (var_8e2[var1] & 4) == 0) {
             var2 = var_96c[var1] & 255;
-            if (((var14 = (Entity)var_670[var2]).var_21a & 524288) == 0 && (var14.statusFlags & 1048576) == 0) {
+            if (((var14 = (Entity)var_670[var2]).propertyFlags & 524288) == 0 && (var14.statusFlags & 1048576) == 0) {
                if (var14.aiState == 12) {
-                  var14.x += var14.var_28b * var14.var_373;
-                  var14.y += var14.var_28b * var14.var_3cd;
+                  var14.x += var14.movementTimer * var14.knockbackVelocityX;
+                  var14.y += var14.movementTimer * var14.knockbackVelocityY;
                }
 
                var10000 = var_96c;
@@ -1543,7 +1543,7 @@ final class GameManager {
                }
 
                (var14 = (Entity)var_670[var2]).mapObjectIndex = (byte)var1;
-               var14.var_355 = var_9a9[var1];
+               var14.zoneProgressId = var_9a9[var1];
                var14.health = var_96c[var1] >> 16;
                var10000 = var_96c;
                var10000[var1] &= -256;
@@ -2598,7 +2598,7 @@ final class GameManager {
                      if ((var2.statusFlags & 8) != 0) {
                         var2.screenX = GameRenderer.worldToScreenFixedX(0, var2.x);
                         var2.screenY = GameRenderer.worldToScreenFixedY(0, var2.y);
-                        if (var2.var_4af < 1024) {
+                        if (var2.renderDepth < 1024) {
                            var_aab[var_ac5++] = (var2.x >> 8 & 2047) << 7 | (var2.y >> 8 & 2047) << 18 | (var2.entityId & 127) << 0;
                         }
                      }
@@ -2676,7 +2676,7 @@ final class GameManager {
             if ((var_9d8 & 67108864) == 0) {
                for(int var1 = 0; var1 < 16; ++var1) {
                   Entity var2;
-                  if (((var2 = (Entity)var_670[1 + var1]).statusFlags & 8) != 0 && var2.var_4af >= 1024) {
+                  if (((var2 = (Entity)var_670[1 + var1]).statusFlags & 8) != 0 && var2.renderDepth >= 1024) {
                      var2.sub_487(var0);
                   }
                }
@@ -3485,7 +3485,7 @@ final class GameManager {
 
                   var12.sub_1ac(var0, var1, var2, var13);
                   var12.statusFlags |= 512;
-                  var12.var_4f2 = var5;
+                  var12.projectileData = var5;
                   var12.mapObjectIndex = -1;
                }
                break;
@@ -3860,12 +3860,12 @@ final class GameManager {
    }
 
    static void sub_1409(int var0, Entity var1) {
-      if (var1 != null && var0 < 0 && (var1.var_1b4 & 524288) != 0) {
-         GameRenderer.setBitInArray(var_ff5, var1.var_355, 0, 1, var_10f1);
+      if (var1 != null && var0 < 0 && (var1.behaviorFlags & 524288) != 0) {
+         GameRenderer.setBitInArray(var_ff5, var1.zoneProgressId, 0, 1, var_10f1);
          ++var_ff5[4];
          var_9d8 |= 4096;
          sub_14a1();
-         sub_1506(1, var1.var_c4);
+         sub_1506(1, var1.dataId);
          sub_7c9();
          sub_14bb();
       }
@@ -3875,8 +3875,8 @@ final class GameManager {
    static void sub_144b() {
       for(int var0 = 0; var0 < 16; ++var0) {
          Entity var1;
-         if (((var1 = (Entity)var_670[1 + var0]).var_1b4 & 16) != 0) {
-            var1.var_2f9 = Integer.MAX_VALUE;
+         if (((var1 = (Entity)var_670[1 + var0]).behaviorFlags & 16) != 0) {
+            var1.attackCooldown = Integer.MAX_VALUE;
             var1.sub_328();
          }
       }
@@ -3915,10 +3915,10 @@ final class GameManager {
             var2 = 2;
          }
 
-         int var3 = var4.var_c4;
+         int var3 = var4.dataId;
          switch(sub_1539(var2, var3)) {
          case -2:
-            if ((var4.var_21a & 524288) == 0) {
+            if ((var4.propertyFlags & 524288) == 0) {
                var4.statusFlags &= -9;
             }
          default:

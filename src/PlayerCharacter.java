@@ -252,7 +252,7 @@ final class PlayerCharacter extends AnimatedSprite {
          if (var6 != 8) {
             for(int var7 = 0; var7 < 16; ++var7) {
                Entity var12 = (Entity) GameManager.var_670[1 + var7];
-               if ((var6 != 1 || (var12.statusFlags & 4194304) == 0) && (var6 == 7 || (var12.var_21a & 16) == 0) && var5 != var12 && (var12.statusFlags & 8) != 0 && ((var12.stateFlags & 8) != 0 || (var12.stateFlags & 32) != 0 && AnimatedSprite.sub_106(var12) || var6 == 3 || var6 == 5)) {
+               if ((var6 != 1 || (var12.statusFlags & 4194304) == 0) && (var6 == 7 || (var12.propertyFlags & 16) == 0) && var5 != var12 && (var12.statusFlags & 8) != 0 && ((var12.stateFlags & 8) != 0 || (var12.stateFlags & 32) != 0 && AnimatedSprite.sub_106(var12) || var6 == 3 || var6 == 5)) {
                   byte var10;
                   label188: {
                      var10 = 0;
@@ -277,7 +277,7 @@ final class PlayerCharacter extends AnimatedSprite {
                      }
 
                      if (var6 == 3) {
-                        if (var12.animationSetId != 3 && (var12.var_1b4 & 65536) == 0) {
+                        if (var12.animationSetId != 3 && (var12.behaviorFlags & 65536) == 0) {
                            if (var12.animationSetId == 11) {
                               return false;
                            }
@@ -290,10 +290,10 @@ final class PlayerCharacter extends AnimatedSprite {
                         return true;
                      }
 
-                     if ((var12.var_1b4 & 65536) == 0) {
+                     if ((var12.behaviorFlags & 65536) == 0) {
                         if (var5 != null) {
                            boolean var8 = false;
-                           if ((var12.var_21a & 16) != 0) {
+                           if ((var12.propertyFlags & 16) != 0) {
                               ++GameManager.var_ff5[9];
                            }
                         } else if (var12.animationSetId == 1) {
@@ -403,20 +403,20 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    public final void sub_296(Entity var1) {
-      if ((var1.var_1b4 & 67108864) != 0) {
+      if ((var1.behaviorFlags & 67108864) != 0) {
          if ((super.statusFlags & 65536) != 0) {
             var1.sub_105(false);
             GameManager.sub_a29(var1.x >> 8, var1.y >> 8, 2, 261, 0, 4, 0);
             return;
          }
-      } else if ((var1.var_1b4 & 65536) != 0) {
+      } else if ((var1.behaviorFlags & 65536) != 0) {
          if (var1.aiState != 12) {
             var1.sub_267(super.collisionRadius);
             return;
          }
-      } else if ((var1.var_1b4 & '耀') != 0) {
-         byte var2 = GameManager.objectSpawnData[var1.var_c4 * 5 + 3];
-         byte var3 = GameManager.objectSpawnData[var1.var_c4 * 5 + 4];
+      } else if ((var1.behaviorFlags & '耀') != 0) {
+         byte var2 = GameManager.objectSpawnData[var1.dataId * 5 + 3];
+         byte var3 = GameManager.objectSpawnData[var1.dataId * 5 + 4];
          short var6 = var2 != -2 ? GameManager.animationResourceIds[var3] : -1;
          if (var2 == -2) {
             GameManager.var_aed = 290;
@@ -463,30 +463,30 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    private static int sub_2a0(Entity var0) {
-      if (var0.var_355 != -1) {
+      if (var0.zoneProgressId != -1) {
          if (GameManager.var_ff5[26] == 0) {
             GameManager.var_ff5[26] = 1;
             GameManager.sub_11a8(339);
          }
 
-         GameRenderer.setBitInArray(GameManager.var_ff5, var0.var_355, 0, 1, 33);
+         GameRenderer.setBitInArray(GameManager.var_ff5, var0.zoneProgressId, 0, 1, 33);
       }
 
       for(int var1 = 0; var1 < 7; ++var1) {
-         if (GameManager.var_607[88 + var1 * 5 + 0] == var0.var_c4) {
+         if (GameManager.var_607[88 + var1 * 5 + 0] == var0.dataId) {
             ++GameManager.var_ff5[var1 + 18];
             GameManager.var_f43 = GameManager.var_ff5[var1 + 18];
             break;
          }
 
-         if (GameManager.var_607[var1 * 9 + 0] == var0.var_c4) {
+         if (GameManager.var_607[var1 * 9 + 0] == var0.dataId) {
             ++GameManager.var_ff5[var1 + 10];
             GameManager.sub_13a3();
             break;
          }
       }
 
-      GameManager.sub_1506(2, var0.var_c4);
+      GameManager.sub_1506(2, var0.dataId);
       GameManager.sub_7c9();
       var0.sub_2b1();
       return 0;
@@ -502,21 +502,21 @@ final class PlayerCharacter extends AnimatedSprite {
 
       for(int var1 = 0; var1 < 16; ++var1) {
          Entity var8;
-         if (((var8 = (Entity) GameManager.var_670[1 + var1]).var_21a & 16) == 0 && (var8.statusFlags & 8) != 0 && AnimatedSprite.sub_106(var8) && var8.x + var8.transformedBounds[10] >= var2 && var8.y + var8.transformedBounds[11] >= var4 && var8.x + var8.transformedBounds[8] <= var3 && var8.y + var8.transformedBounds[9] <= var5) {
+         if (((var8 = (Entity) GameManager.var_670[1 + var1]).propertyFlags & 16) == 0 && (var8.statusFlags & 8) != 0 && AnimatedSprite.sub_106(var8) && var8.x + var8.transformedBounds[10] >= var2 && var8.y + var8.transformedBounds[11] >= var4 && var8.x + var8.transformedBounds[8] <= var3 && var8.y + var8.transformedBounds[9] <= var5) {
             if ((super.statusFlags & 32) == 0 && (var8.stateFlags & 2) != 0) {
-               this.damageDirection = var8.var_19d;
+               this.damageDirection = var8.movementDirection;
                if ((super.statusFlags & 65536) == 0) {
                   this.takeDamage(var8.sub_45b(), true);
                }
 
                if (var8.animationSetId == 1) {
-                  var8.sub_20a(0, true, -2560, var8.var_19d);
+                  var8.sub_20a(0, true, -2560, var8.movementDirection);
                } else if (var8.animationSetId == 11) {
                   var8.sub_a4();
 
                   for(var1 = 0; var1 < 16; ++var1) {
                      Entity var9;
-                     if ((var9 = (Entity) GameManager.var_670[1 + var1]).entityId == (var8.var_4f2 >> 26 & 63)) {
+                     if ((var9 = (Entity) GameManager.var_670[1 + var1]).entityId == (var8.projectileData >> 26 & 63)) {
                         --var9.var_596;
                         break;
                      }
@@ -1066,7 +1066,7 @@ final class PlayerCharacter extends AnimatedSprite {
       if (var3) {
          for(int var4 = 0; var4 < 16; ++var4) {
             Entity var30;
-            if (((var30 = (Entity) GameManager.var_670[1 + var4]).animFlags & 2) != 0 && (var30.statusFlags & 8) != 0 && (var30.stateFlags & 1) != 0 && (var30.var_21a & 16) == 0 && var30.x + var30.transformedBounds[2] >= var11 && var30.y + var30.transformedBounds[3] >= var12 && var30.x + var30.transformedBounds[0] <= var13 && var30.y + var30.transformedBounds[1] <= var14) {
+            if (((var30 = (Entity) GameManager.var_670[1 + var4]).animFlags & 2) != 0 && (var30.statusFlags & 8) != 0 && (var30.stateFlags & 1) != 0 && (var30.propertyFlags & 16) == 0 && var30.x + var30.transformedBounds[2] >= var11 && var30.y + var30.transformedBounds[3] >= var12 && var30.x + var30.transformedBounds[0] <= var13 && var30.y + var30.transformedBounds[1] <= var14) {
                if (var30.x + var30.transformedBounds[2] >= var35 && var30.y + var30.transformedBounds[3] >= var37 && var30.x + var30.transformedBounds[0] <= var36 && var30.y + var30.transformedBounds[1] <= var38) {
                   var28 -= var1;
                   var29 -= var2;
@@ -1078,7 +1078,7 @@ final class PlayerCharacter extends AnimatedSprite {
                      }
                   }
 
-                  if ((var30.var_1b4 & 268435456) == 0 || (var30.var_21a & 16) == 0) {
+                  if ((var30.behaviorFlags & 268435456) == 0 || (var30.propertyFlags & 16) == 0) {
                      return false;
                   }
                }
