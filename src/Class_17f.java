@@ -1,36 +1,36 @@
 import javax.microedition.lcdui.Graphics;
 
 final class Class_17f {
-   static int var_21;
-   static int var_67;
-   public static int var_89;
-   public static int var_dd;
-   public static int var_104;
-   public static int var_13c;
-   public static int var_186;
-   public static int var_1d5;
-   public static int var_1ee;
+   static int screenWidth;
+   static int screenHeight;
+   public static int viewWidth;
+   public static int viewHeight;
+   public static int viewOffsetX;
+   public static int viewOffsetY;
+   public static int marginX;
+   public static int marginY;
+   public static int viewportFlags;
    public static int var_238;
    public static int var_24c;
    public static int var_289;
    public static int var_2c5;
-   public static byte var_30f;
-   public static boolean var_33f;
-   public static int var_363;
-   public static int var_3b7;
+   public static byte inputState;
+   public static boolean inputChanged;
+   public static int lastKeyCode;
+   public static int frameCounter;
    static int var_418;
    static int var_43a;
    public static int var_481 = 0;
-   public static char[] var_4bb;
-   public static Sprite var_4f0;
-   static char[] var_51a;
-   static int[] var_543;
-   static int var_563;
-   static int var_56e;
-   static boolean var_5a1;
-   static int var_5d5;
-   static Sprite[] var_61d;
-   static Object[] var_671;
+   public static char[] numberBuffer;
+   public static Sprite iconSprite;
+   static char[] fontChars;
+   static int[] stringTable;
+   static int charCounter;
+   static int charLimit;
+   static boolean textOverflow;
+   static int languageId;
+   static Sprite[] fontSprites;
+   static Object[] fontData;
    static int var_696;
    static int var_6e3;
    static int var_735;
@@ -50,8 +50,8 @@ final class Class_17f {
    static int var_ae8;
    static char[] var_b49;
    static int[] var_ba2;
-   protected static int[] var_c06 = null;
-   protected static Object[] var_c27 = null;
+   protected static int[] resourceIds = null;
+   protected static Object[] resourceCache = null;
    static int var_c77;
    static int[] var_cb6;
    static TileMap[] var_cd8;
@@ -60,10 +60,10 @@ final class Class_17f {
    static int var_d6b;
    static byte[] var_dcb;
    static int var_e25;
-   static int var_e72;
-   static int var_eaa;
-   static int var_ef4;
-   static int var_f32;
+   static int viewportLeft;
+   static int viewportTop;
+   static int viewportWidth;
+   static int viewportHeight;
    static int var_f77;
    static short[] var_f81;
    static int var_fd5;
@@ -86,7 +86,7 @@ final class Class_17f {
          var5 = 0;
          var6 = 0;
          if ((var2 & 5) == 5) {
-            var10000 = var_dd - var4 >> 1;
+            var10000 = viewHeight - var4 >> 1;
          } else if ((var2 & 1) != 0) {
             var10000 = 0;
          } else {
@@ -94,7 +94,7 @@ final class Class_17f {
                break label31;
             }
 
-            var10000 = var_dd - var4;
+            var10000 = viewHeight - var4;
          }
 
          var6 = var10000;
@@ -102,7 +102,7 @@ final class Class_17f {
 
       label24: {
          if ((var2 & 10) == 10) {
-            var10000 = var_89 - var3 >> 1;
+            var10000 = viewWidth - var3 >> 1;
          } else if ((var2 & 8) != 0) {
             var10000 = 0;
          } else {
@@ -110,20 +110,20 @@ final class Class_17f {
                break label24;
             }
 
-            var10000 = var_89 - var3;
+            var10000 = viewWidth - var3;
          }
 
          var5 = var10000;
       }
 
-      var5 += var_104;
-      var6 += var_13c;
+      var5 += viewOffsetX;
+      var6 += viewOffsetY;
       var0.drawImage(var1.var_8a[0], var5, var6, 20);
    }
 
    static void sub_7f(Graphics var0, int var1, int var2, int var3, int var4, Sprite var5, int var6, int var7, int var8) {
-      var1 += var_104;
-      var2 += var_13c;
+      var1 += viewOffsetX;
+      var2 += viewOffsetY;
       var6 *= var7;
       var0.clipRect(var1, var2, var3, var4);
       int var10000 = var2;
@@ -131,7 +131,7 @@ final class Class_17f {
       while(true) {
          int var10 = var10000;
          if (var10000 >= var2 + var4) {
-            var0.setClip(0, 0, var_21, var_67);
+            var0.setClip(0, 0, screenWidth, screenHeight);
             return;
          }
 
@@ -151,16 +151,16 @@ final class Class_17f {
    }
 
    public static void sub_9a() {
-      var_30f = 0;
-      var_363 = 0;
-      var_33f = false;
+      inputState = 0;
+      lastKeyCode = 0;
+      inputChanged = false;
    }
 
    static void sub_b2(int var0, boolean var1) {
       byte var2;
       byte var3;
       label54: {
-         var2 = var_30f;
+         var2 = inputState;
          var3 = 0;
          byte var10000;
          if (var0 != 8 && var0 != 53) {
@@ -196,16 +196,16 @@ final class Class_17f {
 
       int var4;
       if (var1) {
-         var_33f = true;
-         var_363 = var0;
+         inputChanged = true;
+         lastKeyCode = var0;
          var4 = var2 | var3;
       } else {
          var4 = var2 & ~var3;
       }
 
       var2 = (byte)var4;
-      if (var_30f != var2) {
-         var_30f = var2;
+      if (inputState != var2) {
+         inputState = var2;
       }
 
    }
@@ -244,57 +244,57 @@ final class Class_17f {
    }
 
    public static void sub_14a(int var0, int var1, boolean var2) {
-      var_89 = var0 <= 0 ? var_21 : var0;
-      var_dd = var1 <= 0 ? var_67 : var1;
-      var_104 = var_21 - var_89 >> 1;
-      var_13c = var_67 - var_dd >> 1;
+      viewWidth = var0 <= 0 ? screenWidth : var0;
+      viewHeight = var1 <= 0 ? screenHeight : var1;
+      viewOffsetX = screenWidth - viewWidth >> 1;
+      viewOffsetY = screenHeight - viewHeight >> 1;
       if (var2) {
-         var_1ee &= -16;
+         viewportFlags &= -16;
       }
 
    }
 
    private static void sub_16a() {
-      var_1ee &= -241;
-      if (var_ef4 < var_89) {
-         if (var_e72 > 0) {
-            var_1ee |= 128;
+      viewportFlags &= -241;
+      if (viewportWidth < viewWidth) {
+         if (viewportLeft > 0) {
+            viewportFlags |= 128;
          }
 
-         if (var_89 - var_ef4 - var_e72 > 0) {
-            var_1ee |= 32;
+         if (viewWidth - viewportWidth - viewportLeft > 0) {
+            viewportFlags |= 32;
          }
       }
 
-      if (var_f32 < var_dd) {
-         if (var_eaa > 0) {
-            var_1ee |= 16;
+      if (viewportHeight < viewHeight) {
+         if (viewportTop > 0) {
+            viewportFlags |= 16;
          }
 
-         if (var_dd - var_f32 - var_eaa > 0) {
-            var_1ee |= 64;
+         if (viewHeight - viewportHeight - viewportTop > 0) {
+            viewportFlags |= 64;
          }
       }
 
    }
 
    public static void sub_1c2(Graphics var0, int var1) {
-      if ((var_1ee & 240) != 0) {
+      if ((viewportFlags & 240) != 0) {
          var0.setColor(var1);
-         if ((var_1ee & 128) != 0) {
-            var0.fillRect(var_104, var_13c, var_e72 + var_186, var_dd);
+         if ((viewportFlags & 128) != 0) {
+            var0.fillRect(viewOffsetX, viewOffsetY, viewportLeft + marginX, viewHeight);
          }
 
-         if ((var_1ee & 32) != 0) {
-            var0.fillRect(var_104 + var_e72 + var_ef4 - var_186, var_13c, var_89 - var_ef4 - var_e72 + var_186, var_dd);
+         if ((viewportFlags & 32) != 0) {
+            var0.fillRect(viewOffsetX + viewportLeft + viewportWidth - marginX, viewOffsetY, viewWidth - viewportWidth - viewportLeft + marginX, viewHeight);
          }
 
-         if ((var_1ee & 16) != 0) {
-            var0.fillRect(var_104, var_13c, var_89, var_eaa + var_1d5);
+         if ((viewportFlags & 16) != 0) {
+            var0.fillRect(viewOffsetX, viewOffsetY, viewWidth, viewportTop + marginY);
          }
 
-         if ((var_1ee & 64) != 0) {
-            var0.fillRect(var_104, var_13c + var_f32 + var_eaa - var_1d5, var_89, var_dd - var_f32 - var_eaa + var_1d5);
+         if ((viewportFlags & 64) != 0) {
+            var0.fillRect(viewOffsetX, viewOffsetY + viewportHeight + viewportTop - marginY, viewWidth, viewHeight - viewportHeight - viewportTop + marginY);
          }
       }
 
@@ -304,8 +304,8 @@ final class Class_17f {
       int var8;
       int var12 = (var8 = var4 / var7) * var7;
       int var9 = 255 / var7;
-      var1 += var_104;
-      var2 += var_13c;
+      var1 += viewOffsetX;
+      var2 += viewOffsetY;
       int var11 = 0;
 
       int var10;
@@ -369,16 +369,16 @@ final class Class_17f {
          var_24c = Integer.MAX_VALUE;
          var_289 = -1;
          var_2c5 = -1;
-         var1 += var_104;
-         var2 += var_13c;
+         var1 += viewOffsetX;
+         var2 += viewOffsetY;
 
          for(int var11 = 0; var11 < var9; var10 += 7) {
             int var13 = var8[var10 + 6] & 255;
             if ((var5 & 1 << var13) != 0) {
                int var17 = var8[var10 + 0] & 255;
                int var18 = var8[var10 + 1] & 255;
-               Sprite var29 = (Sprite)var_c27[var8[1 + var17]];
-               byte[] var28 = (byte[])var_c27[var8[1 + var18]];
+               Sprite var29 = (Sprite) resourceCache[var8[1 + var17]];
+               byte[] var28 = (byte[]) resourceCache[var8[1 + var18]];
                byte var16 = var8[var10 + 2];
                var13 = (var8[var10 + 5] & 255) << 2;
                int var19 = (var28[var13++] & 255) << 1;
@@ -508,47 +508,47 @@ final class Class_17f {
    }
 
    static void sub_3d7(int var0) {
-      var_61d = new Sprite[var0];
-      var_671 = new Object[var0];
-      var_4bb = new char[10];
-      var_56e = 0;
-      var_5d5 = 0;
+      fontSprites = new Sprite[var0];
+      fontData = new Object[var0];
+      numberBuffer = new char[10];
+      charLimit = 0;
+      languageId = 0;
    }
 
    static void sub_437() {
       sub_499(-1);
-      var_61d = null;
-      var_671 = null;
-      var_4bb = null;
-      if (var_4f0 != null) {
-         GameEngine.freeSprite(var_4f0);
-         var_4f0 = null;
+      fontSprites = null;
+      fontData = null;
+      numberBuffer = null;
+      if (iconSprite != null) {
+         GameEngine.freeSprite(iconSprite);
+         iconSprite = null;
       }
 
       sub_4d7();
    }
 
    static void sub_485(int var0, int var1, int var2) {
-      var_61d[var0] = GameEngine.loadSpriteSet(var1);
+      fontSprites[var0] = GameEngine.loadSpriteSet(var1);
       BinaryReader var5;
       int var3 = ((var5 = GameEngine.openDataStream(var2)).buffer[var5.position++] & 255) + ((var5.buffer[var5.position++] & 255) << 8) + ((var5.buffer[var5.position++] & 255) << 16) + ((var5.buffer[var5.position++] & 255) << 24);
-      var_671[var0] = GameEngine.readBytes(var5, var3);
+      fontData[var0] = GameEngine.readBytes(var5, var3);
       var5.buffer = null;
       byte[] var4;
-      (var4 = (byte[])var_671[var0])[69] = 5;
+      (var4 = (byte[]) fontData[var0])[69] = 5;
       var4[435] = 5;
    }
 
    private static void sub_499(int var0) {
-      for(int var1 = 0; var1 < var_61d.length; ++var1) {
+      for(int var1 = 0; var1 < fontSprites.length; ++var1) {
          if (var0 == -1 || var0 == var1) {
-            if (var_61d[var1] != null) {
-               GameEngine.freeSprite(var_61d[var1]);
-               var_61d[var1] = null;
+            if (fontSprites[var1] != null) {
+               GameEngine.freeSprite(fontSprites[var1]);
+               fontSprites[var1] = null;
             }
 
-            if (var_671[var1] != null) {
-               var_671[var1] = null;
+            if (fontData[var1] != null) {
+               fontData[var1] = null;
             }
          }
       }
@@ -557,35 +557,35 @@ final class Class_17f {
    }
 
    public static void sub_4d7() {
-      var_51a = null;
-      var_543 = null;
+      fontChars = null;
+      stringTable = null;
    }
 
    public static void sub_4f7(char[] var0, int[] var1) {
-      var_51a = var0;
-      var_543 = var1;
+      fontChars = var0;
+      stringTable = var1;
    }
 
    public static int sub_52a(int var0) {
       BinaryReader var3;
-      byte[] var2 = GameEngine.readBytes(var3 = GameEngine.openDataStream(var_5d5 * 174 + var0), GameEngine.getStreamSize(var3));
+      byte[] var2 = GameEngine.readBytes(var3 = GameEngine.openDataStream(languageId * 174 + var0), GameEngine.getStreamSize(var3));
       var3.buffer = null;
-      var_51a = sub_b90(var2, var2.length);
+      fontChars = sub_b90(var2, var2.length);
       return sub_546();
    }
 
    public static int sub_546() {
-      var_543 = null;
-      if (var_51a == null) {
+      stringTable = null;
+      if (fontChars == null) {
          return 0;
       } else {
-         int var0 = var_51a.length;
+         int var0 = fontChars.length;
          int var1 = 0;
          int var4 = 0;
 
          char var2;
          while(var1 < var0) {
-            if ((var2 = var_51a[var1++]) == 0 || var1 >= var0) {
+            if ((var2 = fontChars[var1++]) == 0 || var1 >= var0) {
                ++var4;
                break;
             }
@@ -596,23 +596,23 @@ final class Class_17f {
          }
 
          if (var4 > 0) {
-            var_543 = new int[var4];
+            stringTable = new int[var4];
             int var3 = 0;
             var1 = 0;
-            var_543[0] = 0;
+            stringTable[0] = 0;
 
             do {
                do {
                   if (var1 >= var0) {
                      return var4;
                   }
-               } while((var2 = var_51a[var1++]) != '\n' && var2 != 0 && var1 < var0);
+               } while((var2 = fontChars[var1++]) != '\n' && var2 != 0 && var1 < var0);
 
-               int[] var10000 = var_543;
-               var10000[var3] |= var1 - var_543[var3] - 1 << 16;
+               int[] var10000 = stringTable;
+               var10000[var3] |= var1 - stringTable[var3] - 1 << 16;
                ++var3;
                if (var3 < var4) {
-                  var_543[var3] = var1;
+                  stringTable[var3] = var1;
                }
             } while(var2 != 0);
          }
@@ -622,22 +622,22 @@ final class Class_17f {
    }
 
    public static int sub_5a0(int var0) {
-      return ((byte[])var_671[var0])[2];
+      return ((byte[]) fontData[var0])[2];
    }
 
    public static int sub_5f5(int var0, int var1) {
-      if (var_51a != null && var1 < var_543.length) {
-         int var3 = var_543[var1] >> 16;
-         int var4 = var_543[var1] & '\uffff';
-         byte[] var8 = (byte[])var_671[var0];
+      if (fontChars != null && var1 < stringTable.length) {
+         int var3 = stringTable[var1] >> 16;
+         int var4 = stringTable[var1] & '\uffff';
+         byte[] var8 = (byte[]) fontData[var0];
          int var2 = 0;
 
          int var6;
          for(var6 = 0; var2 < var3; ++var2) {
             int var5;
-            if ((var5 = var_51a[var4 + var2] & 255) == 64) {
+            if ((var5 = fontChars[var4 + var2] & 255) == 64) {
                ++var2;
-               if (var_4f0 != null) {
+               if (iconSprite != null) {
                   var6 += 0;
                }
             } else {
@@ -658,7 +658,7 @@ final class Class_17f {
       int var9 = var1 & 255;
       byte var8;
       byte[] var12;
-      if ((var8 = (var12 = (byte[])var_671[var4])[4 + var9 * 2 + 1]) > 0) {
+      if ((var8 = (var12 = (byte[]) fontData[var4])[4 + var9 * 2 + 1]) > 0) {
          if (var5 != -1) {
             var2 += var5 - var8 >> 1;
          }
@@ -670,7 +670,7 @@ final class Class_17f {
             int var7 = (var6 = var12[4 + var9 * 2 + 0] & 255) / var12[3];
             var6 = (var6 - var7 * var12[3]) * var10;
             var7 *= var11;
-            GameEngine.drawRegion(var0, var_61d[var4], var_104 + var2, var_13c + var3, 20, var6, var7, var10, var11, 0);
+            GameEngine.drawRegion(var0, fontSprites[var4], viewOffsetX + var2, viewOffsetY + var3, 20, var6, var7, var10, var11, 0);
          }
 
          var2 += var8 + 0;
@@ -683,17 +683,17 @@ final class Class_17f {
       int var22 = var5 >> 24;
       int var23 = var5 >> 16 & 255;
       var5 &= 65535;
-      if (var_51a == null) {
+      if (fontChars == null) {
          return 0;
       } else {
          byte[] var21;
-         int var17 = (var21 = (byte[])var_671[var7])[2] + 1;
-         var22 = var22 > 0 && var1 + var22 <= var_543.length ? var22 + var1 : var_543.length;
+         int var17 = (var21 = (byte[]) fontData[var7])[2] + 1;
+         var22 = var22 > 0 && var1 + var22 <= stringTable.length ? var22 + var1 : stringTable.length;
          byte var18 = (byte)(var4 >> 8 & 255);
-         int var10000 = var_543[var1] >> 16;
+         int var10000 = stringTable[var1] >> 16;
          boolean var11 = false;
          int var9 = var10000;
-         int var10 = var_543[var1] & '\uffff';
+         int var10 = stringTable[var1] & '\uffff';
          int var14 = 0;
          int var19;
          int var24;
@@ -710,7 +710,7 @@ final class Class_17f {
             }
 
             if (var0 != null) {
-               var19 = sub_6a9(var0, var_51a, var10, var9, var2, var3, var7);
+               var19 = sub_6a9(var0, fontChars, var10, var9, var2, var3, var7);
             }
 
             var3 += var17 + var18;
@@ -746,7 +746,7 @@ final class Class_17f {
                   int var8;
                   for(var8 = var15; var8 < var9; ++var8) {
                      char var20;
-                     if ((var20 = var_51a[var10 + var8]) != 167 && var20 != '~') {
+                     if ((var20 = fontChars[var10 + var8]) != 167 && var20 != '~') {
                         if (var20 == '@') {
                            ++var8;
                            var12 += 0;
@@ -798,7 +798,7 @@ final class Class_17f {
                         var13 = var3 - (var17 + var18 >> 1);
                      }
 
-                     var19 = sub_6a9(var0, var_51a, var10 + var15, var8, var12, var13, var7);
+                     var19 = sub_6a9(var0, fontChars, var10 + var15, var8, var12, var13, var7);
                      var3 += var17 + var18;
                      if (var22 != 0 && var23 != 0) {
                         --var23;
@@ -821,8 +821,8 @@ final class Class_17f {
                   break;
                }
 
-               var9 = var_543[var1] >> 16;
-               var10 = var_543[var1] & '\uffff';
+               var9 = stringTable[var1] >> 16;
+               var10 = stringTable[var1] & '\uffff';
             }
          }
 
@@ -835,12 +835,12 @@ final class Class_17f {
    }
 
    private static int sub_6a9(Graphics var0, char[] var1, int var2, int var3, int var4, int var5, int var6) {
-      var4 += var_104;
-      var5 += var_13c;
+      var4 += viewOffsetX;
+      var5 += viewOffsetY;
       var3 += var2;
-      var_5a1 = false;
+      textOverflow = false;
       byte[] var14;
-      byte var12 = (var14 = (byte[])var_671[var6])[1];
+      byte var12 = (var14 = (byte[]) fontData[var6])[1];
       byte var13 = var14[2];
 
       for(int var8 = var2; var8 < var3; ++var8) {
@@ -848,8 +848,8 @@ final class Class_17f {
          if ((var7 = var1[var8] & 255) == 64) {
             ++var8;
             var7 = var1[var8] - 97;
-            if (var_4f0 != null) {
-               GameEngine.drawRegion(var0, var_4f0, var4, var5, 20, var7 * 0, 0, 0, 0, 0);
+            if (iconSprite != null) {
+               GameEngine.drawRegion(var0, iconSprite, var4, var5, 20, var7 * 0, 0, 0, 0, 0);
                var4 += 0;
             }
          } else {
@@ -860,13 +860,13 @@ final class Class_17f {
                   int var11 = (var10 = var14[4 + var7 * 2 + 0] & 255) / var14[3];
                   var10 = (var10 - var11 * var14[3]) * var12;
                   var11 *= var13;
-                  if (var_56e != 0 && var_563 >= var_56e) {
-                     var_5a1 = true;
+                  if (charLimit != 0 && charCounter >= charLimit) {
+                     textOverflow = true;
                   } else {
-                     GameEngine.drawRegion(var0, var_61d[var6], var4, var5, 20, var10, var11, var12, var13, 0);
+                     GameEngine.drawRegion(var0, fontSprites[var6], var4, var5, 20, var10, var11, var12, var13, 0);
                   }
 
-                  ++var_563;
+                  ++charCounter;
                }
 
                var4 += var9 + 0;
@@ -874,14 +874,14 @@ final class Class_17f {
          }
       }
 
-      return var4 - var_104;
+      return var4 - viewOffsetX;
    }
 
    public static int sub_6de(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6) {
       int var8 = 0;
       byte var14 = 0;
-      var2 += var_104;
-      var3 += var_13c;
+      var2 += viewOffsetX;
+      var3 += viewOffsetY;
       if (var1 < 0) {
          var14 = 1;
          var1 = -var1;
@@ -892,7 +892,7 @@ final class Class_17f {
          int var10001;
          byte var10002;
          if (var1 == 0) {
-            var10000 = var_4bb;
+            var10000 = numberBuffer;
             var10001 = 0;
             ++var8;
             var10002 = 48;
@@ -903,13 +903,13 @@ final class Class_17f {
                      break label87;
                   }
 
-                  var10000 = var_4bb;
+                  var10000 = numberBuffer;
                   var10001 = var8++;
                   var10002 = 45;
                   break;
                }
 
-               var_4bb[var8++] = (char)(48 + var1 % 10);
+               numberBuffer[var8++] = (char)(48 + var1 % 10);
                var1 /= 10;
             }
          }
@@ -919,14 +919,14 @@ final class Class_17f {
 
       if (var4 > 0 && var4 - var8 - var14 > 0) {
          for(int var7 = 0; var7 < Math.min(var4 - var8 - var14, 10); ++var7) {
-            var_4bb[var8++] = '0';
+            numberBuffer[var8++] = '0';
          }
       }
 
       if (var5 == -2) {
          return var8;
       } else {
-         byte[] var15 = (byte[])var_671[var6];
+         byte[] var15 = (byte[]) fontData[var6];
          int var9;
          char var16;
          if (var5 != -1) {
@@ -940,7 +940,7 @@ final class Class_17f {
                   break;
                }
 
-               var16 = var_4bb[var9];
+               var16 = numberBuffer[var9];
                byte var10;
                if ((var10 = var15[4 + var16 * 2 + 1]) != 0) {
                   var11 += var10 + 0;
@@ -953,10 +953,10 @@ final class Class_17f {
             do {
                --var8;
                if (var8 < 0) {
-                  return var2 - var_104;
+                  return var2 - viewOffsetX;
                }
 
-               var16 = var_4bb[var8];
+               var16 = numberBuffer[var8];
             } while((var18 = var15[4 + var16 * 2 + 1]) == 0);
 
             if (var0 != null) {
@@ -965,7 +965,7 @@ final class Class_17f {
                int var17 = (var9 = var15[4 + var16 * 2 + 0] & 255) / var15[3];
                var9 = (var9 - var17 * var15[3]) * var12;
                var17 *= var13;
-               GameEngine.drawRegion(var0, var_61d[var6], var2, var3, 20, var9, var17, var12, var13, 0);
+               GameEngine.drawRegion(var0, fontSprites[var6], var2, var3, 20, var9, var17, var12, var13, 0);
             }
 
             var2 += var18 + 0;
@@ -980,26 +980,26 @@ final class Class_17f {
       int var14 = var3 == null ? sub_6de((Graphics)null, var2, 0, 0, 0, -2, 0) : 0;
       int var10 = 0;
 
-      for(int var7 = var0; var7 < var_543.length; ++var7) {
-         int var8 = var_543[var7] >> 16;
-         int var9 = var_543[var7] & '\uffff';
+      for(int var7 = var0; var7 < stringTable.length; ++var7) {
+         int var8 = stringTable[var7] >> 16;
+         int var9 = stringTable[var7] & '\uffff';
 
          for(int var6 = 0; var6 < var8; ++var6) {
             boolean var10000;
-            if (var_51a[var9 + var6] == '~') {
+            if (fontChars[var9 + var6] == '~') {
                if (var10 == var1) {
                   var12 = true;
                   if (var3 == null) {
                      --var14;
                      if (var14 >= 0) {
-                        var_51a[var9 + var6] = var_4bb[var14];
+                        fontChars[var9 + var6] = numberBuffer[var14];
                      } else {
-                        var_51a[var9 + var6] = 167;
+                        fontChars[var9 + var6] = 167;
                      }
                   } else if (var14 < var5) {
-                     var_51a[var9 + var6] = var3[var4 + var14++];
+                     fontChars[var9 + var6] = var3[var4 + var14++];
                   } else {
-                     var_51a[var9 + var6] = 167;
+                     fontChars[var9 + var6] = 167;
                   }
                   continue;
                }
@@ -1066,25 +1066,25 @@ final class Class_17f {
          int var1 = var_7a4 & 255;
          int var2 = var_7a4 >> 8 & 255;
          if (var_7a4 != 0 && var_7a4 != 16777216 && var1 != 0 && var2 > 0) {
-            if (var_30f == 8) {
+            if (inputState == 8) {
                var_7a4 &= 65535;
                var_6e3 |= 1;
                return;
             }
 
-            if (var_30f == 16) {
+            if (inputState == 16) {
                var_7a4 = 65536 | var_7a4 & '\uffff';
                var_6e3 |= 1;
                return;
             }
 
-            if ((var_30f & 1) != 0) {
+            if ((inputState & 1) != 0) {
                ++var_7fb;
                var_6e3 |= 1;
                return;
             }
          } else {
-            if ((var_30f & 5) != 0) {
+            if ((inputState & 5) != 0) {
                if (var_ae8 != 0) {
                   var_ae8 = 0;
                } else {
@@ -1112,8 +1112,8 @@ final class Class_17f {
       switch(var_696) {
       case 30:
          sub_52a(var_735);
-         var_b49 = var_51a;
-         var_ba2 = var_543;
+         var_b49 = fontChars;
+         var_ba2 = stringTable;
          var_7a4 = 0;
          var_7fb = 0;
          var_851 = sub_89d((Graphics)null, 0, 0, 0);
@@ -1129,8 +1129,8 @@ final class Class_17f {
          if (var_971 != 0) {
             var0 = var_7a4 & 255;
             var1 = var_7a4 >> 8 & 255;
-            int var2 = (var_51a[2] | 32) - 97;
-            int var3 = (var_51a[3] | 32) - 97;
+            int var2 = (fontChars[2] | 32) - 97;
+            int var3 = (fontChars[3] | 32) - 97;
             if (var_971 != 1 && (var2 != 0 || var3 != 0)) {
                if (var_971 == 2) {
                   ++var1;
@@ -1186,7 +1186,7 @@ final class Class_17f {
          return false;
       } else {
          var0.setColor(9961472);
-         var0.fillRect(var_104 + var1, var_13c + var2, var_89, var_a20);
+         var0.fillRect(viewOffsetX + var1, viewOffsetY + var2, viewWidth, var_a20);
          sub_21d(var0, var1 + 2, var2 + 2, var_9c5 - 4, var_a20 - 4, 4737080, 0, 16);
          sub_4f7(var_b49, var_ba2);
          if (var_696 != 34) {
@@ -1203,7 +1203,7 @@ final class Class_17f {
                var_ae8 += 2;
             }
 
-            if (var_7fb < var_851 - 1 && var_3b7 % 20 != 0) {
+            if (var_7fb < var_851 - 1 && frameCounter % 20 != 0) {
                sub_645(var0, '°', var3 + var_9c5 - sub_645((Graphics)null, '°', 0, 0, var_ab7, -1) - 2, var2 + var_a20 - var_a7e, var_ab7, -1);
             }
 
@@ -1229,11 +1229,11 @@ final class Class_17f {
             var10 = 0;
             var11 = 0;
             boolean var12 = false;
-            if ((var_7a4 & 16777216) == 0 && var_543[0] >> 16 >= 7 && var_51a[0] == '@' && (var_51a[1] | 32) == 122) {
-               int var15 = (var_51a[2] | 32) - 97;
-               int var16 = (var_51a[3] | 32) - 97;
-               var14 = (var_51a[4] | 32) - 97;
-               var9 = (var_51a[5] | 32) - 97;
+            if ((var_7a4 & 16777216) == 0 && stringTable[0] >> 16 >= 7 && fontChars[0] == '@' && (fontChars[1] | 32) == 122) {
+               int var15 = (fontChars[2] | 32) - 97;
+               int var16 = (fontChars[3] | 32) - 97;
+               var14 = (fontChars[4] | 32) - 97;
+               var9 = (fontChars[5] | 32) - 97;
                var10 = var_7a4 >> 8 & 255;
                var11 = var_7a4 >> 16 & 255;
                if (var10 == 0 && var14 == 0) {
@@ -1252,8 +1252,8 @@ final class Class_17f {
                }
 
                var13 = 3 + var14 + var15 + var16 + (var10 - 1);
-               if (4 + var10 < var_543[0] >> 16) {
-                  var10000 = (var_51a[6 + var10] | 32) - 97;
+               if (4 + var10 < stringTable[0] >> 16) {
+                  var10000 = (fontChars[6 + var10] | 32) - 97;
                   break label86;
                }
             } else {
@@ -1278,15 +1278,15 @@ final class Class_17f {
          int var4 = sub_5f5(var_ab7, 2);
          var17 += var2 + var_a20 - var_a7e - 1 - var17 >> 1;
          if (var11 == 0) {
-            sub_645(var0, '±', var1 + 8 + (GameEngine.cos(var_3b7 * 32) * 3 >> 16), var17, var_ac9, -1);
+            sub_645(var0, '±', var1 + 8 + (GameEngine.cos(frameCounter * 32) * 3 >> 16), var17, var_ac9, -1);
          }
 
-         sub_6a9(var0, var_51a, var_543[1] & '\uffff', var_543[1] >> 16, var1 + 0 + 8 + var13, var17, var_ab7);
+         sub_6a9(var0, fontChars, stringTable[1] & '\uffff', stringTable[1] >> 16, var1 + 0 + 8 + var13, var17, var_ab7);
          if (var11 == 1) {
-            sub_645(var0, '±', var1 + var_9c5 - var4 - var13 - 8 + (GameEngine.cos(var_3b7 * 32) * 3 >> 16), var17, var_ac9, -1);
+            sub_645(var0, '±', var1 + var_9c5 - var4 - var13 - 8 + (GameEngine.cos(frameCounter * 32) * 3 >> 16), var17, var_ac9, -1);
          }
 
-         sub_6a9(var0, var_51a, var_543[2] & '\uffff', var_543[2] >> 16, var1 + 0 + var_9c5 - var4 - 8, var17, var_ab7);
+         sub_6a9(var0, fontChars, stringTable[2] & '\uffff', stringTable[2] >> 16, var1 + 0 + var_9c5 - var4 - 8, var17, var_ab7);
          var10000 = var_6e3 | 128;
       } else {
          var10000 = var_6e3 & -129;
@@ -1305,16 +1305,16 @@ final class Class_17f {
          var_8df = var_87e;
       }
 
-      byte[] var18 = (byte[])var_671[var_ab7];
-      var_563 = 0;
-      var_56e = var_ae8;
+      byte[] var18 = (byte[]) fontData[var_ab7];
+      charCounter = 0;
+      charLimit = var_ae8;
       int var16 = 0;
       boolean var12 = false;
       int var11 = 0;
 
       do {
-         int var8 = var_543[var20] >> 16;
-         int var9 = var_543[var20] & '\uffff';
+         int var8 = stringTable[var20] >> 16;
+         int var9 = stringTable[var20] & '\uffff';
          int var14 = 0;
          int var15 = 0;
          if (var_936 != 0 && (var_936 & 1 << var20) == 0) {
@@ -1334,7 +1334,7 @@ final class Class_17f {
                int var7;
                int var13;
                for(var7 = var14; var7 < var8; ++var7) {
-                  if (var_51a[var9 + var7] == '@') {
+                  if (fontChars[var9 + var7] == '@') {
                      ++var7;
                      if (var10 + 0 >= var4) {
                         break;
@@ -1347,14 +1347,14 @@ final class Class_17f {
                      }
 
                      if (var0 != null) {
-                        var_87e = (var_51a[var9 + var7] | 32) - 97;
+                        var_87e = (fontChars[var9 + var7] | 32) - 97;
                      }
                   } else {
-                     if (var_51a[var9 + var7] == ' ') {
+                     if (fontChars[var9 + var7] == ' ') {
                         var15 = var7 - 1;
                      }
 
-                     var13 = (var18[4 + ((var_51a[var9 + var7] & 255) << 1) + 1] & 255) + 0;
+                     var13 = (var18[4 + ((fontChars[var9 + var7] & 255) << 1) + 1] & 255) + 0;
                      if (var10 + var13 >= var4) {
                         break;
                      }
@@ -1370,8 +1370,8 @@ final class Class_17f {
                if (!var12) {
                   if (var0 != null && var16 == var3) {
                      var13 = var15 - var14 + 1;
-                     sub_6a9(var0, var_51a, var9 + var14, var13, var1, var2, var_ab7);
-                     if (var_5a1) {
+                     sub_6a9(var0, fontChars, var9 + var14, var13, var1, var2, var_ab7);
+                     if (textOverflow) {
                         var19 = true;
                      }
 
@@ -1395,7 +1395,7 @@ final class Class_17f {
          }
 
          ++var20;
-      } while(var21 == -1 && var20 < var_543.length || var21 != -1 && var20 <= var21);
+      } while(var21 == -1 && var20 < stringTable.length || var21 != -1 && var20 <= var21);
 
       if (var0 != null && !var19) {
          var_ae8 = 0;
@@ -1405,8 +1405,8 @@ final class Class_17f {
          ++var16;
       }
 
-      var_563 = 0;
-      var_56e = 0;
+      charCounter = 0;
+      charLimit = 0;
       if (var0 != null && var_8df != -1 && var_8df != var_87e) {
          var_6e3 |= 64;
       }
@@ -1415,32 +1415,32 @@ final class Class_17f {
    }
 
    public static void sub_901(int var0) {
-      var_c06 = new int[var0];
-      var_c27 = new Object[var0];
+      resourceIds = new int[var0];
+      resourceCache = new Object[var0];
 
       for(int var1 = 0; var1 < var0; ++var1) {
-         var_c06[var1] = -1;
-         var_c27[var1] = null;
+         resourceIds[var1] = -1;
+         resourceCache[var1] = null;
       }
 
    }
 
    public static void sub_90c() {
-      var_c06 = null;
-      if (var_c27 != null) {
-         for(int var0 = 0; var0 < var_c27.length; ++var0) {
-            var_c27[var0] = null;
+      resourceIds = null;
+      if (resourceCache != null) {
+         for(int var0 = 0; var0 < resourceCache.length; ++var0) {
+            resourceCache[var0] = null;
          }
       }
 
-      var_c27 = null;
+      resourceCache = null;
    }
 
    private static int sub_94a(int var0, int var1) {
       int var2 = var1 < 0 ? var0 & '\uffff' : (var1 << 16) + (var0 & '\uffff');
 
-      for(int var3 = 0; var3 < var_c06.length; ++var3) {
-         if (var_c06[var3] == var2 && var_c27[var3] != null) {
+      for(int var3 = 0; var3 < resourceIds.length; ++var3) {
+         if (resourceIds[var3] == var2 && resourceCache[var3] != null) {
             return var3;
          }
       }
@@ -1452,8 +1452,8 @@ final class Class_17f {
       int var3 = var1 < 0 ? var0 & '\uffff' : (var1 << 16) + (var0 & '\uffff');
 
       int var6;
-      for(var6 = 0; var6 < var_c06.length; ++var6) {
-         if (var_c06[var6] == var3 && var_c27[var6] != null) {
+      for(var6 = 0; var6 < resourceIds.length; ++var6) {
+         if (resourceIds[var6] == var3 && resourceCache[var6] != null) {
             return var6;
          }
       }
@@ -1462,11 +1462,11 @@ final class Class_17f {
       Sprite var10;
       switch(var2) {
       case 0:
-         var_c27[var6] = GameEngine.loadSpriteSet(var0);
+         resourceCache[var6] = GameEngine.loadSpriteSet(var0);
          break;
       case 1:
          var10 = GameEngine.loadSpriteSet(var0);
-         var_c27[var6] = GameEngine.recolorSprite(var10, sub_afd(var1), -1);
+         resourceCache[var6] = GameEngine.recolorSprite(var10, sub_afd(var1), -1);
          GameEngine.freeSprite(var10);
          break;
       case 2:
@@ -1476,8 +1476,8 @@ final class Class_17f {
          BinaryReader var11;
          byte[] var9 = GameEngine.readBytes(var11 = GameEngine.openDataStream(var0), GameEngine.getStreamSize(var11));
          var11.buffer = null;
-         var_c27[var6] = var9;
-         var_c06[var6] = var3;
+         resourceCache[var6] = var9;
+         resourceIds[var6] = var3;
          int var5 = var9[0] & 255;
 
          int var4;
@@ -1498,13 +1498,13 @@ final class Class_17f {
                var7 = sub_a31();
                var10 = GameEngine.loadSpriteSet(var0);
                if ((var9[var4] & 128) != 0 && var1 != -1) {
-                  var_c27[var7] = GameEngine.recolorSprite(var10, sub_afd(var1), -1);
+                  resourceCache[var7] = GameEngine.recolorSprite(var10, sub_afd(var1), -1);
                   GameEngine.freeSprite(var10);
                } else {
-                  var_c27[var7] = var10;
+                  resourceCache[var7] = var10;
                }
 
-               var_c06[var7] = var1 < 0 ? var0 & '\uffff' : (var1 << 16) + (var0 & '\uffff');
+               resourceIds[var7] = var1 < 0 ? var0 & '\uffff' : (var1 << 16) + (var0 & '\uffff');
             }
 
             var9[var4] = (byte)var7;
@@ -1514,8 +1514,8 @@ final class Class_17f {
             int var8;
             if ((var8 = sub_94a(var0 = 437 + (var9[var4 + 1] & 255), -1)) == -1) {
                var8 = sub_a31();
-               var_c27[var8] = sub_b55(var0);
-               var_c06[var8] = var0 & '\uffff';
+               resourceCache[var8] = sub_b55(var0);
+               resourceIds[var8] = var0 & '\uffff';
             }
 
             var9[var4 + 1] = (byte)var8;
@@ -1523,18 +1523,18 @@ final class Class_17f {
 
          return var6;
       case 4:
-         var_c27[var6] = GameEngine.openDataStream(var0);
+         resourceCache[var6] = GameEngine.openDataStream(var0);
          break;
       case 5:
-         var_c27[var6] = sub_afd(var0);
+         resourceCache[var6] = sub_afd(var0);
       }
 
-      var_c06[var6] = var3;
+      resourceIds[var6] = var3;
       return var6;
    }
 
    public static Object sub_9d4(int var0) {
-      return var_c27[var0];
+      return resourceCache[var0];
    }
 
    public static boolean sub_9fa(int var0, int var1) {
@@ -1543,39 +1543,39 @@ final class Class_17f {
       } else {
          if (var1 != 0 && var1 != 1) {
             if (var1 == 4) {
-               ((BinaryReader)var_c27[var0]).buffer = null;
+               ((BinaryReader) resourceCache[var0]).buffer = null;
             } else if (var1 == 3) {
-               byte[] var2 = (byte[])var_c27[var0];
+               byte[] var2 = (byte[]) resourceCache[var0];
                int var3 = 1 + (var2[0] & 255) * 2;
 
                for(int var4 = 1; var4 < var3; var4 += 2) {
                   byte var5 = var2[var4];
                   byte var6 = var2[var4 + 1];
                   if (var5 > var0) {
-                     GameEngine.freeSprite((Sprite)var_c27[var5]);
-                     var_c06[var5] = -1;
-                     var_c27[var5] = null;
+                     GameEngine.freeSprite((Sprite) resourceCache[var5]);
+                     resourceIds[var5] = -1;
+                     resourceCache[var5] = null;
                   }
 
                   if (var6 > var0) {
-                     var_c06[var6] = -1;
-                     var_c27[var6] = null;
+                     resourceIds[var6] = -1;
+                     resourceCache[var6] = null;
                   }
                }
             }
          } else {
-            GameEngine.freeSprite((Sprite)var_c27[var0]);
+            GameEngine.freeSprite((Sprite) resourceCache[var0]);
          }
 
-         var_c06[var0] = -1;
-         var_c27[var0] = null;
+         resourceIds[var0] = -1;
+         resourceCache[var0] = null;
          return true;
       }
    }
 
    private static int sub_a31() {
-      for(int var0 = 0; var0 < var_c06.length; ++var0) {
-         if (var_c06[var0] == -1 && var_c27[var0] == null) {
+      for(int var0 = 0; var0 < resourceIds.length; ++var0) {
+         if (resourceIds[var0] == -1 && resourceCache[var0] == null) {
             return var0;
          }
       }
@@ -1727,10 +1727,10 @@ final class Class_17f {
    }
 
    public static void sub_c18(int var0, int var1, int var2, int var3) {
-      var_e72 = var0;
-      var_eaa = var1;
-      var_ef4 = var2;
-      var_f32 = var3;
+      viewportLeft = var0;
+      viewportTop = var1;
+      viewportWidth = var2;
+      viewportHeight = var3;
       int var5 = 0;
 
       for(int var4 = 0; var4 < var_c77; var5 += 23) {
@@ -1745,20 +1745,20 @@ final class Class_17f {
             if ((var6 = var_cb6[var5 + 21]) == 5) {
                var10000 = var_cb6;
                var10001 = var5 + 20;
-               var10002 = var_f32 - var_cb6[var5 + 20];
+               var10002 = viewportHeight - var_cb6[var5 + 20];
                var10003 = var_cb6;
                var10004 = var5;
                var10005 = 5;
             } else {
                if (var6 == 7) {
-                  var_cb6[var5 + 20] = var_f32 - var_cb6[var5 + 20] - var_cb6[var5 + 5];
+                  var_cb6[var5 + 20] = viewportHeight - var_cb6[var5 + 20] - var_cb6[var5 + 5];
                } else if (var6 != 2) {
                   break label21;
                }
 
                var10000 = var_cb6;
                var10001 = var5 + 19;
-               var10002 = var_ef4 - var_cb6[var5 + 19];
+               var10002 = viewportWidth - var_cb6[var5 + 19];
                var10003 = var_cb6;
                var10004 = var5;
                var10005 = 4;
@@ -1854,25 +1854,25 @@ final class Class_17f {
          var3 = var3 - var_cb6[var5 + 13] >> 1;
       }
 
-      var2 += var_104 + var_e72 + var_cb6[var5 + 19];
-      var3 += var_13c + var_eaa + var_cb6[var5 + 20];
+      var2 += viewOffsetX + viewportLeft + var_cb6[var5 + 19];
+      var3 += viewOffsetY + viewportTop + var_cb6[var5 + 20];
       GameEngine.drawTileMap(var_cd8[var0 * 1], var1, var2, var3);
    }
 
    static int sub_d20(int var0, int var1) {
-      return var_e72 + var_cb6[23 * var0 + 19] + var1 - var_cb6[23 * var0 + 10];
+      return viewportLeft + var_cb6[23 * var0 + 19] + var1 - var_cb6[23 * var0 + 10];
    }
 
    static int sub_d31(int var0, int var1) {
-      return var_eaa + var_cb6[23 * var0 + 20] + var1 - var_cb6[23 * var0 + 11];
+      return viewportTop + var_cb6[23 * var0 + 20] + var1 - var_cb6[23 * var0 + 11];
    }
 
    static int sub_d60(int var0, int var1) {
-      return var_e72 + var_cb6[23 * var0 + 19] + (var1 >> 8) - var_cb6[23 * var0 + 10] << 8;
+      return viewportLeft + var_cb6[23 * var0 + 19] + (var1 >> 8) - var_cb6[23 * var0 + 10] << 8;
    }
 
    static int sub_db8(int var0, int var1) {
-      return var_eaa + var_cb6[23 * var0 + 20] + (var1 >> 8) - var_cb6[23 * var0 + 11] << 8;
+      return viewportTop + var_cb6[23 * var0 + 20] + (var1 >> 8) - var_cb6[23 * var0 + 11] << 8;
    }
 
    static int sub_dd0(int var0, int var1) {

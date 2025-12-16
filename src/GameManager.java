@@ -1,21 +1,21 @@
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.midlet.MIDlet;
 
-final class Class_201 {
-   static int var_1c = -1;
-   private static int var_3e = -1;
-   private static int var_4e = 0;
-   static Sprite var_9f;
-   static Sprite var_b7;
-   static Class_1ac var_111;
-   static int var_11d;
-   static Sprite var_15b;
-   static Sprite var_204;
-   static int[] var_228;
-   static short[] var_240;
-   static int var_26c;
-   static char[] var_2f1 = null;
-   static short[] var_307 = null;
+final class GameManager {
+   static int currentMusicId = -1;
+   private static int lastPlayedMusicId = -1;
+   private static int musicFlags = 0;
+   static Sprite uiSprite;
+   static Sprite backgroundSprite;
+   static Class_1ac logoAnimation;
+   static int logoAnimationId;
+   static Sprite checkmarkSprite;
+   static Sprite starSprite;
+   static int[] menuState;
+   static short[] menuItems;
+   static int selectedSaveSlot;
+   static char[] versionChars = null;
+   static short[] stateConfigs = null;
    static int[] var_343;
    static int[] var_39b;
    static short[] var_3c4;
@@ -99,17 +99,17 @@ final class Class_201 {
    static int var_11d4;
    static int var_11ff;
    static int var_1250;
-   static int var_129e;
+   static int vibrationEnabled;
    static String var_12dd = null;
    static int var_1311;
 
-   static boolean sub_2f(int var0, int var1) {
+   static boolean requestMusic(int var0, int var1) {
       if (var0 != -1) {
-         var_1c = var0;
-         var_4e |= 1;
+         currentMusicId = var0;
+         musicFlags |= 1;
          GameEngine.isLoopEnabled = (var1 & 2) != 0;
          if ((var1 & 4) != 0) {
-            var_3e = -1;
+            lastPlayedMusicId = -1;
          }
 
          return true;
@@ -118,12 +118,12 @@ final class Class_201 {
       }
    }
 
-   static boolean sub_50() {
-      if ((var_4e & 1) != 0 && var_1c != -1 && (!GameEngine.isLoopEnabled || var_1c != var_3e)) {
-         var_4e &= -2;
-         var_3e = var_1c;
+   static boolean playPendingMusic() {
+      if ((musicFlags & 1) != 0 && currentMusicId != -1 && (!GameEngine.isLoopEnabled || currentMusicId != lastPlayedMusicId)) {
+         musicFlags &= -2;
+         lastPlayedMusicId = currentMusicId;
          GameEngine.stopMusic();
-         StringBuffer var0 = (new StringBuffer(4)).append("/m").append(var_3e);
+         StringBuffer var0 = (new StringBuffer(4)).append("/m").append(lastPlayedMusicId);
          GameEngine.playMusic(GameCanvas.midlet, var0.toString());
          return true;
       } else {
@@ -134,37 +134,37 @@ final class Class_201 {
    static void sub_a7() {
       GameEngine.stopMusic();
       GameEngine.isLoopEnabled = false;
-      var_3e = -1;
-      var_1c = -1;
-      var_4e &= -2;
+      lastPlayedMusicId = -1;
+      currentMusicId = -1;
+      musicFlags &= -2;
    }
 
-   static void sub_c0() {
-      var_228 = new int[33];
+   static void stopAllMusic() {
+      menuState = new int[33];
       int var0 = GameCanvas.gameState * 9;
-      var_228[0] = var_307[var0 + 0];
-      var_228[1] = var_307[var0 + 1];
-      var_228[5] = var_307[var0 + 2];
-      var_228[6] = var_307[var0 + 3];
-      var_228[13] = var_307[var0 + 6];
-      var_228[14] = var_307[var0 + 7];
-      var_228[9] = var_307[var0 + 8];
-      var_228[25] = var_307[var0 + 4];
-      var_228[32] = 0;
-      sub_2f(var_228[25], 2);
+      menuState[0] = stateConfigs[var0 + 0];
+      menuState[1] = stateConfigs[var0 + 1];
+      menuState[5] = stateConfigs[var0 + 2];
+      menuState[6] = stateConfigs[var0 + 3];
+      menuState[13] = stateConfigs[var0 + 6];
+      menuState[14] = stateConfigs[var0 + 7];
+      menuState[9] = stateConfigs[var0 + 8];
+      menuState[25] = stateConfigs[var0 + 4];
+      menuState[32] = 0;
+      requestMusic(menuState[25], 2);
       int[] var10000;
       byte var10001;
       short var1;
       int var10002;
-      if ((var1 = var_307[var0 + 5]) == 1) {
-         var10000 = var_228;
+      if ((var1 = stateConfigs[var0 + 5]) == 1) {
+         var10000 = menuState;
          var10001 = 8;
          var10002 = 16777215;
       } else {
          if (var1 == 2) {
          }
 
-         var10000 = var_228;
+         var10000 = menuState;
          var10001 = 8;
          var10002 = 0;
       }
@@ -174,94 +174,94 @@ final class Class_201 {
          switch(GameCanvas.gameState) {
          case 0:
          case 1:
-            var_228[3] = 24;
-            var_228[7] = 64;
-            var10000 = var_228;
+            menuState[3] = 24;
+            menuState[7] = 64;
+            var10000 = menuState;
             var10001 = 4;
             var10002 = 5;
             break;
          case 2:
             var_eab = 8;
-            var_228[3] = 272631552;
-            var_228[4] = 3;
+            menuState[3] = 272631552;
+            menuState[4] = 3;
             String var3 = "02.00.00";
-            var_2f1 = new char["02.00.00".length() + 1];
+            versionChars = new char["02.00.00".length() + 1];
 
             int var2;
             for(var2 = 0; var2 < var3.length(); ++var2) {
-               var_2f1[var2] = var3.charAt(var2);
+               versionChars[var2] = var3.charAt(var2);
             }
 
-            var_2f1[var2] = 0;
+            versionChars[var2] = 0;
             break label52;
          case 3:
-            var_228[3] = 13312;
-            var10000 = var_228;
+            menuState[3] = 13312;
+            var10000 = menuState;
             var10001 = 4;
             var10002 = 2;
             break;
          case 4:
-            var_228[3] = 135168;
-            var10000 = var_228;
+            menuState[3] = 135168;
+            var10000 = menuState;
             var10001 = 4;
             var10002 = 3;
             break;
          case 5:
-            var_15b = GameEngine.loadSpriteSet(46);
-            var_204 = GameEngine.loadSpriteSet(49);
-            var_228[3] = 4265216;
-            var_228[18] = 0;
-            var_228[14] = 3;
-            var_228[11] = sub_170f() ? 1 : 0;
-            var_228[21] = 2;
-            var_228[22] = 3;
-            var_228[20] = GameCanvas.gameState == 5 ? 11 : 9;
+            checkmarkSprite = GameEngine.loadSpriteSet(46);
+            starSprite = GameEngine.loadSpriteSet(49);
+            menuState[3] = 4265216;
+            menuState[18] = 0;
+            menuState[14] = 3;
+            menuState[11] = sub_170f() ? 1 : 0;
+            menuState[21] = 2;
+            menuState[22] = 3;
+            menuState[20] = GameCanvas.gameState == 5 ? 11 : 9;
             break label52;
          case 6:
-            var10000 = var_228;
+            var10000 = menuState;
             var10001 = 3;
             var10002 = 20480;
             break;
          case 7:
-            var_228[3] = 12583936;
-            var_228[4] = 4;
-            var10000 = var_228;
+            menuState[3] = 12583936;
+            menuState[4] = 4;
+            var10000 = menuState;
             var10001 = 7;
             var10002 = 96;
             break;
          case 8:
-            var10000 = var_228;
+            var10000 = menuState;
             var10001 = 3;
             var10002 = 21504;
             break;
          case 9:
-            var10000 = var_228;
+            var10000 = menuState;
             var10001 = 3;
             var10002 = 2228224;
             break;
          case 10:
-            var10000 = var_228;
+            var10000 = menuState;
             var10001 = 3;
             var10002 = 536891392;
             break;
          case 11:
-            var_228[3] = 4265984;
-            var10000 = var_228;
+            menuState[3] = 4265984;
+            var10000 = menuState;
             var10001 = 4;
             var10002 = 1;
             break;
          case 12:
-            var_228[3] = 1077936392;
-            var_228[4] = 2;
-            var_228[22] = 3;
+            menuState[3] = 1077936392;
+            menuState[4] = 2;
+            menuState[22] = 3;
             if (var_1311 == 2) {
-               var_228[21] = 2;
-               var10000 = var_228;
+               menuState[21] = 2;
+               var10000 = menuState;
                var10001 = 20;
                var10002 = 10;
             } else {
-               var_228[21] = 1;
-               var10000 = var_228;
+               menuState[21] = 1;
+               var10000 = menuState;
                var10001 = 20;
                var10002 = 11;
             }
@@ -277,51 +277,51 @@ final class Class_201 {
    }
 
    static void sub_11c() {
-      var_2f1 = null;
-      GameEngine.freeSprite(var_9f);
-      GameEngine.freeSprite(var_15b);
-      GameEngine.freeSprite(var_204);
-      var_9f = null;
-      var_15b = null;
-      var_204 = null;
-      GameEngine.freeSprite(var_b7);
-      var_b7 = null;
-      if (var_111 != null) {
-         var_111.sub_6f();
-         var_111 = null;
-         Class_17f.sub_9fa(var_11d, 3);
+      versionChars = null;
+      GameEngine.freeSprite(uiSprite);
+      GameEngine.freeSprite(checkmarkSprite);
+      GameEngine.freeSprite(starSprite);
+      uiSprite = null;
+      checkmarkSprite = null;
+      starSprite = null;
+      GameEngine.freeSprite(backgroundSprite);
+      backgroundSprite = null;
+      if (logoAnimation != null) {
+         logoAnimation.sub_6f();
+         logoAnimation = null;
+         Class_17f.sub_9fa(logoAnimationId, 3);
       }
 
       Class_17f.sub_c0e();
-      var_228 = null;
-      var_240 = null;
+      menuState = null;
+      menuItems = null;
       Class_17f.sub_4d7();
    }
 
    private static void sub_143() {
-      int var2 = Class_17f.sub_5a0(var_228[32]);
-      int var3 = (Class_17f.var_dd - 108) / var2 - 1;
-      if (var_228 != null) {
-         if ((var_228[3] & 4096) != 0) {
-            var_9f = GameEngine.loadSpriteSet(52);
+      int var2 = Class_17f.sub_5a0(menuState[32]);
+      int var3 = (Class_17f.viewHeight - 108) / var2 - 1;
+      if (menuState != null) {
+         if ((menuState[3] & 4096) != 0) {
+            uiSprite = GameEngine.loadSpriteSet(52);
          }
 
-         if ((var_228[3] & 8) != 0) {
-            var_b7 = (var_228[3] & 1073741824) != 0 ? (Sprite) GameEngine.loadExternalFile(GameCanvas.midlet, var_1311 == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : GameEngine.loadSpriteSet(var_228[6]);
-            if ((var_228[3] & 128) != 0) {
-               var_228[10] = -var_b7.var_8a[0].getHeight();
+         if ((menuState[3] & 8) != 0) {
+            backgroundSprite = (menuState[3] & 1073741824) != 0 ? (Sprite) GameEngine.loadExternalFile(GameCanvas.midlet, var_1311 == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : GameEngine.loadSpriteSet(menuState[6]);
+            if ((menuState[3] & 128) != 0) {
+               menuState[10] = -backgroundSprite.var_8a[0].getHeight();
             }
 
-            if (var_228[19] == -1) {
-               var_228[19] = Class_17f.var_dd - var_b7.var_8a[0].getHeight() >> 1;
+            if (menuState[19] == -1) {
+               menuState[19] = Class_17f.viewHeight - backgroundSprite.var_8a[0].getHeight() >> 1;
             }
          }
 
-         if (var_228[9] != 0) {
-            Class_17f.sub_52a(var_228[9]);
+         if (menuState[9] != 0) {
+            Class_17f.sub_52a(menuState[9]);
          }
 
-         if ((var_228[3] & 3072) != 0) {
+         if ((menuState[3] & 3072) != 0) {
             sub_2f5();
          }
 
@@ -329,75 +329,75 @@ final class Class_201 {
          label76: {
             byte var10001;
             int var10002;
-            if ((var_228[3] & 8192) != 0) {
-               var10000 = var_228;
+            if ((menuState[3] & 8192) != 0) {
+               var10000 = menuState;
                var10000[3] |= 65536;
-               var_228[18] = 0;
+               menuState[18] = 0;
                sub_26f();
-               var_228[14] = var_240.length;
-               if (var_228[14] > var3) {
-                  var10000 = var_228;
+               menuState[14] = menuItems.length;
+               if (menuState[14] > var3) {
+                  var10000 = menuState;
                   var10001 = 17;
                   var10002 = 0;
                } else {
-                  var10000 = var_228;
+                  var10000 = menuState;
                   var10001 = 17;
-                  var10002 = Class_17f.var_dd - var_228[14] * var2 >> 1;
+                  var10002 = Class_17f.viewHeight - menuState[14] * var2 >> 1;
                }
 
                var10000[var10001] = var10002;
-               var_228[16] = 0;
+               menuState[16] = 0;
                int var1 = 0;
 
-               for(boolean var0 = false; var1 < var_240.length; ++var1) {
+               for(boolean var0 = false; var1 < menuItems.length; ++var1) {
                   int var4;
-                  if ((var4 = Class_17f.sub_5f5(var_228[32], var_240[var1] & 255)) > var_228[16]) {
-                     var_228[16] = var4;
+                  if ((var4 = Class_17f.sub_5f5(menuState[32], menuItems[var1] & 255)) > menuState[16]) {
+                     menuState[16] = var4;
                   }
                }
 
-               var10000 = var_228;
+               var10000 = menuState;
                var10001 = 16;
-               var10002 = Class_17f.var_89 - var_228[16] >> 1;
-            } else if ((var_228[3] & 16384) != 0) {
-               var10000 = var_228;
+               var10002 = Class_17f.viewWidth - menuState[16] >> 1;
+            } else if ((menuState[3] & 16384) != 0) {
+               var10000 = menuState;
                var10000[4] &= -2;
-               var10000 = var_228;
+               var10000 = menuState;
                var10000[4] |= 2;
-               var_228[14] = 1 + Class_17f.sub_657((Graphics)null, var_228[13], 0, 0, 11, Class_17f.var_89, 0, var_228[32]);
-               if (var_228[14] > var3) {
-                  var10000 = var_228;
+               menuState[14] = 1 + Class_17f.sub_657((Graphics)null, menuState[13], 0, 0, 11, Class_17f.viewWidth, 0, menuState[32]);
+               if (menuState[14] > var3) {
+                  var10000 = menuState;
                   var10001 = 17;
                   var10002 = 54;
                } else {
-                  var10000 = var_228;
+                  var10000 = menuState;
                   var10001 = 17;
-                  var10002 = Class_17f.var_dd - (1 + var_228[14]) * var2 >> 1;
+                  var10002 = Class_17f.viewHeight - (1 + menuState[14]) * var2 >> 1;
                }
 
                var10000[var10001] = var10002;
-               var_228[18] = 0;
-               var10000 = var_228;
+               menuState[18] = 0;
+               var10000 = menuState;
                var10001 = 14;
                var10002 = 2;
             } else {
-               if ((var_228[3] & 131072) == 0) {
+               if ((menuState[3] & 131072) == 0) {
                   break label76;
                }
 
-               var_228[11] = (var_228[14] & 255) << 24 | (var3 & 255) << 16 | Class_17f.var_89;
-               var_228[15] = 0;
-               var_228[14] = Class_17f.sub_657((Graphics)null, var_228[13], 0, 0, 11, var_228[11], 0, var_228[32]);
-               if (var_228[14] >= var3) {
-                  var_228[17] = 54 + var2;
-                  var10000 = var_228;
+               menuState[11] = (menuState[14] & 255) << 24 | (var3 & 255) << 16 | Class_17f.viewWidth;
+               menuState[15] = 0;
+               menuState[14] = Class_17f.sub_657((Graphics)null, menuState[13], 0, 0, 11, menuState[11], 0, menuState[32]);
+               if (menuState[14] >= var3) {
+                  menuState[17] = 54 + var2;
+                  var10000 = menuState;
                   var10000[14] -= var3;
-                  var10000 = var_228;
+                  var10000 = menuState;
                   var10001 = 3;
                   var10002 = var10000[3] | 262144;
                } else {
-                  var_228[17] = Class_17f.var_dd - (var_228[19] + var_228[14] * var2) >> 1;
-                  var10000 = var_228;
+                  menuState[17] = Class_17f.viewHeight - (menuState[19] + menuState[14] * var2) >> 1;
+                  var10000 = menuState;
                   var10001 = 14;
                   var10002 = 0;
                }
@@ -406,26 +406,26 @@ final class Class_201 {
             var10000[var10001] = var10002;
          }
 
-         if (var_228[22] > 0) {
-            sub_3f8(var_228[20], var_228[21]);
+         if (menuState[22] > 0) {
+            sub_3f8(menuState[20], menuState[21]);
          }
 
-         var10000 = var_228;
+         var10000 = menuState;
          var10000[3] |= 97;
-         Class_17f.var_30f = 0;
+         Class_17f.inputState = 0;
          GameCanvas.stateFlags &= -65;
       }
    }
 
    public static boolean sub_18b() {
-      if (var_228 == null) {
+      if (menuState == null) {
          return false;
       } else {
-         if ((GameCanvas.stateFlags & 65536) != 0 && sub_2f(var_228[25], 6)) {
+         if ((GameCanvas.stateFlags & 65536) != 0 && requestMusic(menuState[25], 6)) {
             GameCanvas.stateFlags &= -65537;
          }
 
-         if ((var_228[3] & 1) == 0) {
+         if ((menuState[3] & 1) == 0) {
             return false;
          } else {
             sub_21b();
@@ -434,41 +434,41 @@ final class Class_201 {
                GameCanvas.stateFlags |= 266;
                return true;
             } else {
-               int var10002 = var_228[24]++;
-               if ((var_228[3] & 134217728) != 0) {
+               int var10002 = menuState[24]++;
+               if ((menuState[3] & 134217728) != 0) {
                   sub_2f5();
                   return false;
                } else {
-                  if ((var_228[3] & 268435456) != 0) {
+                  if ((menuState[3] & 268435456) != 0) {
                      sub_311();
                   }
 
                   int[] var10000;
-                  if (var_228[7] > 0) {
-                     var10002 = var_228[7]--;
-                     if (var_228[7] <= 0) {
-                        var_228[7] = 0;
-                        if ((var_228[3] & 8388608) != 0) {
+                  if (menuState[7] > 0) {
+                     var10002 = menuState[7]--;
+                     if (menuState[7] <= 0) {
+                        menuState[7] = 0;
+                        if ((menuState[3] & 8388608) != 0) {
                            sub_302();
                         }
 
-                        if ((var_228[3] & 16) != 0) {
-                           var10000 = var_228;
+                        if ((menuState[3] & 16) != 0) {
+                           var10000 = menuState;
                            var10000[3] |= 2;
                         }
                      }
                   }
 
-                  if ((GameCanvas.stateFlags & 64) != 0 && (var_228[3] & 6) != 0) {
+                  if ((GameCanvas.stateFlags & 64) != 0 && (menuState[3] & 6) != 0) {
                      GameCanvas.stateFlags |= 10;
-                     var10000 = var_228;
+                     var10000 = menuState;
                      var10000[3] &= -2;
                      byte var10001;
-                     if ((var_228[3] & 2) == 0 && var_228[1] != -1) {
-                        var10000 = var_228;
+                     if ((menuState[3] & 2) == 0 && menuState[1] != -1) {
+                        var10000 = menuState;
                         var10001 = 1;
                      } else {
-                        var10000 = var_228;
+                        var10000 = menuState;
                         var10001 = 0;
                      }
 
@@ -489,66 +489,66 @@ final class Class_201 {
    }
 
    public static void sub_1ba(Graphics var0) {
-      if (var_228 != null && (var_228[3] & 1) != 0) {
-         int var5 = Class_17f.sub_5a0(var_228[32]);
+      if (menuState != null && (menuState[3] & 1) != 0) {
+         int var5 = Class_17f.sub_5a0(menuState[32]);
          GameCanvas.stateFlags |= 64;
          int[] var10000;
-         if ((var_228[3] & 64) != 0 && (var_228[3] & 32) != 0) {
-            var0.setColor(var_228[8]);
-            var0.fillRect(Class_17f.var_104, Class_17f.var_13c, Class_17f.var_89, Class_17f.var_dd);
-            if ((var_228[3] & 512) == 0) {
-               var10000 = var_228;
+         if ((menuState[3] & 64) != 0 && (menuState[3] & 32) != 0) {
+            var0.setColor(menuState[8]);
+            var0.fillRect(Class_17f.viewOffsetX, Class_17f.viewOffsetY, Class_17f.viewWidth, Class_17f.viewHeight);
+            if ((menuState[3] & 512) == 0) {
+               var10000 = menuState;
                var10000[3] &= -33;
             }
          }
 
-         if ((var_228[3] & 262144) != 0) {
-            if (var_228[15] > 0) {
-               Class_17f.sub_645(var0, '²', Class_17f.var_89 - Class_17f.sub_645((Graphics)null, '²', 0, 0, var_228[32], -1), 54, var_228[32], -1);
+         if ((menuState[3] & 262144) != 0) {
+            if (menuState[15] > 0) {
+               Class_17f.sub_645(var0, '²', Class_17f.viewWidth - Class_17f.sub_645((Graphics)null, '²', 0, 0, menuState[32], -1), 54, menuState[32], -1);
             }
 
-            if (var_228[15] < var_228[14]) {
-               Class_17f.sub_645(var0, '°', Class_17f.var_89 - Class_17f.sub_645((Graphics)null, '°', 0, 0, var_228[32], -1), Class_17f.var_dd - Class_17f.sub_5a0(var_228[32]), var_228[32], -1);
+            if (menuState[15] < menuState[14]) {
+               Class_17f.sub_645(var0, '°', Class_17f.viewWidth - Class_17f.sub_645((Graphics)null, '°', 0, 0, menuState[32], -1), Class_17f.viewHeight - Class_17f.sub_5a0(menuState[32]), menuState[32], -1);
             }
          }
 
-         if ((var_228[3] & 4096) != 0) {
-            if ((var_228[3] & 64) != 0) {
-               if ((var_228[3] & 536870912) == 0) {
-                  sub_3a2(var0, Class_17f.var_89, Class_17f.var_dd, false);
+         if ((menuState[3] & 4096) != 0) {
+            if ((menuState[3] & 64) != 0) {
+               if ((menuState[3] & 536870912) == 0) {
+                  sub_3a2(var0, Class_17f.viewWidth, Class_17f.viewHeight, false);
                }
 
-               if (var_228[5] != -1) {
-                  Class_17f.sub_657(var0, var_228[5], Class_17f.var_89 - Class_17f.sub_5f5(var_228[32], var_228[5]) + 10, (54 - var5 >> 1) + 1, 11, 0, 0, var_228[32]);
+               if (menuState[5] != -1) {
+                  Class_17f.sub_657(var0, menuState[5], Class_17f.viewWidth - Class_17f.sub_5f5(menuState[32], menuState[5]) + 10, (54 - var5 >> 1) + 1, 11, 0, 0, menuState[32]);
                }
             }
 
-            if (var_228[22] > 0 && GameCanvas.gameState != 12 && (var_228[22] - 1 & 2) != 0) {
+            if (menuState[22] > 0 && GameCanvas.gameState != 12 && (menuState[22] - 1 & 2) != 0) {
                sub_439(var0);
             }
          }
 
-         if ((var_228[3] & 64) != 0) {
-            if ((var_228[3] & 1024) != 0) {
+         if ((menuState[3] & 64) != 0) {
+            if ((menuState[3] & 1024) != 0) {
                sub_370(var0);
             }
 
-            if ((var_228[3] & 8) != 0) {
-               if ((var_228[3] & 128) != 0) {
-                  if (var_228[10] < var_228[19]) {
-                     var10000 = var_228;
+            if ((menuState[3] & 8) != 0) {
+               if ((menuState[3] & 128) != 0) {
+                  if (menuState[10] < menuState[19]) {
+                     var10000 = menuState;
                      var10000[10] += 4;
                   }
 
-                  int var4 = var_b7.var_8a[0].getWidth();
-                  var0.drawImage(var_b7.var_8a[0], Class_17f.var_104 + (Class_17f.var_89 - var4 >> 1), Class_17f.var_13c + var_228[10], 20);
+                  int var4 = backgroundSprite.var_8a[0].getWidth();
+                  var0.drawImage(backgroundSprite.var_8a[0], Class_17f.viewOffsetX + (Class_17f.viewWidth - var4 >> 1), Class_17f.viewOffsetY + menuState[10], 20);
                } else {
-                  Class_17f.sub_3b(var0, var_b7, (byte)15);
+                  Class_17f.sub_3b(var0, backgroundSprite, (byte)15);
                }
 
-               if (var_228[22] > 0 && GameCanvas.gameState == 12 && (var_228[22] - 1 & 2) != 0) {
-                  if ((var_228[3] & 536870912) == 0) {
-                     sub_3a2(var0, Class_17f.var_89, Class_17f.var_dd, true);
+               if (menuState[22] > 0 && GameCanvas.gameState == 12 && (menuState[22] - 1 & 2) != 0) {
+                  if ((menuState[3] & 536870912) == 0) {
+                     sub_3a2(var0, Class_17f.viewWidth, Class_17f.viewHeight, true);
                   }
 
                   sub_439(var0);
@@ -556,44 +556,44 @@ final class Class_201 {
             }
 
             int var3;
-            if ((var_228[3] & 8192) != 0) {
+            if ((menuState[3] & 8192) != 0) {
                boolean var2 = false;
-               var3 = var_228[17] + -58;
+               var3 = menuState[17] + -58;
 
-               for(int var1 = 0; var1 < var_240.length; ++var1) {
-                  if (var1 == var_228[18]) {
-                     GameEngine.drawRegion(var0, var_9f, Class_17f.var_104 - 92 + var_228[16], Class_17f.var_13c + var3 - -13 + (var5 >> 1), 20, 0, 54, 108, 18, 0);
+               for(int var1 = 0; var1 < menuItems.length; ++var1) {
+                  if (var1 == menuState[18]) {
+                     GameEngine.drawRegion(var0, uiSprite, Class_17f.viewOffsetX - 92 + menuState[16], Class_17f.viewOffsetY + var3 - -13 + (var5 >> 1), 20, 0, 54, 108, 18, 0);
                   }
 
-                  Class_17f.sub_657(var0, var_240[var1] & 255, var_228[16] + 0, var3 + 22, 0, 0, 0, var_228[32]);
+                  Class_17f.sub_657(var0, menuItems[var1] & 255, menuState[16] + 0, var3 + 22, 0, 0, 0, menuState[32]);
                   var3 += var5 + 18;
                }
-            } else if ((var_228[3] & 16384) != 0) {
+            } else if ((menuState[3] & 16384) != 0) {
                boolean var6 = false;
-               var3 = var_228[17];
-               var3 = Class_17f.sub_657(var0, var_228[13], Class_17f.var_89 >> 1, var3 - 28, 11, Class_17f.var_89, 0, var_228[32]);
+               var3 = menuState[17];
+               var3 = Class_17f.sub_657(var0, menuState[13], Class_17f.viewWidth >> 1, var3 - 28, 11, Class_17f.viewWidth, 0, menuState[32]);
                var3 += 18;
-               int var7 = (Class_17f.var_89 - Class_17f.sub_5f5(var_228[32], 2)) / 2 - 23;
-               GameEngine.drawRegion(var0, var_9f, Class_17f.var_104 + var7 - 0, Class_17f.var_13c + var3 + 0 + (var_228[18] == 0 ? 0 : 1) * (var5 + 18), 20, 108, 54, 18, 18, 0);
+               int var7 = (Class_17f.viewWidth - Class_17f.sub_5f5(menuState[32], 2)) / 2 - 23;
+               GameEngine.drawRegion(var0, uiSprite, Class_17f.viewOffsetX + var7 - 0, Class_17f.viewOffsetY + var3 + 0 + (menuState[18] == 0 ? 0 : 1) * (var5 + 18), 20, 108, 54, 18, 18, 0);
                var7 += 23;
-               Class_17f.sub_657(var0, 1, var7, var3, 0, 0, 0, var_228[32]);
+               Class_17f.sub_657(var0, 1, var7, var3, 0, 0, 0, menuState[32]);
                var3 += var5 + 18;
-               Class_17f.sub_657(var0, 2, var7, var3, 0, 0, 0, var_228[32]);
-            } else if ((var_228[3] & 131072) != 0) {
-               var_228[23] = Class_17f.sub_657(var0, var_228[13], Class_17f.var_89 >> 1, var_228[17], 11, var_228[11], var_228[15], var_228[32]);
+               Class_17f.sub_657(var0, 2, var7, var3, 0, 0, 0, menuState[32]);
+            } else if ((menuState[3] & 131072) != 0) {
+               menuState[23] = Class_17f.sub_657(var0, menuState[13], Class_17f.viewWidth >> 1, menuState[17], 11, menuState[11], menuState[15], menuState[32]);
             }
 
-            if ((var_228[3] & 2048) != 0) {
+            if ((menuState[3] & 2048) != 0) {
                sub_370(var0);
             }
 
-            if ((var_228[3] & 256) == 0) {
-               var10000 = var_228;
+            if ((menuState[3] & 256) == 0) {
+               var10000 = menuState;
                var10000[3] &= -65;
             }
 
-            if ((var_228[3] & 2097152) != 0) {
-               var10000 = var_228;
+            if ((menuState[3] & 2097152) != 0) {
+               var10000 = menuState;
                var10000[3] |= 2;
             }
 
@@ -602,64 +602,64 @@ final class Class_201 {
    }
 
    private static void sub_21b() {
-      if (Class_17f.var_33f) {
-         Class_17f.var_33f = false;
-         if (var_228 != null && (var_228[3] & 1) != 0) {
-            if ((var_228[3] & 4194304) == 0 || !sub_32f(Class_17f.var_363)) {
+      if (Class_17f.inputChanged) {
+         Class_17f.inputChanged = false;
+         if (menuState != null && (menuState[3] & 1) != 0) {
+            if ((menuState[3] & 4194304) == 0 || !sub_32f(Class_17f.lastKeyCode)) {
                int[] var10000;
-               if (Class_17f.var_363 == 42) {
-                  if ((var_228[3] & 1572864) == 0 && (var_228[4] & 2) == 0) {
-                     if ((var_228[4] & 4) != 0) {
-                        var10000 = var_228;
+               if (Class_17f.lastKeyCode == 42) {
+                  if ((menuState[3] & 1572864) == 0 && (menuState[4] & 2) == 0) {
+                     if ((menuState[4] & 4) != 0) {
+                        var10000 = menuState;
                         var10000[3] |= 2;
                      }
                   } else {
-                     var10000 = var_228;
+                     var10000 = menuState;
                      var10000[3] |= 4;
                   }
                } else {
                   int var10002;
-                  if (Class_17f.var_30f == 2) {
-                     if ((var_228[3] & 65536) != 0) {
-                        var10002 = var_228[18]--;
-                        if (var_228[18] < 0) {
-                           var_228[18] = var_228[14] - 1;
+                  if (Class_17f.inputState == 2) {
+                     if ((menuState[3] & 65536) != 0) {
+                        var10002 = menuState[18]--;
+                        if (menuState[18] < 0) {
+                           menuState[18] = menuState[14] - 1;
                         }
-                     } else if ((var_228[3] & 262144) != 0) {
-                        if (var_228[15] > 0) {
-                           var10002 = var_228[15]--;
+                     } else if ((menuState[3] & 262144) != 0) {
+                        if (menuState[15] > 0) {
+                           var10002 = menuState[15]--;
                         }
-                     } else if ((var_228[3] & 16384) != 0) {
-                        var_228[18] = 0;
+                     } else if ((menuState[3] & 16384) != 0) {
+                        menuState[18] = 0;
                      }
-                  } else if (Class_17f.var_30f == 4) {
-                     if ((var_228[3] & 65536) != 0) {
-                        var10002 = var_228[18]++;
-                        if (var_228[18] >= var_228[14]) {
-                           var_228[18] = 0;
+                  } else if (Class_17f.inputState == 4) {
+                     if ((menuState[3] & 65536) != 0) {
+                        var10002 = menuState[18]++;
+                        if (menuState[18] >= menuState[14]) {
+                           menuState[18] = 0;
                         }
-                     } else if ((var_228[3] & 262144) != 0) {
-                        if (var_228[15] < var_228[14]) {
-                           var10002 = var_228[15]++;
+                     } else if ((menuState[3] & 262144) != 0) {
+                        if (menuState[15] < menuState[14]) {
+                           var10002 = menuState[15]++;
                         }
-                     } else if ((var_228[3] & 16384) != 0) {
-                        var_228[18] = 1;
+                     } else if ((menuState[3] & 16384) != 0) {
+                        menuState[18] = 1;
                      }
-                  } else if (Class_17f.var_30f == 1 && (var_228[3] & 524288) == 0) {
-                     if ((var_228[4] & 1) != 0) {
-                        var10000 = var_228;
+                  } else if (Class_17f.inputState == 1 && (menuState[3] & 524288) == 0) {
+                     if ((menuState[4] & 1) != 0) {
+                        var10000 = menuState;
                         var10000[3] |= 2;
-                     } else if ((var_228[3] & 8192) != 0) {
-                        var_228[0] = var_240[var_228[18]] >> 8;
-                        var10000 = var_228;
+                     } else if ((menuState[3] & 8192) != 0) {
+                        menuState[0] = menuItems[menuState[18]] >> 8;
+                        var10000 = menuState;
                         var10000[3] |= 2;
-                     } else if ((var_228[3] & 81920) != 0) {
+                     } else if ((menuState[3] & 81920) != 0) {
                         sub_2c2();
                      }
                   }
                }
 
-               var10000 = var_228;
+               var10000 = menuState;
                var10000[3] |= 96;
             }
          }
@@ -670,21 +670,21 @@ final class Class_201 {
       byte var0 = 0;
       boolean var1 = var_1311 != 0;
       if (GameCanvas.gameState == 3) {
-         var_240 = new short[5];
+         menuItems = new short[5];
          int var2 = var0 + 1;
-         var_240[0] = 1284;
+         menuItems[0] = 1284;
          if (var1) {
             ++var2;
-            var_240[1] = 3081;
+            menuItems[1] = 3081;
          }
 
-         var_240[var2++] = 1029;
-         var_240[var2] = 2822;
+         menuItems[var2++] = 1029;
+         menuItems[var2] = 2822;
          if (!var1) {
-            var_240[3] = 1799;
+            menuItems[3] = 1799;
          }
 
-         var_240[4] = 2056;
+         menuItems[4] = 2056;
       }
 
    }
@@ -699,7 +699,7 @@ final class Class_201 {
             switch(GameCanvas.gameState) {
             case 5:
                label46: {
-                  var_10ca = var_228[18];
+                  var_10ca = menuState[18];
                   byte var0;
                   int var1;
                   if ((sub_179c(var_10ca, 0, 8) & 1) == 0) {
@@ -721,32 +721,32 @@ final class Class_201 {
                }
 
                sub_ea2();
-               var_228[11] = sub_170f() ? 1 : 0;
-               var_228[0] = 9;
+               menuState[11] = sub_170f() ? 1 : 0;
+               menuState[0] = 9;
                break;
             case 6:
             case 8:
             case 10:
-               if (var_228[18] == 0) {
+               if (menuState[18] == 0) {
                   if (GameCanvas.gameState == 6) {
-                     sub_17a9(var_26c, 0, 0, 8);
+                     sub_17a9(selectedSaveSlot, 0, 0, 8);
                      sub_17b7();
-                     var_228[0] = 5;
+                     menuState[0] = 5;
                   } else if (GameCanvas.gameState == 10) {
                      GameEngine.setMuted(false);
                      GameCanvas.handleMusicLoop(true);
                   }
 
-                  var10000 = var_228;
+                  var10000 = menuState;
                   break label51;
                }
 
                if (GameCanvas.gameState != 10) {
-                  if (var_228[1] == -1) {
+                  if (menuState[1] == -1) {
                      return;
                   }
 
-                  var10000 = var_228;
+                  var10000 = menuState;
                   var10001 = 3;
                   var10002 = var10000[3];
                   var10003 = 4;
@@ -761,7 +761,7 @@ final class Class_201 {
                return;
             }
 
-            var10000 = var_228;
+            var10000 = menuState;
          }
 
          var10001 = 3;
@@ -775,52 +775,52 @@ final class Class_201 {
    private static void sub_2f5() {
       switch(GameCanvas.gameState) {
       case 2:
-         var_9f = GameEngine.loadSpriteSet(48);
-         var_228[19] = Class_17f.var_dd * 24 / 320;
-         var_111 = new Class_1ac();
-         var_11d = Class_17f.sub_97a(24, -1, 3);
-         var_111.var_11 = (byte[])Class_17f.sub_9d4(var_11d);
-         var_111.sub_292(0);
+         uiSprite = GameEngine.loadSpriteSet(48);
+         menuState[19] = Class_17f.viewHeight * 24 / 320;
+         logoAnimation = new Class_1ac();
+         logoAnimationId = Class_17f.sub_97a(24, -1, 3);
+         logoAnimation.var_11 = (byte[])Class_17f.sub_9d4(logoAnimationId);
+         logoAnimation.sub_292(0);
          Class_17f.sub_e12(160, -1, -1, -1);
-         Class_17f.sub_c18(0, 0, Class_17f.var_89, Class_17f.var_dd);
-         Class_17f.sub_c7b(0, Class_17f.var_89, Class_17f.var_dd, false);
-         GameEngine.setMapOffset(Class_17f.var_cd8[0], Class_17f.var_104, Class_17f.var_13c);
-         var_228[11] = Class_17f.var_cb6[4] - Class_17f.var_89 >> 1;
-         var_228[12] = Class_17f.var_cb6[5] - Class_17f.var_dd;
-         if (var_228[12] < 0) {
-            var_228[12] = 0;
+         Class_17f.sub_c18(0, 0, Class_17f.viewWidth, Class_17f.viewHeight);
+         Class_17f.sub_c7b(0, Class_17f.viewWidth, Class_17f.viewHeight, false);
+         GameEngine.setMapOffset(Class_17f.var_cd8[0], Class_17f.viewOffsetX, Class_17f.viewOffsetY);
+         menuState[11] = Class_17f.var_cb6[4] - Class_17f.viewWidth >> 1;
+         menuState[12] = Class_17f.var_cb6[5] - Class_17f.viewHeight;
+         if (menuState[12] < 0) {
+            menuState[12] = 0;
          }
 
-         Class_17f.sub_ccb(0, var_228[11], var_228[12], true, false);
+         Class_17f.sub_ccb(0, menuState[11], menuState[12], true, false);
          return;
       case 3:
          Class_17f.sub_e12(157, -1, -1, -1);
-         Class_17f.sub_c18(0, 0, Class_17f.var_89, Class_17f.var_dd);
+         Class_17f.sub_c18(0, 0, Class_17f.viewWidth, Class_17f.viewHeight);
          Class_17f.sub_c7b(0, Class_17f.var_cb6[4], Class_17f.var_cb6[5], true);
          Class_17f.sub_ccb(0, 0, 0, true, false);
          return;
       case 5:
          Class_17f.sub_e12(159, -1, -1, -1);
-         Class_17f.sub_c18(0, 0, Class_17f.var_89, Class_17f.var_dd);
+         Class_17f.sub_c18(0, 0, Class_17f.viewWidth, Class_17f.viewHeight);
          Class_17f.sub_c7b(0, Class_17f.var_cb6[4], Class_17f.var_cb6[5], true);
          Class_17f.sub_ccb(0, 0, 0, true, false);
          return;
       case 7:
-         var_228[14] = Class_17f.var_543.length;
-         var_228[15] = 0;
+         menuState[14] = Class_17f.stringTable.length;
+         menuState[15] = 0;
          Class_17f.sub_738(0, 0, 0, GameCanvas.midlet.getAppProperty("MIDlet-Version").toCharArray(), 0, GameCanvas.midlet.getAppProperty("MIDlet-Version").toCharArray().length);
          return;
       case 8:
          Class_17f.sub_e12(158, -1, -1, -1);
-         Class_17f.sub_c18(0, 0, Class_17f.var_89, Class_17f.var_dd);
+         Class_17f.sub_c18(0, 0, Class_17f.viewWidth, Class_17f.viewHeight);
          Class_17f.sub_c7b(0, Class_17f.var_cb6[4], Class_17f.var_cb6[5], true);
          Class_17f.sub_ccb(0, 0, 0, true, false);
          return;
       case 11:
-         var_240 = new short[2];
-         var_240[0] = 3;
-         var_240[1] = 4;
-         var_228[14] = var_240.length;
+         menuItems = new short[2];
+         menuItems[0] = 3;
+         menuItems[1] = 4;
+         menuState[14] = menuItems.length;
       case 4:
       case 6:
       case 9:
@@ -834,16 +834,16 @@ final class Class_201 {
       byte var10001;
       int var10002;
       if (GameCanvas.gameState == 7) {
-         var10000 = var_228;
+         var10000 = menuState;
          var10000[3] |= 96;
-         var_228[7] = 96;
-         var10000 = var_228;
+         menuState[7] = 96;
+         var10000 = menuState;
          var10000[15] += 4;
-         if (var_228[15] < var_228[14]) {
+         if (menuState[15] < menuState[14]) {
             return;
          }
 
-         var10000 = var_228;
+         var10000 = menuState;
          var10001 = 3;
          var10002 = var10000[3] | 2;
       } else {
@@ -851,7 +851,7 @@ final class Class_201 {
             return;
          }
 
-         var10000 = var_228;
+         var10000 = menuState;
          var10001 = 3;
          var10002 = var10000[3] & -16777217;
       }
@@ -861,7 +861,7 @@ final class Class_201 {
 
    private static void sub_311() {
       if (GameCanvas.gameState == 2) {
-         Class_17f.sub_ccb(0, var_228[11], var_228[12], true, false);
+         Class_17f.sub_ccb(0, menuState[11], menuState[12], true, false);
       }
 
    }
@@ -870,26 +870,26 @@ final class Class_201 {
       int[] var10000;
       if (GameCanvas.gameState == 5) {
          if (var0 == 48) {
-            if (var_228[11] != 0 && (sub_179c(var_228[18], 0, 8) & 1) != 0) {
-               var_26c = var_228[18];
-               var_228[0] = 6;
-               var10000 = var_228;
+            if (menuState[11] != 0 && (sub_179c(menuState[18], 0, 8) & 1) != 0) {
+               selectedSaveSlot = menuState[18];
+               menuState[0] = 6;
+               var10000 = menuState;
                var10000[3] |= 2;
             }
          } else if (GameCanvas.gameState == 5 && var0 == 42) {
-            var10000 = var_228;
+            var10000 = menuState;
             var10000[3] |= 4;
          }
       } else if (GameCanvas.gameState == 7) {
          if (var0 == 8 || var0 == 53) {
-            var10000 = var_228;
+            var10000 = menuState;
             var10000[3] |= 2;
          }
       } else if (GameCanvas.gameState == 2) {
          if (var0 == 35) {
-            var10000 = var_228;
+            var10000 = menuState;
             var10000[3] |= 25165824;
-            var_228[7] = 96;
+            menuState[7] = 96;
          }
       } else if (GameCanvas.gameState == 12) {
          if (var0 == 8 && var_1311 == 2) {
@@ -899,15 +899,15 @@ final class Class_201 {
          }
       } else if (GameCanvas.gameState == 11) {
          if (var0 != 42 && var0 != 53) {
-            if ((Class_17f.var_30f & 24) != 0) {
-               switch(var_240[var_228[18]] & 255) {
+            if ((Class_17f.inputState & 24) != 0) {
+               switch(menuItems[menuState[18]] & 255) {
                case 3:
                   if (!GameEngine.toggleSound()) {
-                     sub_2f(var_228[25], 6);
+                     requestMusic(menuState[25], 6);
                   }
                   break;
                case 4:
-                  var_129e ^= 1;
+                  vibrationEnabled ^= 1;
                }
             }
          } else {
@@ -926,30 +926,30 @@ final class Class_201 {
       int var6;
       switch(GameCanvas.gameState) {
       case 2:
-         Class_17f.sub_cf9(0, var0, 0, Class_17f.var_dd - Class_17f.var_cb6[5], false);
-         var6 = Class_17f.sub_5a0(var_228[32]);
+         Class_17f.sub_cf9(0, var0, 0, Class_17f.viewHeight - Class_17f.var_cb6[5], false);
+         var6 = Class_17f.sub_5a0(menuState[32]);
          sub_161f(var0, 0);
-         var_111.sub_2ce(var0, Class_17f.var_89 >> 1, (Class_17f.var_dd >> 1) + -20);
-         var_111.sub_315();
-         var1 = var_9f.var_8a[0].getWidth();
-         var2 = Class_17f.var_dd - var6;
-         var0.drawImage(var_9f.var_8a[0], Class_17f.var_104 + (Class_17f.var_89 - var1 >> 1), Class_17f.var_13c + var2 - 4, 20);
-         var2 = Class_17f.var_dd - var6;
-         if ((var_228[3] & 16777216) != 0 && var_2f1 != null) {
-            char[] var11 = Class_17f.var_51a;
-            Class_17f.var_51a = var_2f1;
+         logoAnimation.sub_2ce(var0, Class_17f.viewWidth >> 1, (Class_17f.viewHeight >> 1) + -20);
+         logoAnimation.sub_315();
+         var1 = uiSprite.var_8a[0].getWidth();
+         var2 = Class_17f.viewHeight - var6;
+         var0.drawImage(uiSprite.var_8a[0], Class_17f.viewOffsetX + (Class_17f.viewWidth - var1 >> 1), Class_17f.viewOffsetY + var2 - 4, 20);
+         var2 = Class_17f.viewHeight - var6;
+         if ((menuState[3] & 16777216) != 0 && versionChars != null) {
+            char[] var11 = Class_17f.fontChars;
+            Class_17f.fontChars = versionChars;
             Class_17f.sub_546();
-            Class_17f.sub_657(var0, 0, Class_17f.var_89 >> 1, var2 - 24, 11, Class_17f.var_89, 0, var_228[32]);
-            Class_17f.var_51a = var11;
+            Class_17f.sub_657(var0, 0, Class_17f.viewWidth >> 1, var2 - 24, 11, Class_17f.viewWidth, 0, menuState[32]);
+            Class_17f.fontChars = var11;
             Class_17f.sub_546();
             return;
          }
 
-         Class_17f.sub_657(var0, 12, Class_17f.var_89 >> 1, var2 - 24, 11, Class_17f.var_89, 0, var_228[32]);
+         Class_17f.sub_657(var0, 12, Class_17f.viewWidth >> 1, var2 - 24, 11, Class_17f.viewWidth, 0, menuState[32]);
          return;
       case 3:
-         var1 = Class_17f.var_89 - Class_17f.var_cb6[4] >> 1;
-         var2 = Class_17f.var_dd - Class_17f.var_cb6[5] >> 1;
+         var1 = Class_17f.viewWidth - Class_17f.var_cb6[4] >> 1;
+         var2 = Class_17f.viewHeight - Class_17f.var_cb6[5] >> 1;
          Class_17f.sub_cf9(0, var0, var1, var2, false);
          return;
       case 4:
@@ -959,38 +959,38 @@ final class Class_201 {
       default:
          break;
       case 5:
-         var1 = Class_17f.var_89 - Class_17f.var_cb6[4] >> 1;
-         var2 = Class_17f.var_dd - Class_17f.var_cb6[5] >> 1;
+         var1 = Class_17f.viewWidth - Class_17f.var_cb6[4] >> 1;
+         var2 = Class_17f.viewHeight - Class_17f.var_cb6[5] >> 1;
          Class_17f.sub_cf9(0, var0, var1, var2, false);
 
          for(var5 = 0; var5 < 3; ++var5) {
-            if (var5 == var_228[18]) {
-               GameEngine.drawRegion(var0, var_9f, Class_17f.var_104 + var1 - 24, Class_17f.var_13c + var2, 20, 0, 54, 108, 18, 0);
+            if (var5 == menuState[18]) {
+               GameEngine.drawRegion(var0, uiSprite, Class_17f.viewOffsetX + var1 - 24, Class_17f.viewOffsetY + var2, 20, 0, 54, 108, 18, 0);
             }
 
-            if (var_228[11] != 0 && (sub_179c(var5, 0, 8) & 1) != 0) {
+            if (menuState[11] != 0 && (sub_179c(var5, 0, 8) & 1) != 0) {
                var0.setColor(5046272);
                if ((sub_179c(var5, 31, 8) & 255 & 2) == 0) {
-                  var0.drawRect(Class_17f.var_104 + var1 + 184, Class_17f.var_13c + var2 + 0 + 1, 15, 15);
+                  var0.drawRect(Class_17f.viewOffsetX + var1 + 184, Class_17f.viewOffsetY + var2 + 0 + 1, 15, 15);
                } else {
-                  var0.drawImage(var_15b.var_8a[0], Class_17f.var_104 + var1 + 184 - 1, Class_17f.var_13c + var2 + 0, 20);
+                  var0.drawImage(checkmarkSprite.var_8a[0], Class_17f.viewOffsetX + var1 + 184 - 1, Class_17f.viewOffsetY + var2 + 0, 20);
                }
 
                if ((sub_179c(var5, 31, 8) & 255 & 4) == 0) {
-                  var0.drawRect(Class_17f.var_104 + var1 + 184 + 18, Class_17f.var_13c + var2 + 0 + 1, 15, 15);
+                  var0.drawRect(Class_17f.viewOffsetX + var1 + 184 + 18, Class_17f.viewOffsetY + var2 + 0 + 1, 15, 15);
                } else {
-                  var0.drawImage(var_204.var_8a[0], Class_17f.var_104 + var1 + 184 + 18 - 1, Class_17f.var_13c + var2 + 0, 20);
+                  var0.drawImage(starSprite.var_8a[0], Class_17f.viewOffsetX + var1 + 184 + 18 - 1, Class_17f.viewOffsetY + var2 + 0, 20);
                }
 
                var0.setColor(16711680);
-               var0.drawLine(Class_17f.var_104 + Class_17f.var_89 >> 1, Class_17f.var_13c + var2 + 18, Class_17f.var_104 + Class_17f.var_89 >> 1, Class_17f.var_13c + var2 + 6 + 18);
-               var0.drawLine(Class_17f.var_104 + Class_17f.var_89 >> 1, Class_17f.var_13c + var2 + 6 + 18, (Class_17f.var_104 + Class_17f.var_89 >> 1) + 30, Class_17f.var_13c + var2 + 6 + 18);
+               var0.drawLine(Class_17f.viewOffsetX + Class_17f.viewWidth >> 1, Class_17f.viewOffsetY + var2 + 18, Class_17f.viewOffsetX + Class_17f.viewWidth >> 1, Class_17f.viewOffsetY + var2 + 6 + 18);
+               var0.drawLine(Class_17f.viewOffsetX + Class_17f.viewWidth >> 1, Class_17f.viewOffsetY + var2 + 6 + 18, (Class_17f.viewOffsetX + Class_17f.viewWidth >> 1) + 30, Class_17f.viewOffsetY + var2 + 6 + 18);
                int var7 = ((sub_179c(var5, 30, 8) & 255) << 24) + ((sub_179c(var5, 29, 8) & 255) << 16) + ((sub_179c(var5, 28, 8) & 255) << 8) + (sub_179c(var5, 27, 8) & 255);
                sub_ddf(var0, var7, var1 + 72, var2 + 0, true, true, false, false);
-               var3 = Class_17f.sub_6de(var0, (sub_179c(var5, 4, 8) & 255) * 100 / 199, var1 + 144, var2 + 18, 0, 14, var_228[32]);
-               Class_17f.sub_657(var0, 8, var3, var2 + 18, 65536, 0, 0, var_228[32]);
+               var3 = Class_17f.sub_6de(var0, (sub_179c(var5, 4, 8) & 255) * 100 / 199, var1 + 144, var2 + 18, 0, 14, menuState[32]);
+               Class_17f.sub_657(var0, 8, var3, var2 + 18, 65536, 0, 0, menuState[32]);
             } else {
-               Class_17f.sub_657(var0, 5, var1 + 66 + (66 - Class_17f.sub_5f5(var_228[32], 5) >> 1), var2 + 0, 0, 0, 0, var_228[32]);
+               Class_17f.sub_657(var0, 5, var1 + 66 + (66 - Class_17f.sub_5f5(menuState[32], 5) >> 1), var2 + 0, 0, 0, 0, menuState[32]);
             }
 
             var2 += 36;
@@ -998,54 +998,54 @@ final class Class_201 {
 
          return;
       case 7:
-         var6 = Class_17f.sub_5a0(var_228[32]);
-         var2 = Class_17f.var_dd - 4 * var6 >> 1;
+         var6 = Class_17f.sub_5a0(menuState[32]);
+         var2 = Class_17f.viewHeight - 4 * var6 >> 1;
 
-         for(var5 = 0; var_228[15] + var5 < Class_17f.var_543.length && var5 < 4; var2 += var6) {
-            Class_17f.sub_657(var0, var_228[15] + var5, Class_17f.var_89 >> 1, var2, 11, 0, 0, var_228[32]);
+         for(var5 = 0; menuState[15] + var5 < Class_17f.stringTable.length && var5 < 4; var2 += var6) {
+            Class_17f.sub_657(var0, menuState[15] + var5, Class_17f.viewWidth >> 1, var2, 11, 0, 0, menuState[32]);
             ++var5;
          }
 
          return;
       case 8:
-         var1 = Class_17f.var_89 - Class_17f.var_cb6[4] >> 1;
-         var2 = Class_17f.var_dd - Class_17f.var_cb6[5] >> 1;
+         var1 = Class_17f.viewWidth - Class_17f.var_cb6[4] >> 1;
+         var2 = Class_17f.viewHeight - Class_17f.var_cb6[5] >> 1;
          Class_17f.sub_cf9(0, var0, var1, var2, false);
          return;
       case 11:
-         int var8 = Class_17f.sub_5f5(var_228[32], 1);
-         var3 = Class_17f.sub_5f5(var_228[32], 2);
+         int var8 = Class_17f.sub_5f5(menuState[32], 1);
+         var3 = Class_17f.sub_5f5(menuState[32], 2);
          var5 = 0;
 
          int var4;
          int var9;
-         for(var4 = 0; var5 < var_240.length; ++var5) {
-            if ((var9 = Class_17f.sub_5f5(var_228[32], var_240[var5])) > var4) {
+         for(var4 = 0; var5 < menuItems.length; ++var5) {
+            if ((var9 = Class_17f.sub_5f5(menuState[32], menuItems[var5])) > var4) {
                var4 = var9;
             }
          }
 
-         var9 = var4 + Math.max(var8, var3) + Class_17f.sub_645((Graphics)null, '³', 0, 0, var_228[32], -1) * 2 + 10 + 12;
-         var8 = Class_17f.var_89 - var9 >> 1;
-         var2 = 54 + (Class_17f.var_dd - 108 - var_240.length * 15 >> 1);
+         var9 = var4 + Math.max(var8, var3) + Class_17f.sub_645((Graphics)null, '³', 0, 0, menuState[32], -1) * 2 + 10 + 12;
+         var8 = Class_17f.viewWidth - var9 >> 1;
+         var2 = 54 + (Class_17f.viewHeight - 108 - menuItems.length * 15 >> 1);
          var5 = 0;
 
-         for(int var10 = 0; var5 < var_240.length; var2 += 15) {
-            Class_17f.sub_657(var0, var_240[var5], var8, var2, 0, 0, 0, var_228[32]);
+         for(int var10 = 0; var5 < menuItems.length; var2 += 15) {
+            Class_17f.sub_657(var0, menuItems[var5], var8, var2, 0, 0, 0, menuState[32]);
             var1 = var8 + var4 + 10;
-            var1 = Class_17f.sub_645(var_228[18] == var5 ? var0 : null, '³', var1, var2, var_228[32], -1);
+            var1 = Class_17f.sub_645(menuState[18] == var5 ? var0 : null, '³', var1, var2, menuState[32], -1);
             var1 += 4;
-            switch(var_240[var5]) {
+            switch(menuItems[var5]) {
             case 3:
                var10 = !GameEngine.isMuted() ? 1 : 2;
                break;
             case 4:
-               var10 = (var_129e & 1) != 0 ? 1 : 2;
+               var10 = (vibrationEnabled & 1) != 0 ? 1 : 2;
             }
 
-            var1 = Class_17f.sub_657(var0, var10, var1, var2, 65536, 0, 0, var_228[32]);
+            var1 = Class_17f.sub_657(var0, var10, var1, var2, 65536, 0, 0, menuState[32]);
             var1 += 4;
-            Class_17f.sub_645(var_228[18] == var5 ? var0 : null, '±', var1, var2, var_228[32], -1);
+            Class_17f.sub_645(menuState[18] == var5 ? var0 : null, '±', var1, var2, menuState[32], -1);
             ++var5;
          }
       }
@@ -1053,50 +1053,50 @@ final class Class_201 {
    }
 
    private static void sub_3a2(Graphics var0, int var1, int var2, boolean var3) {
-      if (var_9f != null) {
+      if (uiSprite != null) {
          if (var3) {
             int var6 = (var1 + 18 - 1) / 18;
             int var5 = 0;
 
             for(int var4 = 0; var4 < var6; var5 += 18) {
-               GameEngine.drawRegion(var0, var_9f, Class_17f.var_104 + var5, Class_17f.var_13c + var2 - 54, 20, 252, 0, 18, 54, 1);
+               GameEngine.drawRegion(var0, uiSprite, Class_17f.viewOffsetX + var5, Class_17f.viewOffsetY + var2 - 54, 20, 252, 0, 18, 54, 1);
                ++var4;
             }
          } else {
-            GameEngine.drawRegion(var0, var_9f, Class_17f.var_104 + var1 - 252, Class_17f.var_13c, 20, 0, 0, 252, 54, 0);
+            GameEngine.drawRegion(var0, uiSprite, Class_17f.viewOffsetX + var1 - 252, Class_17f.viewOffsetY, 20, 0, 0, 252, 54, 0);
          }
 
       }
    }
 
    private static void sub_3f8(int var0, int var1) {
-      var_228[29] = (var1 & '\uffff') << 16 | var0 & '\uffff';
-      var_228[28] = 0;
-      var_228[26] = Class_17f.var_89 << 8;
-      var_228[27] = -Class_17f.sub_5f5(var_228[32], var0 + var_228[28]) << 8;
+      menuState[29] = (var1 & '\uffff') << 16 | var0 & '\uffff';
+      menuState[28] = 0;
+      menuState[26] = Class_17f.viewWidth << 8;
+      menuState[27] = -Class_17f.sub_5f5(menuState[32], var0 + menuState[28]) << 8;
    }
 
    private static boolean sub_439(Graphics var0) {
-      int[] var10000 = var_228;
+      int[] var10000 = menuState;
       var10000[3] |= 96;
       boolean var4 = false;
-      int var3 = var_228[29] >> 16;
-      int var2 = Class_17f.var_dd - 24;
-      var10000 = var_228;
+      int var3 = menuState[29] >> 16;
+      int var2 = Class_17f.viewHeight - 24;
+      var10000 = menuState;
       var10000[26] -= 1024;
-      if (var_228[26] < var_228[27]) {
+      if (menuState[26] < menuState[27]) {
          var4 = true;
-         int var10002 = var_228[28]++;
-         if (var_228[28] >= var3) {
-            var_228[28] = 0;
+         int var10002 = menuState[28]++;
+         if (menuState[28] >= var3) {
+            menuState[28] = 0;
          }
 
-         var_228[26] = Class_17f.var_89 << 8;
-         var_228[27] = -Class_17f.sub_5f5(var_228[32], (var_228[29] & '\uffff') + var_228[28]) << 8;
+         menuState[26] = Class_17f.viewWidth << 8;
+         menuState[27] = -Class_17f.sub_5f5(menuState[32], (menuState[29] & '\uffff') + menuState[28]) << 8;
       }
 
-      int var1 = var_228[26] >> 8;
-      Class_17f.sub_657(var0, var_228[28] + (var_228[29] & '\uffff'), var1, var2, 0, 0, 0, var_228[32]);
+      int var1 = menuState[26] >> 8;
+      Class_17f.sub_657(var0, menuState[28] + (menuState[29] & '\uffff'), var1, var2, 0, 0, 0, menuState[32]);
       return var4;
    }
 
@@ -1225,11 +1225,11 @@ final class Class_201 {
       var_57c = Class_17f.sub_aaf(441);
       var_5fa = Class_17f.sub_a5d(438);
       var_607 = Class_17f.sub_a5d(450);
-      var_307 = Class_17f.sub_aaf(445);
+      stateConfigs = Class_17f.sub_aaf(445);
       var_5ab = Class_17f.sub_a5d(443);
       Class_17f.sub_52a(263);
-      var_634 = Class_17f.var_51a;
-      var_64b = Class_17f.var_543;
+      var_634 = Class_17f.fontChars;
+      var_64b = Class_17f.stringTable;
    }
 
    private static void sub_5fd() {
@@ -1245,7 +1245,7 @@ final class Class_201 {
       var_57c = null;
       var_5fa = null;
       var_607 = null;
-      var_307 = null;
+      stateConfigs = null;
       var_634 = null;
       var_64b = null;
    }
@@ -1986,7 +1986,7 @@ final class Class_201 {
             return;
          }
 
-         GameEngine.drawRegion(var0, var_686[1], var2, var3, 20, (Class_17f.var_4bb[var4] - 48) * 10, 0, 10, 12, 0);
+         GameEngine.drawRegion(var0, var_686[1], var2, var3, 20, (Class_17f.numberBuffer[var4] - 48) * 10, 0, 10, 12, 0);
          var2 += 10;
       }
    }
@@ -2116,7 +2116,7 @@ final class Class_201 {
    public static void sub_ad9() {
       sub_5e1();
       var_ec9 = new int[224];
-      var_dfb = Class_17f.var_dd - 0 - 6;
+      var_dfb = Class_17f.viewHeight - 0 - 6;
       var_dfb -= 152;
       var_dfb /= 36;
    }
@@ -2130,8 +2130,8 @@ final class Class_201 {
       var_aed = -1;
       var_a69 = null;
       Class_17f.sub_52a(265);
-      var_bd6 = Class_17f.var_51a;
-      var_c04 = Class_17f.var_543;
+      var_bd6 = Class_17f.fontChars;
+      var_c04 = Class_17f.stringTable;
       var_b22 = new Sprite[var_5ab.length];
       sub_15d4(0);
       GameCanvas.stateFlags &= -16385;
@@ -2217,9 +2217,9 @@ final class Class_201 {
          }
 
          var_e34 = Class_17f.var_1129;
-         int var2 = Class_17f.var_89;
+         int var2 = Class_17f.viewWidth;
          int var3;
-         if ((var3 = Class_17f.var_dd) > Class_17f.var_cb6[5]) {
+         if ((var3 = Class_17f.viewHeight) > Class_17f.var_cb6[5]) {
             var3 = Class_17f.var_cb6[5];
          }
 
@@ -2227,8 +2227,8 @@ final class Class_201 {
             var2 = Class_17f.var_cb6[4];
          }
 
-         int var0 = Class_17f.var_89 - var2 >> 1;
-         int var1 = Class_17f.var_dd - var3 >> 1;
+         int var0 = Class_17f.viewWidth - var2 >> 1;
+         int var1 = Class_17f.viewHeight - var3 >> 1;
          Class_17f.sub_c18(var0, var1, var2, var3);
          if (Class_17f.var_c77 > 1) {
             Class_17f.sub_c7b(Class_17f.var_10a3, var2, var3 - Class_17f.var_cb6[23 * Class_17f.var_10eb + 5], true);
@@ -2349,15 +2349,15 @@ final class Class_201 {
    }
 
    private static void sub_d6f(Graphics var0) {
-      sub_96e(var0, var_f43, Class_17f.var_104 + var_ccb + (Class_17f.sub_d60(0, (var_f6b >> 16 << 8) + 1024) >> 8), Class_17f.var_13c + var_d14 + (Class_17f.sub_db8(0, ((var_f6b & '\uffff') << 8) + -1536) >> 8));
+      sub_96e(var0, var_f43, Class_17f.viewOffsetX + var_ccb + (Class_17f.sub_d60(0, (var_f6b >> 16 << 8) + 1024) >> 8), Class_17f.viewOffsetY + var_d14 + (Class_17f.sub_db8(0, ((var_f6b & '\uffff') << 8) + -1536) >> 8));
    }
 
    private static void sub_dd2(Graphics var0, int var1, int var2, int var3) {
       var0.setColor(0);
-      var0.fillRect(Class_17f.var_104 + (Class_17f.var_89 >> 1) - 28, Class_17f.var_13c + var3, 56, 24);
+      var0.fillRect(Class_17f.viewOffsetX + (Class_17f.viewWidth >> 1) - 28, Class_17f.viewOffsetY + var3, 56, 24);
       if (var_e4f != var1 / 32) {
-         int var6 = Class_17f.var_104 + (Class_17f.var_89 >> 1) - 26;
-         int var7 = Class_17f.var_13c + var3;
+         int var6 = Class_17f.viewOffsetX + (Class_17f.viewWidth >> 1) - 26;
+         int var7 = Class_17f.viewOffsetY + var3;
          int var4 = var6 + 53;
          int var5 = var7 + 21;
          var0.setColor(16711680);
@@ -2417,12 +2417,12 @@ final class Class_201 {
       sub_119c();
       sub_9f3();
       if ((var_9d8 & 1) != 0) {
-         Class_17f.var_30f = 0;
+         Class_17f.inputState = 0;
       }
 
       var_9d8 &= -2;
       if (Class_17f.var_d6b != -1) {
-         sub_2f(Class_17f.var_d6b, 2);
+         requestMusic(Class_17f.var_d6b, 2);
       } else {
          sub_a7();
       }
@@ -2439,15 +2439,15 @@ final class Class_201 {
    }
 
    private static void sub_e26() {
-      if (Class_17f.var_33f) {
-         Class_17f.var_33f = false;
+      if (Class_17f.inputChanged) {
+         Class_17f.inputChanged = false;
          if ((var_9d8 & 128) != 0) {
-            Class_17f.sub_81d(Class_17f.var_363);
+            Class_17f.sub_81d(Class_17f.lastKeyCode);
          } else if (var_a0a == 11) {
-            sub_ff6(Class_17f.var_363, false);
+            sub_ff6(Class_17f.lastKeyCode, false);
          } else {
             if (var_a0a == 1 || var_a0a == 10) {
-               if (Class_17f.var_363 == 48 && var_a0a != 9 && Class_17f.var_481 != 2 && var_a69.var_954 != 3) {
+               if (Class_17f.lastKeyCode == 48 && var_a0a != 9 && Class_17f.var_481 != 2 && var_a69.var_954 != 3) {
                   if ((var_57c[var_ff5[8] * 8 + 3] & 512) != 0 && (var_9d8 & 128) == 0) {
                      var_b02 = 0;
                      var_aed = 280;
@@ -2460,7 +2460,7 @@ final class Class_201 {
                   return;
                }
 
-               if (Class_17f.var_363 == 8 && Class_17f.var_1026 != -1 && (var_9d8 & 128) == 0 && (var_9d8 & 2097152) != 0 && var_d22 <= 0 && var_aed == -1) {
+               if (Class_17f.lastKeyCode == 8 && Class_17f.var_1026 != -1 && (var_9d8 & 128) == 0 && (var_9d8 & 2097152) != 0 && var_d22 <= 0 && var_aed == -1) {
                   var_b02 = 0;
                   var_aed = 262 + ((Class_17f.var_1026 & '\uffff') >> 0 & 4095);
                   int var0;
@@ -2484,12 +2484,12 @@ final class Class_201 {
    }
 
    static boolean sub_e55() {
-      if ((GameCanvas.stateFlags & 65536) != 0 && (var_9d8 & 6144) != 6144 && sub_2f(Class_17f.var_d6b, 6)) {
+      if ((GameCanvas.stateFlags & 65536) != 0 && (var_9d8 & 6144) != 6144 && requestMusic(Class_17f.var_d6b, 6)) {
          GameCanvas.stateFlags &= -65537;
       }
 
       int var0;
-      if (Class_17f.var_3b7 % 32 == 0) {
+      if (Class_17f.frameCounter % 32 == 0) {
          var0 = Class_17f.sub_2ad(var_ff5, 27);
          ++var0;
          Class_17f.sub_300(var_ff5, 27, var0);
@@ -2626,13 +2626,13 @@ final class Class_201 {
                --var_d22;
             }
 
-            if ((Class_17f.var_30f & 2) != 0) {
+            if ((Class_17f.inputState & 2) != 0) {
                sub_ff6(1, true);
-            } else if ((Class_17f.var_30f & 4) != 0) {
+            } else if ((Class_17f.inputState & 4) != 0) {
                sub_ff6(6, true);
-            } else if ((Class_17f.var_30f & 8) != 0) {
+            } else if ((Class_17f.inputState & 8) != 0) {
                sub_ff6(2, true);
-            } else if ((Class_17f.var_30f & 16) != 0) {
+            } else if ((Class_17f.inputState & 16) != 0) {
                sub_ff6(5, true);
             }
          }
@@ -2652,7 +2652,7 @@ final class Class_201 {
       if ((var_9d8 & 1024) != 0) {
          var_9d8 &= -1025;
          var0.setColor(var_e34);
-         var0.fillRect(Class_17f.var_104, Class_17f.var_13c, Class_17f.var_89, Class_17f.var_dd);
+         var0.fillRect(Class_17f.viewOffsetX, Class_17f.viewOffsetY, Class_17f.viewWidth, Class_17f.viewHeight);
          var_9d8 |= 2097152;
       }
 
@@ -2665,7 +2665,7 @@ final class Class_201 {
          if ((var_a0a == 1 || var_a0a == 9 || var_a0a == 10) && (var_9d8 & 64) != 0) {
             if ((var_9d8 & 67108864) != 0) {
                var0.setColor(var_e34);
-               var0.fillRect(Class_17f.var_104, Class_17f.var_13c, Class_17f.var_89, Class_17f.var_dd);
+               var0.fillRect(Class_17f.viewOffsetX, Class_17f.viewOffsetY, Class_17f.viewWidth, Class_17f.viewHeight);
                sub_f50(var0, 1);
                break label93;
             }
@@ -2693,11 +2693,11 @@ final class Class_201 {
             if ((var_9d8 & 16777216) != 0) {
                var_9d8 &= -16777217;
                var0.setColor(var_e34);
-               var0.fillRect(Class_17f.var_104, Class_17f.var_13c, Class_17f.var_89, Class_17f.var_dd);
+               var0.fillRect(Class_17f.viewOffsetX, Class_17f.viewOffsetY, Class_17f.viewWidth, Class_17f.viewHeight);
             }
 
             if ((var_57c[var_ff5[8] * 8 + 3] & 8192) != 0) {
-               sub_dd2(var0, var_e42, (Class_17f.var_89 >> 1) - 15, Class_17f.var_eaa);
+               sub_dd2(var0, var_e42, (Class_17f.viewWidth >> 1) - 15, Class_17f.viewportTop);
             }
 
             var10000 = var_9d8;
@@ -2721,7 +2721,7 @@ final class Class_201 {
       }
 
       if ((var_9d8 & 128) != 0) {
-         Class_17f.sub_83e(var0, 0, Class_17f.var_dd - Class_17f.var_a20, 0);
+         Class_17f.sub_83e(var0, 0, Class_17f.viewHeight - Class_17f.var_a20, 0);
          Class_17f.sub_4f7(var_bd6, var_c04);
          sub_12ef(var0);
       }
@@ -2780,8 +2780,8 @@ final class Class_201 {
       var1 = Class_17f.sub_5f5(0, 44);
       var2 = Class_17f.sub_5f5(0, 45);
       int var3 = var4 + Math.max(var1, var2) + Class_17f.sub_645((Graphics)null, '³', 0, 0, 0, -1) + 10 + 12;
-      var1 = Class_17f.var_89 - var3 >> 1;
-      int var6 = Class_17f.var_dd - 0 - 6 - 40;
+      var1 = Class_17f.viewWidth - var3 >> 1;
+      int var6 = Class_17f.viewHeight - 0 - 6 - 40;
       var6 += 101;
       var6 >>= 1;
       var6 -= 10;
@@ -2798,7 +2798,7 @@ final class Class_201 {
       var5 = var1 + var4 + 10;
       var5 = Class_17f.sub_645(var9 == 2 ? var0 : null, '³', var5, var6, 0, -1);
       var5 += 4;
-      var7 = (var_129e & 1) != 0 ? 44 : 45;
+      var7 = (vibrationEnabled & 1) != 0 ? 44 : 45;
       var5 = Class_17f.sub_657(var0, var7, var5, var6, 65536, 0, 0, 0);
       var5 += 4;
       Class_17f.sub_645(var9 == 2 ? var0 : null, '±', var5, var6, 0, -1);
@@ -2820,14 +2820,14 @@ final class Class_201 {
       int var15 = (var_d82 & 15728640) >> 20;
       int var17 = (var_d82 & '\uff00') >> 8;
       int var16 = (var_d82 & 255) >> 0;
-      int var4 = Class_17f.var_104 + 0 + 3;
-      int var5 = Class_17f.var_13c + 0 + 3;
-      int var10 = Class_17f.var_89 - 0 - 6;
-      int var11 = Class_17f.var_dd - 0 - 6;
+      int var4 = Class_17f.viewOffsetX + 0 + 3;
+      int var5 = Class_17f.viewOffsetY + 0 + 3;
+      int var10 = Class_17f.viewWidth - 0 - 6;
+      int var11 = Class_17f.viewHeight - 0 - 6;
       if ((var_d55 & 4) == 0) {
          var_d55 |= 4;
          var0.setColor(16711680);
-         var0.fillRect(Class_17f.var_104, Class_17f.var_13c, Class_17f.var_89, Class_17f.var_dd);
+         var0.fillRect(Class_17f.viewOffsetX, Class_17f.viewOffsetY, Class_17f.viewWidth, Class_17f.viewHeight);
          var0.setColor(9043968);
          var0.fillRect(var4, var5, var10 - 1, var11 - 1);
       }
@@ -2841,7 +2841,7 @@ final class Class_201 {
       }
 
       var5 += 5;
-      if (Class_17f.var_3b7 % 16 != 0) {
+      if (Class_17f.frameCounter % 16 != 0) {
          var0.drawImage(var_686[2].var_8a[0], var4, var5, 20);
       }
 
@@ -2849,7 +2849,7 @@ final class Class_201 {
       int var22 = (var18 = Class_17f.sub_2e5(var_ff5, 2)) == var_a69.var_d ? '\uff00' : (var18 > var_a69.var_d >> 1 ? 16776960 : 16711680);
       int var8;
       int var9;
-      if (Class_17f.var_3b7 % 16 == 0) {
+      if (Class_17f.frameCounter % 16 == 0) {
          var8 = var_686[2].var_8a[0].getWidth() - 3;
          var9 = var_686[2].var_8a[0].getHeight() - 3;
          ++var4;
@@ -2860,8 +2860,8 @@ final class Class_201 {
          --var5;
       }
 
-      var4 -= Class_17f.var_104;
-      var5 -= Class_17f.var_13c;
+      var4 -= Class_17f.viewOffsetX;
+      var5 -= Class_17f.viewOffsetY;
       if ((var_d55 & 16) == 0) {
          var_d55 |= 16;
          Class_17f.sub_657(var0, 36, var4 + 77, var5, 0, 0, 0, 0);
@@ -2883,14 +2883,14 @@ final class Class_201 {
          var5 = 3;
          var9 = var19 + -2;
          var0.setColor(16711680);
-         var0.fillRect(Class_17f.var_104 + var4, Class_17f.var_13c + 3, 100, 98);
+         var0.fillRect(Class_17f.viewOffsetX + var4, Class_17f.viewOffsetY + 3, 100, 98);
          var0.setColor(4210752);
-         var0.fillRect(Class_17f.var_104 + var4 + 1, Class_17f.var_13c + 3, 99, 97);
+         var0.fillRect(Class_17f.viewOffsetX + var4 + 1, Class_17f.viewOffsetY + 3, 99, 97);
 
          for(var1 = 0; var1 < var14; var5 += var9) {
             if (var1 == var15) {
                var0.setColor(16711680);
-               var0.fillRect(Class_17f.var_104 + var4 + 1, Class_17f.var_13c + var5, 99, var9 + 1);
+               var0.fillRect(Class_17f.viewOffsetX + var4 + 1, Class_17f.viewOffsetY + var5, 99, var9 + 1);
                if ((var_d82 & 268435456) == 0) {
                   Class_17f.sub_292(var0, var4 + 4, var5 + 0, 0, 0, -1, true, 0, (byte[])Class_17f.sub_9d4(var_6d1[1]));
                }
@@ -2901,10 +2901,10 @@ final class Class_201 {
          }
       }
 
-      var4 = Class_17f.var_104 + 0 + 3;
+      var4 = Class_17f.viewOffsetX + 0 + 3;
       if ((var_d55 & 128) == 0) {
          var_d55 |= 128;
-         var5 = Class_17f.var_13c + 0 + 3 + 98;
+         var5 = Class_17f.viewOffsetY + 0 + 3 + 98;
          var8 = Class_17f.sub_5f5(0, 38) + 30 + 20;
          int var6 = (var_d82 & 268435456) != 0 ? var_db7 : 0;
          var0.setColor(0);
@@ -2960,11 +2960,11 @@ final class Class_201 {
                         var0.drawLine(var4, var5, var4 + var10, var5);
                         var0.drawLine(var4, var5 + 36 - 1, var4 + var10, var5 + 36 - 1);
                         if (var16 > sub_1011(var16, var17, -1, var15, 0)) {
-                           Class_17f.sub_292(var0, var10 - 7 - 10, var5 - Class_17f.var_13c, 0, 1, -1, true, 0, (byte[])Class_17f.sub_9d4(var_6d1[1]));
+                           Class_17f.sub_292(var0, var10 - 7 - 10, var5 - Class_17f.viewOffsetY, 0, 1, -1, true, 0, (byte[])Class_17f.sub_9d4(var_6d1[1]));
                         }
 
                         if (var16 < sub_1011(var16, var17, 1, var15, 0)) {
-                           Class_17f.sub_292(var0, var10 - 7 - 10, var5 + 20 - Class_17f.var_13c, 0, 2, -1, true, 0, (byte[])Class_17f.sub_9d4(var_6d1[1]));
+                           Class_17f.sub_292(var0, var10 - 7 - 10, var5 + 20 - Class_17f.viewOffsetY, 0, 2, -1, true, 0, (byte[])Class_17f.sub_9d4(var_6d1[1]));
                         }
                      } else {
                         var0.setColor((var5 / 36 & 1) == 0 ? 3158064 : 4210752);
@@ -2972,8 +2972,8 @@ final class Class_201 {
                      }
 
                      label201: {
-                        Class_17f.sub_292(var0, var4 + 4 - Class_17f.var_104, var5 + 4 + 0 - Class_17f.var_13c, 98, var1, -1, true, 0, (byte[])Class_17f.sub_9d4(var_6d1[1]));
-                        Class_17f.sub_657(var0, 6 + var1, var4 + 36 + 4 - Class_17f.var_104, var5 + 0 - Class_17f.var_13c, 0, 0, 0, 0);
+                        Class_17f.sub_292(var0, var4 + 4 - Class_17f.viewOffsetX, var5 + 4 + 0 - Class_17f.viewOffsetY, 98, var1, -1, true, 0, (byte[])Class_17f.sub_9d4(var_6d1[1]));
+                        Class_17f.sub_657(var0, 6 + var1, var4 + 36 + 4 - Class_17f.viewOffsetX, var5 + 0 - Class_17f.viewOffsetY, 0, 0, 0, 0);
                         int var2;
                         byte var10001;
                         int var10002;
@@ -2988,8 +2988,8 @@ final class Class_201 {
                            var10002 = var4 + var10 - var8;
                         } else {
                            if (var1 < 7 && var_607[88 + var1 * 5 + 1] >= 10) {
-                              var2 = Class_17f.sub_657(var0, 38, var4 + var10 - var8 - Class_17f.var_104, var5 + 36 - var19 - 1 - Class_17f.var_13c, 65536, 0, 0, 0);
-                              sub_96e(var0, var_607[88 + var1 * 5 + 2], var2 + Class_17f.var_104 + 3, var5 + 36 - var19 - -3);
+                              var2 = Class_17f.sub_657(var0, 38, var4 + var10 - var8 - Class_17f.viewOffsetX, var5 + 36 - var19 - 1 - Class_17f.viewOffsetY, 65536, 0, 0, 0);
+                              sub_96e(var0, var_607[88 + var1 * 5 + 2], var2 + Class_17f.viewOffsetX + 3, var5 + 36 - var19 - -3);
                            }
 
                            if (10 + var1 >= 21) {
@@ -3001,8 +3001,8 @@ final class Class_201 {
                            var10002 = var4 + 4 + 36;
                         }
 
-                        var2 = Class_17f.sub_657(var23, var10001, var10002 - Class_17f.var_104, var5 + var19 - 1 - Class_17f.var_13c, 65536, 0, 0, 0);
-                        sub_96e(var0, var_ff5[10 + var1], var2 + Class_17f.var_104 + 3, var5 + 36 - var19 - -3);
+                        var2 = Class_17f.sub_657(var23, var10001, var10002 - Class_17f.viewOffsetX, var5 + var19 - 1 - Class_17f.viewOffsetY, 65536, 0, 0, 0);
+                        sub_96e(var0, var_ff5[10 + var1], var2 + Class_17f.viewOffsetX + 3, var5 + 36 - var19 - -3);
                      }
 
                      var5 += 36;
@@ -3013,14 +3013,14 @@ final class Class_201 {
          }
 
          if (var15 == 0 || var15 == 1 || var15 == 2) {
-            var5 = Class_17f.var_13c + 0 + 3 + 98 + var_dfb * 36;
+            var5 = Class_17f.viewOffsetY + 0 + 3 + 98 + var_dfb * 36;
             var8 = var10 - 2;
             var0.setColor(16711680);
             var0.fillRect(var4, var5, var10, 40);
             var0.setColor(9043968);
             var0.fillRect(var4, var5 + 1, var10, 38);
             if ((var_d82 & 268435456) != 0 && var21) {
-               Class_17f.sub_657(var0, 21 + var16, var4 + 1 - Class_17f.var_104, var5 - Class_17f.var_13c, 0, 16973824 | var8, 0, 0);
+               Class_17f.sub_657(var0, 21 + var16, var4 + 1 - Class_17f.viewOffsetX, var5 - Class_17f.viewOffsetY, 0, 16973824 | var8, 0, 0);
             }
          }
       }
@@ -3029,35 +3029,35 @@ final class Class_201 {
       var8 = var10 - 2;
       if ((var9 = var11 - (98 + var_dfb * 36 + 40)) > 30) {
          var9 = 20;
-         var5 = Class_17f.var_dd - 20 - 2;
+         var5 = Class_17f.viewHeight - 20 - 2;
       }
 
       if ((var_d55 & 256) == 0) {
          var_d55 |= 256;
          var0.setColor(0);
-         var0.fillRect(var4, Class_17f.var_13c + var5, var10, var9);
+         var0.fillRect(var4, Class_17f.viewOffsetY + var5, var10, var9);
       }
 
       var5 += 3;
-      Class_17f.sub_657(var0, 48, var4 + 1 - Class_17f.var_104, var5, 0, 16842752 | var8, 0, 0);
+      Class_17f.sub_657(var0, 48, var4 + 1 - Class_17f.viewOffsetX, var5, 0, 16842752 | var8, 0, 0);
       int var12 = Class_17f.sub_5f5(0, 49);
       Class_17f.sub_657(var0, 49, var8 - var12 - 1, var5, 0, 16842752 | var8, 0, 0);
       if ((var_d55 & 1) != 0 || (var_d55 & 2) != 0) {
-         var4 = Class_17f.var_104 + 0 + 3;
-         var5 = Class_17f.var_13c + 0 + 3;
+         var4 = Class_17f.viewOffsetX + 0 + 3;
+         var5 = Class_17f.viewOffsetY + 0 + 3;
          var12 = (var_d55 & 1) != 0 ? 41 : 42;
          var8 = Class_17f.sub_5f5(0, var12);
          var0.setColor(16711680);
          var0.fillRect(var4 + (var10 - (var8 + 16) >> 1), var5 + (var11 - 32 >> 1), 16 + var8, 32);
          var0.setColor(9043968);
          var0.fillRect(var4 + (var10 - (var8 + 16) >> 1) + 3, var5 + (var11 - 32 >> 1) + 3, var8 + 16 - 6, 26);
-         Class_17f.sub_657(var0, var12, var4 + (var10 - var8 >> 1) - Class_17f.var_104, var5 + 6 + (var11 - 32 >> 1) - Class_17f.var_13c, 0, 0, 0, 0);
+         Class_17f.sub_657(var0, var12, var4 + (var10 - var8 >> 1) - Class_17f.viewOffsetX, var5 + 6 + (var11 - 32 >> 1) - Class_17f.viewOffsetY, 0, 0, 0, 0);
       }
 
       if (var15 == 3) {
          var9 = 40 + 36 * var_dfb;
          var0.setColor(0);
-         var0.fillRect(Class_17f.var_104 + 0 + 3, Class_17f.var_13c + 0 + 3 + 98, var10, var9);
+         var0.fillRect(Class_17f.viewOffsetX + 0 + 3, Class_17f.viewOffsetY + 0 + 3 + 98, var10, var9);
          sub_f88(var0);
       }
 
@@ -3074,7 +3074,7 @@ final class Class_201 {
          if (var1) {
             if (var_d22 <= 0) {
                int var9;
-               if ((Class_17f.var_30f & 2) != 0) {
+               if ((Class_17f.inputState & 2) != 0) {
                   if ((var_d55 & 1) != 0 || (var_d55 & 2) != 0) {
                      var_d55 = 0;
                   }
@@ -3125,7 +3125,7 @@ final class Class_201 {
                   return;
                }
 
-               if ((Class_17f.var_30f & 4) != 0) {
+               if ((Class_17f.inputState & 4) != 0) {
                   if ((var_d55 & 1) != 0 || (var_d55 & 2) != 0) {
                      var_d55 = 0;
                   }
@@ -3174,17 +3174,17 @@ final class Class_201 {
                   return;
                }
 
-               if ((Class_17f.var_30f & 24) != 0) {
+               if ((Class_17f.inputState & 24) != 0) {
                   if (var3 == 3) {
                      var_d55 = 0;
                      switch(var4) {
                      case 1:
                         if (!GameEngine.toggleSound()) {
-                           sub_2f(Class_17f.var_d6b, 6);
+                           requestMusic(Class_17f.var_d6b, 6);
                         }
                         break;
                      case 2:
-                        var_129e ^= 1;
+                        vibrationEnabled ^= 1;
                      }
                   }
 
@@ -3192,7 +3192,7 @@ final class Class_201 {
                   return;
                }
             }
-         } else if ((Class_17f.var_30f & 1) != 0) {
+         } else if ((Class_17f.inputState & 1) != 0) {
             if ((var_d55 & 1) == 0 && (var_d55 & 2) == 0) {
                short var10000;
                switch(var3) {
@@ -3549,7 +3549,7 @@ final class Class_201 {
       Class_147 var10000 = var_a69;
       var10000.var_824 &= -17;
       var_9d8 |= 128;
-      Class_17f.sub_785(var0, -1, Class_17f.var_89, 0, 0, 0);
+      Class_17f.sub_785(var0, -1, Class_17f.viewWidth, 0, 0, 0);
    }
 
    private static void sub_11e5(boolean var0) {
@@ -3678,7 +3678,7 @@ final class Class_201 {
             var_f7e = var10000;
          }
 
-         int var1 = Class_17f.var_dd - Class_17f.var_a20;
+         int var1 = Class_17f.viewHeight - Class_17f.var_a20;
          if (Class_17f.var_87e < var_b22.length && var_b22[Class_17f.var_87e] != null) {
             int var3;
             byte var4;
@@ -3687,14 +3687,14 @@ final class Class_201 {
                var3 = var_b22[Class_17f.var_87e].var_8a[0].getHeight();
                int var2 = var_b22[Class_17f.var_87e].var_8a[0].getWidth();
                if (Class_17f.var_87e >= 8) {
-                  var_b72 = Class_17f.var_89 - var2 >> 1;
+                  var_b72 = Class_17f.viewWidth - var2 >> 1;
                   var4 = 0;
                   var10000 = var2;
                } else {
                   if (Class_17f.var_87e >= 1) {
                      var4 = 2;
                      var7 = var2;
-                     var_b72 = Class_17f.var_89 - var2 + var_f7e;
+                     var_b72 = Class_17f.viewWidth - var2 + var_f7e;
                      break label52;
                   }
 
@@ -3710,7 +3710,7 @@ final class Class_201 {
                var7 = var10000;
             }
 
-            GameEngine.drawRegion(var0, var_b22[Class_17f.var_87e], Class_17f.var_104 + var_b72, Class_17f.var_13c + var1 - var3, 20, var6, 0, var7, var3, var4);
+            GameEngine.drawRegion(var0, var_b22[Class_17f.var_87e], Class_17f.viewOffsetX + var_b72, Class_17f.viewOffsetY + var1 - var3, 20, var6, 0, var7, var3, var4);
          } else {
             sub_1314(var0, var1);
          }
@@ -3728,9 +3728,9 @@ final class Class_201 {
          int var2 = Class_17f.sub_5a0(0) - 2 + 3;
          var1 -= var2;
          var0.setColor(4737080);
-         var0.fillRect(Class_17f.var_104, Class_17f.var_13c + var1, Class_17f.var_89, var2);
+         var0.fillRect(Class_17f.viewOffsetX, Class_17f.viewOffsetY + var1, Class_17f.viewWidth, var2);
          var0.setColor(6897408);
-         var0.drawRect(Class_17f.var_104, Class_17f.var_13c + var1, Class_17f.var_89 - 1, var2);
+         var0.drawRect(Class_17f.viewOffsetX, Class_17f.viewOffsetY + var1, Class_17f.viewWidth - 1, var2);
          Class_17f.sub_657(var0, Class_17f.var_87e, 2, var1 + 2, 0, 0, 0, 0);
          Class_17f.sub_4f7(var_bd6, var_c04);
       }
@@ -4040,8 +4040,8 @@ final class Class_201 {
       int var1;
       if ((var0 & 4) != 0) {
          for(var1 = 0; var1 < 224; var1 += 7) {
-            var_ec9[var1 + 0] = Class_17f.sub_cd(0, Class_17f.var_89) + Class_17f.var_104;
-            var_ec9[var1 + 1] = Class_17f.sub_cd(0, Class_17f.var_dd) + Class_17f.var_13c;
+            var_ec9[var1 + 0] = Class_17f.sub_cd(0, Class_17f.viewWidth) + Class_17f.viewOffsetX;
+            var_ec9[var1 + 1] = Class_17f.sub_cd(0, Class_17f.viewHeight) + Class_17f.viewOffsetY;
             int var2 = var_ec9[var1 + 2] = Class_17f.sub_cd(2, 3);
             int var3 = var_ec9[var1 + 3] = Class_17f.sub_cd(20, 24);
             int var4 = Class_17f.sub_cd(80, 200);
@@ -4088,8 +4088,8 @@ final class Class_201 {
          if ((var_eab & 128) != 0) {
             for(var2 = 0; var2 < 112; var2 += 7) {
                var10002 = var_ec9[var2 + 6]++;
-               var4 = Class_17f.var_104 + (Class_17f.sub_d60(0, var_ec9[var2 + 0]) >> 8);
-               var6 = Class_17f.var_13c + (Class_17f.sub_db8(0, var_ec9[var2 + 1]) >> 8);
+               var4 = Class_17f.viewOffsetX + (Class_17f.sub_d60(0, var_ec9[var2 + 0]) >> 8);
+               var6 = Class_17f.viewOffsetY + (Class_17f.sub_db8(0, var_ec9[var2 + 1]) >> 8);
                GameEngine.drawRegion(var0, var_f1b, var4, var6, 20, 0, var_ec9[var2 + 6] / 3 * 72, 72, 72, 0);
                if (var_ec9[var2 + 6] > 27) {
                   sub_15f8(var2);
@@ -4108,7 +4108,7 @@ final class Class_201 {
             var5 = var6 / 96 * 96;
             var7 = var4 - var3;
             var8 = var6 - var5;
-            Class_17f.sub_7f(var0, Class_17f.var_104 - var7, Class_17f.var_13c - var8, Class_17f.var_89 + var7, Class_17f.var_dd - var8, var_f1b, 0, 96, 96);
+            Class_17f.sub_7f(var0, Class_17f.viewOffsetX - var7, Class_17f.viewOffsetY - var8, Class_17f.viewWidth + var7, Class_17f.viewHeight - var8, var_f1b, 0, 96, 96);
          } else if ((var_eab & 4) != 0) {
             var0.setColor(12303291);
 
@@ -4131,18 +4131,18 @@ final class Class_201 {
                var10000[var2 + 0] += var_ec9[var2 + 2];
                var10000 = var_ec9;
                var10000[var2 + 1] += var_ec9[var2 + 3];
-               if (var_ec9[var2 + 0] > Class_17f.var_89 - Class_17f.var_104 || var3 == var4 || var_ec9[var2 + 1] > Class_17f.var_dd - Class_17f.var_13c) {
+               if (var_ec9[var2 + 0] > Class_17f.viewWidth - Class_17f.viewOffsetX || var3 == var4 || var_ec9[var2 + 1] > Class_17f.viewHeight - Class_17f.viewOffsetY) {
                   var_ec9[var2 + 6] = 24;
-                  var_ec9[var2 + 0] = Class_17f.sub_cd(0, Class_17f.var_89) + Class_17f.var_104;
-                  var_ec9[var2 + 1] = Class_17f.sub_cd(0, Class_17f.var_dd) + Class_17f.var_13c;
+                  var_ec9[var2 + 0] = Class_17f.sub_cd(0, Class_17f.viewWidth) + Class_17f.viewOffsetX;
+                  var_ec9[var2 + 1] = Class_17f.sub_cd(0, Class_17f.viewHeight) + Class_17f.viewOffsetY;
                }
             }
          }
 
          if ((var_eab & 8) != 0 && Class_17f.sub_cd(0, 2) == 0) {
             for(var2 = 0; var2 < Class_17f.sub_cd(0, 6); ++var2) {
-               var3 = Class_17f.sub_cd(0, Class_17f.var_89) + Class_17f.var_104;
-               var5 = Class_17f.sub_cd(0, Class_17f.var_dd) + Class_17f.var_13c;
+               var3 = Class_17f.sub_cd(0, Class_17f.viewWidth) + Class_17f.viewOffsetX;
+               var5 = Class_17f.sub_cd(0, Class_17f.viewHeight) + Class_17f.viewOffsetY;
                var4 = var3 + Class_17f.sub_cd(-1, 12);
                var6 = var5 + Class_17f.sub_cd(-12, 12);
                var7 = var4 - Class_17f.sub_cd(-1, 12);
@@ -4153,7 +4153,7 @@ final class Class_201 {
             }
          }
 
-         if ((var_eab & 32) != 0 && (var_129e & 1) != 0 && Class_17f.var_3b7 % 16 == 0) {
+         if ((var_eab & 32) != 0 && (vibrationEnabled & 1) != 0 && Class_17f.frameCounter % 16 == 0) {
             GameEngine.vibrate();
          }
 
@@ -4202,7 +4202,7 @@ final class Class_201 {
       sub_1994(0, 0);
       sub_1765();
       if (!sub_170f()) {
-         var_129e = 1;
+         vibrationEnabled = 1;
       }
 
       sub_19ef(GameCanvas.midlet);
@@ -4220,7 +4220,7 @@ final class Class_201 {
       byte var0 = (byte) GameEngine.readBits(8);
       byte var1 = (byte) GameEngine.readBits(8);
       byte var2 = (byte) GameEngine.readBits(8);
-      var_129e = (byte) GameEngine.readBits(8);
+      vibrationEnabled = (byte) GameEngine.readBits(8);
       int var4 = (GameEngine.readBits(16) << 16) + GameEngine.readBits(16);
       if (var0 == 1 && var1 == 22 && var2 == -127) {
          return sub_186a(8, var_109c) == var4;
@@ -4267,7 +4267,7 @@ final class Class_201 {
       GameEngine.writeBits(1, 8);
       GameEngine.writeBits(22, 8);
       GameEngine.writeBits(-127, 8);
-      GameEngine.writeBits(var_129e, 8);
+      GameEngine.writeBits(vibrationEnabled, 8);
       int var0;
       GameEngine.writeBits((var0 = sub_186a(8, var_109c)) >> 16, 16);
       GameEngine.writeBits(var0 & '\uffff', 16);

@@ -65,13 +65,13 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
 
    static void initGame() {
       GameEngine.forceGC();
-      Class_17f.var_21 = Math.max(240, instance.getWidth());
-      Class_17f.var_67 = instance.getHeight() - virtualPadImage.getHeight();
-      Class_17f.sub_14a(Class_17f.var_21, Class_17f.var_67, false);
-      GameEngine.initialize(midlet, Class_17f.var_21, Class_17f.var_67, 36, 36, 1);
+      Class_17f.screenWidth = Math.max(240, instance.getWidth());
+      Class_17f.screenHeight = instance.getHeight() - virtualPadImage.getHeight();
+      Class_17f.sub_14a(Class_17f.screenWidth, Class_17f.screenHeight, false);
+      GameEngine.initialize(midlet, Class_17f.screenWidth, Class_17f.screenHeight, 36, 36, 1);
       GameEngine.setTrigTables(Class_17f.sub_ac4(437), (int[])null, (int[])null);
       GameEngine.playerListener = instance;
-      Class_201.sub_167e();
+      GameManager.sub_167e();
       Class_17f.sub_3d7(1);
       Class_17f.sub_485(0, 50, 473);
       loadFont();
@@ -84,7 +84,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
    private static void destroyGame() {
       stateFlags |= 8;
       stateFlags &= -786433;
-      Class_201.sub_a7();
+      GameManager.sub_a7();
       cleanupLevel();
       unloadFont();
       GameEngine.destroy();
@@ -105,9 +105,9 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
       }
 
       if (gameState < 13) {
-         Class_201.sub_11c();
+         GameManager.sub_11c();
       } else {
-         Class_201.sub_b8b();
+         GameManager.sub_b8b();
       }
 
       destroyGame();
@@ -119,13 +119,13 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
       while(isRunning) {
          if (!isPaused) {
             stateFlags |= 1;
-            ++Class_17f.var_3b7;
+            ++Class_17f.frameCounter;
             if ((stateFlags & 2) != 0) {
                stateFlags &= -3;
                if ((stateFlags & 256) != 0) {
                   if ((stateFlags & 1048576) != 0) {
                      stateFlags &= -1048577;
-                     Class_201.sub_1a34(midlet);
+                     GameManager.sub_1a34(midlet);
                   }
 
                   isRunning = false;
@@ -144,10 +144,10 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
                      boolean var10001;
                      if (gameState < 13) {
                         var10000 = this;
-                        var10001 = Class_201.sub_18b();
+                        var10001 = GameManager.sub_18b();
                      } else {
                         var10000 = this;
-                        var10001 = Class_201.sub_e55();
+                        var10001 = GameManager.sub_e55();
                      }
 
                      var10000.shouldSkipRepaint = var10001;
@@ -193,7 +193,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
 
    private static void handleGarbageCollection() {
       boolean var0 = false;
-      var0 = Class_201.sub_50();
+      var0 = GameManager.playPendingMusic();
       if ((stateFlags & 131072) != 0 && !var0) {
          GameEngine.forceGC();
 
@@ -229,12 +229,12 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
 
          if (!isPaused) {
             GameEngine.directGraphics = DirectUtils.getDirectGraphics(var1);
-            var1.setClip(0, 0, Class_17f.var_21, Class_17f.var_67);
+            var1.setClip(0, 0, Class_17f.screenWidth, Class_17f.screenHeight);
             if (drawPauseScreen(var1) == 0) {
                if (gameState < 13) {
-                  Class_201.sub_1ba(var1);
+                  GameManager.sub_1ba(var1);
                } else {
-                  Class_201.sub_ed9(var1);
+                  GameManager.sub_ed9(var1);
                }
 
                stateFlags &= -524289;
@@ -260,31 +260,31 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
       int var3 = touchZones.length / 5;
       int var5 = this.getHeight() - virtualPadImage.getHeight();
       int var6 = 0;
-      if (var1 >= 1 && var1 <= 88 && var2 >= Class_17f.var_67 + 0 && var2 <= Class_17f.var_67 + 100) {
+      if (var1 >= 1 && var1 <= 88 && var2 >= Class_17f.screenHeight + 0 && var2 <= Class_17f.screenHeight + 100) {
          this.keyPressed(42);
       }
 
-      if (var1 >= 96 && var1 <= 169 && var2 >= Class_17f.var_67 + 0 && var2 <= Class_17f.var_67 + 106) {
+      if (var1 >= 96 && var1 <= 169 && var2 >= Class_17f.screenHeight + 0 && var2 <= Class_17f.screenHeight + 106) {
          this.keyPressed(-1);
       }
 
-      if (var1 >= 170 && var1 <= 265 && var2 >= Class_17f.var_67 + 0 && var2 <= Class_17f.var_67 + 106) {
+      if (var1 >= 170 && var1 <= 265 && var2 >= Class_17f.screenHeight + 0 && var2 <= Class_17f.screenHeight + 106) {
          this.keyPressed(-2);
       }
 
-      if (var1 >= 273 && var1 <= 360 && var2 >= Class_17f.var_67 + 0 && var2 <= Class_17f.var_67 + 100) {
+      if (var1 >= 273 && var1 <= 360 && var2 >= Class_17f.screenHeight + 0 && var2 <= Class_17f.screenHeight + 100) {
          this.keyPressed(48);
       }
 
-      if (var1 >= 0 && var1 <= 112 && var2 >= Class_17f.var_67 + 107 && var2 <= Class_17f.var_67 + 224) {
+      if (var1 >= 0 && var1 <= 112 && var2 >= Class_17f.screenHeight + 107 && var2 <= Class_17f.screenHeight + 224) {
          this.keyPressed(-3);
       }
 
-      if (var1 >= 113 && var1 <= 253 && var2 >= Class_17f.var_67 + 107 && var2 <= Class_17f.var_67 + 224) {
+      if (var1 >= 113 && var1 <= 253 && var2 >= Class_17f.screenHeight + 107 && var2 <= Class_17f.screenHeight + 224) {
          this.keyPressed(-5);
       }
 
-      if (var1 >= 254 && var1 <= 360 && var2 >= Class_17f.var_67 + 107 && var2 <= Class_17f.var_67 + 224) {
+      if (var1 >= 254 && var1 <= 360 && var2 >= Class_17f.screenHeight + 107 && var2 <= Class_17f.screenHeight + 224) {
          this.keyPressed(-4);
       }
 
@@ -308,34 +308,34 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
    }
 
    public final void pointerReleased(int var1, int var2) {
-      Class_17f.var_30f = 0;
+      Class_17f.inputState = 0;
       this.getHeight();
       virtualPadImage.getHeight();
-      if (var1 >= 1 && var1 <= 95 && var2 >= Class_17f.var_67 + 0 && var2 <= Class_17f.var_67 + 106) {
+      if (var1 >= 1 && var1 <= 95 && var2 >= Class_17f.screenHeight + 0 && var2 <= Class_17f.screenHeight + 106) {
          this.keyReleased(42);
       }
 
-      if (var1 >= 96 && var1 <= 169 && var2 >= Class_17f.var_67 + 0 && var2 <= Class_17f.var_67 + 106) {
+      if (var1 >= 96 && var1 <= 169 && var2 >= Class_17f.screenHeight + 0 && var2 <= Class_17f.screenHeight + 106) {
          this.keyReleased(-1);
       }
 
-      if (var1 >= 170 && var1 <= 265 && var2 >= Class_17f.var_67 + 0 && var2 <= Class_17f.var_67 + 106) {
+      if (var1 >= 170 && var1 <= 265 && var2 >= Class_17f.screenHeight + 0 && var2 <= Class_17f.screenHeight + 106) {
          this.keyReleased(-2);
       }
 
-      if (var1 >= 266 && var1 <= 360 && var2 >= Class_17f.var_67 + 0 && var2 <= Class_17f.var_67 + 106) {
+      if (var1 >= 266 && var1 <= 360 && var2 >= Class_17f.screenHeight + 0 && var2 <= Class_17f.screenHeight + 106) {
          this.keyReleased(48);
       }
 
-      if (var1 >= 0 && var1 <= 112 && var2 >= Class_17f.var_67 + 107 && var2 <= Class_17f.var_67 + 224) {
+      if (var1 >= 0 && var1 <= 112 && var2 >= Class_17f.screenHeight + 107 && var2 <= Class_17f.screenHeight + 224) {
          this.keyReleased(-3);
       }
 
-      if (var1 >= 113 && var1 <= 253 && var2 >= Class_17f.var_67 + 107 && var2 <= Class_17f.var_67 + 224) {
+      if (var1 >= 113 && var1 <= 253 && var2 >= Class_17f.screenHeight + 107 && var2 <= Class_17f.screenHeight + 224) {
          this.keyReleased(-5);
       }
 
-      if (var1 >= 254 && var1 <= 360 && var2 >= Class_17f.var_67 + 107 && var2 <= Class_17f.var_67 + 224) {
+      if (var1 >= 254 && var1 <= 360 && var2 >= Class_17f.screenHeight + 107 && var2 <= Class_17f.screenHeight + 224) {
          this.keyReleased(-4);
       }
 
@@ -345,7 +345,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
 
    public final void keyPressed(int var1) {
       if (gameState == 11 && var1 == 42) {
-         int[] var10000 = Class_201.var_228;
+         int[] var10000 = GameManager.menuState;
          var10000[3] |= 4;
       }
 
@@ -376,24 +376,24 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
    protected final void showNotify() {
       isPaused = false;
       this.setFullScreenMode(true);
-      Class_17f.var_30f = 0;
-      if (Class_201.var_228 != null) {
-         int[] var10000 = Class_201.var_228;
+      Class_17f.inputState = 0;
+      if (GameManager.menuState != null) {
+         int[] var10000 = GameManager.menuState;
          var10000[3] |= 96;
       }
 
-      if ((Class_201.var_9d8 & 128) != 0) {
+      if ((GameManager.var_9d8 & 128) != 0) {
          Class_17f.var_6e3 |= 1;
       }
 
-      Class_201.var_d55 &= -2;
+      GameManager.var_d55 &= -2;
    }
 
    protected final void hideNotify() {
       isPaused = true;
       stateFlags |= 262144;
       if (!threadStopped) {
-         Class_201.sub_a7();
+         GameManager.sub_a7();
       }
 
    }
@@ -415,34 +415,34 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
 
    private static void setState(int var0) {
       gameState = var0;
-      Class_17f.var_3b7 = 0;
+      Class_17f.frameCounter = 0;
       stateFlags &= -9;
       if (gameState < 13) {
-         Class_201.sub_c0();
+         GameManager.stopAllMusic();
          stateFlags &= -131073;
       } else {
-         Class_201.sub_b34();
+         GameManager.sub_b34();
       }
    }
 
    private static void initLevel() {
       Class_17f.sub_bb1();
       Class_17f.sub_901(39);
-      Class_201.sub_ad9();
+      GameManager.sub_ad9();
    }
 
    private static void cleanupLevel() {
-      Class_201.sub_aef();
+      GameManager.sub_aef();
       Class_17f.sub_90c();
       Class_17f.sub_bed();
       Class_17f.sub_437();
-      Class_201.sub_16cb();
+      GameManager.sub_16cb();
    }
 
    private static void loadFont() {
       Class_17f.sub_52a(435);
-      pauseChars = Class_17f.var_51a;
-      pauseCharWidths = Class_17f.var_543;
+      pauseChars = Class_17f.fontChars;
+      pauseCharWidths = Class_17f.stringTable;
    }
 
    private static void unloadFont() {
@@ -454,9 +454,9 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
       if ((stateFlags & 262144) == 0) {
          return 0;
       } else {
-         if (Class_17f.var_33f) {
-            Class_17f.var_33f = false;
-            if (Class_17f.var_30f != 0 || Class_17f.var_363 != 0) {
+         if (Class_17f.inputChanged) {
+            Class_17f.inputChanged = false;
+            if (Class_17f.inputState != 0 || Class_17f.lastKeyCode != 0) {
                stateFlags |= 589824;
                Class_17f.sub_9a();
                return 2;
@@ -470,11 +470,11 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
    private static int drawPauseScreen(Graphics var0) {
       if ((stateFlags & 262144) != 0) {
          var0.setColor(0);
-         var0.fillRect(0, 0, Class_17f.var_21, Class_17f.var_67);
-         char[] var1 = Class_17f.var_51a;
-         int[] var2 = Class_17f.var_543;
+         var0.fillRect(0, 0, Class_17f.screenWidth, Class_17f.screenHeight);
+         char[] var1 = Class_17f.fontChars;
+         int[] var2 = Class_17f.stringTable;
          Class_17f.sub_4f7(pauseChars, pauseCharWidths);
-         Class_17f.sub_657(var0, 0, Class_17f.var_89 >> 1, Class_17f.var_dd >> 1, 15, 0, 0, 0);
+         Class_17f.sub_657(var0, 0, Class_17f.viewWidth >> 1, Class_17f.viewHeight >> 1, 15, 0, 0, 0);
          Class_17f.sub_4f7(var1, var2);
          return 1;
       } else {

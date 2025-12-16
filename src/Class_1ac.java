@@ -194,8 +194,8 @@ class Class_1ac {
          this.var_44b = Integer.MAX_VALUE;
          this.var_4a3 = -1;
          this.var_4eb = -1;
-         var2 += Class_17f.var_104;
-         var3 += Class_17f.var_13c;
+         var2 += Class_17f.viewOffsetX;
+         var3 += Class_17f.viewOffsetY;
          int var5 = this.var_301;
 
          for(int var6 = 0; var6 < var4; var5 += 7) {
@@ -203,8 +203,8 @@ class Class_1ac {
             if ((this.var_53d & 1 << var20) != 0) {
                int var7 = this.var_11[var5 + 0] & 255;
                int var8 = this.var_11[var5 + 1] & 255;
-               Sprite var24 = (Sprite)Class_17f.var_c27[this.var_11[1 + var7]];
-               byte[] var23 = (byte[])Class_17f.var_c27[this.var_11[1 + var8]];
+               Sprite var24 = (Sprite)Class_17f.resourceCache[this.var_11[1 + var7]];
+               byte[] var23 = (byte[])Class_17f.resourceCache[this.var_11[1 + var8]];
                int var9 = (this.var_11[var5 + 5] & 255) << 2;
                int var10 = (var23[var9] & 255) << 1;
                int var11 = (var23[var9 + 1] & 255) << 1;
