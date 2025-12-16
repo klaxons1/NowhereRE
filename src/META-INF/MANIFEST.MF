@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0
+MIDlet-Name: Nowhere
+MIDlet-Version: 02.00.00
+MIDlet-Vendor: mob.ua
+MIDlet-1: Nowhere,/icon.png,MainApp
+MIDlet-Data-Size: 1024
+MIDlet-Icon: /icon.png
+Nokia-MIDlet-App-Orientation: portrait
+Nokia-MIDlet-On-Screen-Keypad: no
+Nokia-MIDlet-Category: Game
+SiteURL: wap.mob.ua
