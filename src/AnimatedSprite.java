@@ -194,8 +194,8 @@ class AnimatedSprite {
          this.var_44b = Integer.MAX_VALUE;
          this.var_4a3 = -1;
          this.var_4eb = -1;
-         var2 += Class_17f.viewOffsetX;
-         var3 += Class_17f.viewOffsetY;
+         var2 += GameRenderer.viewOffsetX;
+         var3 += GameRenderer.viewOffsetY;
          int var5 = this.var_301;
 
          for(int var6 = 0; var6 < var4; var5 += 7) {
@@ -203,8 +203,8 @@ class AnimatedSprite {
             if ((this.var_53d & 1 << var20) != 0) {
                int var7 = this.var_11[var5 + 0] & 255;
                int var8 = this.var_11[var5 + 1] & 255;
-               Sprite var24 = (Sprite)Class_17f.resourceCache[this.var_11[1 + var7]];
-               byte[] var23 = (byte[])Class_17f.resourceCache[this.var_11[1 + var8]];
+               Sprite var24 = (Sprite) GameRenderer.resourceCache[this.var_11[1 + var7]];
+               byte[] var23 = (byte[]) GameRenderer.resourceCache[this.var_11[1 + var8]];
                int var9 = (this.var_11[var5 + 5] & 255) << 2;
                int var10 = (var23[var9] & 255) << 1;
                int var11 = (var23[var9 + 1] & 255) << 1;
@@ -559,8 +559,8 @@ class AnimatedSprite {
 
    public void sub_487(Graphics var1) {
       if ((this.var_824 & 1) != 0) {
-         int var2 = (this.var_743 + this.var_615 >> 8) + this.var_679 + Class_17f.var_418;
-         int var3 = (this.var_77c + this.var_640 >> 8) + this.var_6c3 + Class_17f.var_43a;
+         int var2 = (this.var_743 + this.var_615 >> 8) + this.var_679 + GameRenderer.var_418;
+         int var3 = (this.var_77c + this.var_640 >> 8) + this.var_6c3 + GameRenderer.var_43a;
          this.sub_2ce(var1, var2, var3);
       }
 

@@ -52,12 +52,12 @@ final class PlayerCharacter extends AnimatedSprite {
    public final void sub_a6() {
       super.var_824 |= 1;
       super.var_954 = 0;
-      this.var_30e.var_11 = (byte[])Class_17f.sub_9d4(GameManager.var_6d1[0]);
+      this.var_30e.var_11 = (byte[]) GameRenderer.getResource(GameManager.var_6d1[0]);
       this.var_30e.sub_14(-65536);
       super.var_615 = super.var_640 = 0;
       super.var_679 = super.var_6c3 = 0;
       this.sub_e3();
-      Class_17f.sub_344(GameManager.var_ff5, 2, (short)this.maxHealth);
+      GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)this.maxHealth);
    }
 
    final void sub_e3() {
@@ -76,10 +76,10 @@ final class PlayerCharacter extends AnimatedSprite {
       int var1 = 0;
 
       int var5;
-      for(var5 = -1; var1 < Class_17f.var_f77; var2 += 5) {
-         int var3 = Class_17f.var_f81[var2] & 8191;
+      for(var5 = -1; var1 < GameRenderer.zoneCount; var2 += 5) {
+         int var3 = GameRenderer.zoneData[var2] & 8191;
          int var4;
-         if ((var4 = Class_17f.var_f81[var2] & '\ue000') == 16384 && (var3 & 4096) != 0) {
+         if ((var4 = GameRenderer.zoneData[var2] & '\ue000') == 16384 && (var3 & 4096) != 0) {
             if ((var3 & 511) == var12) {
                var5 = var1;
                var13 = false;
@@ -96,11 +96,11 @@ final class PlayerCharacter extends AnimatedSprite {
       PlayerCharacter var10000;
       if (var5 != -1) {
          var2 = var5 * 5;
-         int var10 = Class_17f.var_f81[var2++] >> 9 & 3;
-         short var6 = Class_17f.var_f81[var2++];
-         short var8 = Class_17f.var_f81[var2++];
-         short var7 = Class_17f.var_f81[var2++];
-         short var9 = Class_17f.var_f81[var2];
+         int var10 = GameRenderer.zoneData[var2++] >> 9 & 3;
+         short var6 = GameRenderer.zoneData[var2++];
+         short var8 = GameRenderer.zoneData[var2++];
+         short var7 = GameRenderer.zoneData[var2++];
+         short var9 = GameRenderer.zoneData[var2];
          if (var13) {
             super.var_591 = var6 + ((var7 - var6) * 128 >> 8);
             super.var_5d1 = var8 + ((var9 - var8) * 128 >> 8);
@@ -166,10 +166,10 @@ final class PlayerCharacter extends AnimatedSprite {
       super.var_591 <<= 8;
       super.var_5d1 <<= 8;
       this.sub_388();
-      super.var_743 = Class_17f.sub_d60(0, super.var_591);
-      super.var_77c = Class_17f.sub_db8(0, super.var_5d1);
+      super.var_743 = GameRenderer.worldToScreenFixedX(0, super.var_591);
+      super.var_77c = GameRenderer.worldToScreenFixedY(0, super.var_5d1);
       this.sub_42d(false);
-      Class_17f.sub_ccb(0, super.var_591 + this.var_26e, super.var_5d1 + this.var_27f, false, true);
+      GameRenderer.setCameraPosition(0, super.var_591 + this.var_26e, super.var_5d1 + this.var_27f, false, true);
       super.var_954 = 0;
       this.var_215 = 0;
    }
@@ -316,9 +316,9 @@ final class PlayerCharacter extends AnimatedSprite {
             }
          }
 
-         if (var6 != 3 && Class_17f.sub_fdd(0, GameManager.var_6be, var1, var2, var3, var4) > 0) {
+         if (var6 != 3 && GameRenderer.findTilesInRect(0, GameManager.var_6be, var1, var2, var3, var4) > 0) {
             int var13 = GameManager.var_6be[0] >> 8;
-            int var9 = Class_17f.var_1064[var13] >> 2;
+            int var9 = GameRenderer.collisionMap[var13] >> 2;
             if ((this.var_160 == 3 || this.var_160 == 7) && (var9 == 3 || var9 == 27) || (this.var_160 == 5 || this.var_160 == 7) && (var9 == 5 || var9 == 18)) {
                GameManager.sub_93e(0, var13);
             }
@@ -336,7 +336,7 @@ final class PlayerCharacter extends AnimatedSprite {
          int var3;
          label41: {
             int var10000;
-            if ((var3 = Class_17f.sub_2e5(GameManager.var_ff5, 2) - var1) < 0) {
+            if ((var3 = GameRenderer.readInt16LE(GameManager.var_ff5, 2) - var1) < 0) {
                var10000 = 0;
             } else {
                if (var3 <= this.maxHealth) {
@@ -349,7 +349,7 @@ final class PlayerCharacter extends AnimatedSprite {
             var3 = var10000;
          }
 
-         Class_17f.sub_344(GameManager.var_ff5, 2, (short)var3);
+         GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)var3);
          GameManager.var_9d8 |= 2;
          if ((GameManager.vibrationEnabled & 1) != 0) {
             GameEngine.vibrate();
@@ -357,7 +357,7 @@ final class PlayerCharacter extends AnimatedSprite {
       }
 
       GameManager.sub_1576(true);
-      if (Class_17f.sub_2e5(GameManager.var_ff5, 2) <= 0) {
+      if (GameRenderer.readInt16LE(GameManager.var_ff5, 2) <= 0) {
          GameManager.var_9d8 |= 16;
          GameManager.sub_c12();
          super.var_8fb = 64;
@@ -440,8 +440,8 @@ final class PlayerCharacter extends AnimatedSprite {
                return;
             }
 
-            var4 = Class_17f.sub_dd0(0, var1.var_591);
-            var10000 = Class_17f.sub_dd0(0, var1.var_5d1);
+            var4 = GameRenderer.snapToGridCenterX(0, var1.var_591);
+            var10000 = GameRenderer.snapToGridCenterX(0, var1.var_5d1);
          } else {
             if (var6 == -1 || AnimatedSprite.sub_22c(var1) == (var6 & 255)) {
                return;
@@ -452,12 +452,12 @@ final class PlayerCharacter extends AnimatedSprite {
                return;
             }
 
-            var4 = Class_17f.sub_dd0(0, var1.var_591);
+            var4 = GameRenderer.snapToGridCenterX(0, var1.var_591);
             var10000 = var1.var_5d1 - 9216;
          }
 
          int var5 = var10000;
-         Class_17f.sub_f76(0, var4, var5, (byte)0);
+         GameRenderer.setCollisionAt(0, var4, var5, (byte)0);
       }
 
    }
@@ -469,7 +469,7 @@ final class PlayerCharacter extends AnimatedSprite {
             GameManager.sub_11a8(339);
          }
 
-         Class_17f.sub_3b0(GameManager.var_ff5, var0.var_355, 0, 1, 33);
+         GameRenderer.setBitInArray(GameManager.var_ff5, var0.var_355, 0, 1, 33);
       }
 
       for(int var1 = 0; var1 < 7; ++var1) {
@@ -537,13 +537,13 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    private boolean sub_33f(int var1, int var2, int var3, int var4) {
-      if (Class_17f.sub_edd(var1, var2, var3, var4) != 0) {
-         if (Class_17f.var_1026 != -1 && (GameManager.var_9d8 & 128) == 0 && ((Class_17f.var_1026 & '\uffff') >> 0 & 4096) != 0) {
+      if (GameRenderer.detectZonesAtPos(var1, var2, var3, var4) != 0) {
+         if (GameRenderer.foundTriggerZone != -1 && (GameManager.var_9d8 & 128) == 0 && ((GameRenderer.foundTriggerZone & '\uffff') >> 0 & 4096) != 0) {
             label76: {
                GameManager.var_b02 = 0;
-               GameManager.var_aed = ((Class_17f.var_1026 & '\uffff') >> 0 & 4095) + 262;
+               GameManager.var_aed = ((GameRenderer.foundTriggerZone & '\uffff') >> 0 & 4095) + 262;
                int var10000;
-               if ((var1 = GameManager.sub_1539(0, GameManager.var_aed)) != -2 && !Class_17f.sub_39b(GameManager.var_ff5, GameManager.var_aed - 262, 0, 1, GameManager.var_10d5)) {
+               if ((var1 = GameManager.sub_1539(0, GameManager.var_aed)) != -2 && !GameRenderer.getBitInArray(GameManager.var_ff5, GameManager.var_aed - 262, 0, 1, GameManager.var_10d5)) {
                   if (var1 == -1) {
                      break label76;
                   }
@@ -558,17 +558,17 @@ final class PlayerCharacter extends AnimatedSprite {
          }
 
          short var5;
-         if ((var5 = (short)(Class_17f.var_fd5 >> 0 & '\uffff')) != -1) {
+         if ((var5 = (short)(GameRenderer.foundWarpZone >> 0 & '\uffff')) != -1) {
             if (GameManager.sub_c66(var5)) {
                return false;
             }
 
-            int var10 = (short)(Class_17f.var_fd5 >> 16 & '\uffff') * 5;
+            int var10 = (short)(GameRenderer.foundWarpZone >> 16 & '\uffff') * 5;
             ++var10;
-            short var6 = Class_17f.var_f81[var10++];
-            short var7 = Class_17f.var_f81[var10++];
-            short var8 = Class_17f.var_f81[var10++];
-            short var9 = Class_17f.var_f81[var10];
+            short var6 = GameRenderer.zoneData[var10++];
+            short var7 = GameRenderer.zoneData[var10++];
+            short var8 = GameRenderer.zoneData[var10++];
+            short var9 = GameRenderer.zoneData[var10];
             this.var_d0 = ((super.var_591 >> 8) - var6 << 8) / (var8 - var6);
             this.var_11b = ((super.var_5d1 >> 8) - var7 << 8) / (var9 - var7);
             if (this.var_11b > 255) {
@@ -589,11 +589,11 @@ final class PlayerCharacter extends AnimatedSprite {
          }
 
          super.var_824 &= -7425;
-         if (Class_17f.var_1013 != -1) {
+         if (GameRenderer.foundEventZone != -1) {
             PlayerCharacter var11;
             int var10001;
             short var10002;
-            switch(Class_17f.var_1013) {
+            switch(GameRenderer.foundEventZone) {
             case 4:
                var11 = this;
                var10001 = super.var_824;
@@ -639,7 +639,7 @@ final class PlayerCharacter extends AnimatedSprite {
             if ((super.var_824 & 65536) != 0) {
                GameManager.var_ff5[5] = 7;
                this.var_160 = GameManager.var_ff5[5];
-               Class_17f.sub_344(GameManager.var_ff5, 2, (short)this.maxHealth);
+               GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)this.maxHealth);
                this.sub_e3();
                if ((GameManager.var_57c[GameManager.var_ff5[8] * 8 + 3] & 8192) != 0 && (super.var_824 & 1024) == 0) {
                   --GameManager.var_e42;
@@ -647,7 +647,7 @@ final class PlayerCharacter extends AnimatedSprite {
 
                if (GameManager.var_e42 < 0) {
                   GameManager.var_e42 = 0;
-                  Class_17f.sub_344(GameManager.var_ff5, 2, (short)0);
+                  GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)0);
                   this.sub_233(0, false);
                }
             } else if (this.var_160 == 7) {
@@ -662,8 +662,8 @@ final class PlayerCharacter extends AnimatedSprite {
          int var12;
          if ((super.var_824 & 4096) != 0) {
             if (super.var_954 == 1) {
-               var11 = Class_17f.sub_dd0(0, super.var_591) >> 8;
-               var12 = Class_17f.sub_de9(0, super.var_5d1) >> 8;
+               var11 = GameRenderer.snapToGridCenterX(0, super.var_591) >> 8;
+               var12 = GameRenderer.snapToGridCenterY(0, super.var_5d1) >> 8;
                if (var11 != this.var_1cc >> 16 && (short)var12 != (short)this.var_1cc) {
                   GameManager.sub_a29(super.var_591 >> 8, super.var_5d1 >> 8, 2, 111, 0, 4, 0);
                   this.var_1cc = (var11 << 16) + (short)var12;
@@ -697,7 +697,7 @@ final class PlayerCharacter extends AnimatedSprite {
          }
 
          label277: {
-            if (Class_17f.sub_2e5(GameManager.var_ff5, 2) <= (short)(this.maxHealth >> 1) && super.var_954 != 3) {
+            if (GameRenderer.readInt16LE(GameManager.var_ff5, 2) <= (short)(this.maxHealth >> 1) && super.var_954 != 3) {
                super.var_824 |= 16384;
                if (++this.var_1b2 <= 160) {
                   if (this.var_1b2 > 152) {
@@ -854,12 +854,12 @@ final class PlayerCharacter extends AnimatedSprite {
                var10000.var_721 = var15;
             }
 
-            if (GameManager.var_d22 <= 0 && ((Class_17f.inputState & 1) != 0 || (super.var_824 & 16) != 0)) {
+            if (GameManager.var_d22 <= 0 && ((GameRenderer.inputState & 1) != 0 || (super.var_824 & 16) != 0)) {
                var10 = this.sub_196();
             }
 
             if (var10) {
-               if ((Class_17f.inputState & 1) == 0) {
+               if ((GameRenderer.inputState & 1) == 0) {
                   super.var_824 &= -129;
                }
 
@@ -870,23 +870,23 @@ final class PlayerCharacter extends AnimatedSprite {
                   label265: {
                      int var16;
                      label198: {
-                        if ((Class_17f.inputState & 2) != 0) {
+                        if ((GameRenderer.inputState & 2) != 0) {
                            this.var_242 |= 1;
                            this.var_242 &= -5;
-                           if ((Class_17f.inputState & 16) == 0 && (Class_17f.inputState & 8) == 0) {
+                           if ((GameRenderer.inputState & 16) == 0 && (GameRenderer.inputState & 8) == 0) {
                               this.var_242 &= -11;
                            }
 
                            var13 = 0;
                            var16 = -super.var_7d4;
                         } else {
-                           if ((Class_17f.inputState & 4) == 0) {
+                           if ((GameRenderer.inputState & 4) == 0) {
                               break label198;
                            }
 
                            this.var_242 |= 4;
                            this.var_242 &= -2;
-                           if ((Class_17f.inputState & 16) == 0 && (Class_17f.inputState & 8) == 0) {
+                           if ((GameRenderer.inputState & 16) == 0 && (GameRenderer.inputState & 8) == 0) {
                               this.var_242 &= -11;
                            }
 
@@ -897,23 +897,23 @@ final class PlayerCharacter extends AnimatedSprite {
                         var12 = var16;
                      }
 
-                     if ((Class_17f.inputState & 8) != 0) {
+                     if ((GameRenderer.inputState & 8) != 0) {
                         this.var_242 |= 8;
                         this.var_242 &= -3;
-                        if ((Class_17f.inputState & 2) == 0 && (Class_17f.inputState & 4) == 0) {
+                        if ((GameRenderer.inputState & 2) == 0 && (GameRenderer.inputState & 4) == 0) {
                            this.var_242 &= -6;
                         }
 
                         var13 = 3;
                         var16 = -super.var_7c3;
                      } else {
-                        if ((Class_17f.inputState & 16) == 0) {
+                        if ((GameRenderer.inputState & 16) == 0) {
                            break label265;
                         }
 
                         this.var_242 |= 2;
                         this.var_242 &= -9;
-                        if ((Class_17f.inputState & 2) == 0 && (Class_17f.inputState & 4) == 0) {
+                        if ((GameRenderer.inputState & 2) == 0 && (GameRenderer.inputState & 4) == 0) {
                            this.var_242 &= -6;
                         }
 
@@ -1035,11 +1035,11 @@ final class PlayerCharacter extends AnimatedSprite {
          if (var28 < 0) {
             var10000 = 0;
          } else {
-            if (var28 <= Class_17f.var_cb6[4] << 8) {
+            if (var28 <= GameRenderer.layerProperties[4] << 8) {
                break label241;
             }
 
-            var10000 = Class_17f.var_cb6[4] - 1 << 8;
+            var10000 = GameRenderer.layerProperties[4] - 1 << 8;
          }
 
          var28 = var10000;
@@ -1049,11 +1049,11 @@ final class PlayerCharacter extends AnimatedSprite {
          if (var29 < 0) {
             var10000 = 0;
          } else {
-            if (var29 <= Class_17f.var_cb6[5] << 8) {
+            if (var29 <= GameRenderer.layerProperties[5] << 8) {
                break label235;
             }
 
-            var10000 = Class_17f.var_cb6[5] - 1 << 8;
+            var10000 = GameRenderer.layerProperties[5] - 1 << 8;
          }
 
          var29 = var10000;
@@ -1093,10 +1093,10 @@ final class PlayerCharacter extends AnimatedSprite {
       int var32;
       int var34;
       label196: {
-         var7 = Class_17f.var_cb6[1];
-         int var8 = Class_17f.var_cb6[2];
-         var26 = Class_17f.var_cb6[6];
-         var27 = Class_17f.var_cb6[7];
+         var7 = GameRenderer.layerProperties[1];
+         int var8 = GameRenderer.layerProperties[2];
+         var26 = GameRenderer.layerProperties[6];
+         var27 = GameRenderer.layerProperties[7];
          var32 = var7 * var26 << 8;
          var34 = var8 * var27 << 8;
          if (var11 < 0) {
@@ -1138,19 +1138,19 @@ final class PlayerCharacter extends AnimatedSprite {
       var34 = (var14 >> 8) / var27;
       int var39 = 0;
       int var6;
-      if ((var6 = Class_17f.var_1064[var33 * var7 + var31] & 3) == 1 || var6 == 2) {
+      if ((var6 = GameRenderer.collisionMap[var33 * var7 + var31] & 3) == 1 || var6 == 2) {
          var39 = 1;
       }
 
-      if ((var6 = Class_17f.var_1064[var33 * var7 + var32] & 3) == 1 || var6 == 2) {
+      if ((var6 = GameRenderer.collisionMap[var33 * var7 + var32] & 3) == 1 || var6 == 2) {
          var39 |= 2;
       }
 
-      if ((var6 = Class_17f.var_1064[var34 * var7 + var31] & 3) == 1 || var6 == 2) {
+      if ((var6 = GameRenderer.collisionMap[var34 * var7 + var31] & 3) == 1 || var6 == 2) {
          var39 |= 4;
       }
 
-      if ((var6 = Class_17f.var_1064[var34 * var7 + var32] & 3) == 1 || var6 == 2) {
+      if ((var6 = GameRenderer.collisionMap[var34 * var7 + var32] & 3) == 1 || var6 == 2) {
          var39 |= 8;
       }
 
@@ -1330,7 +1330,7 @@ final class PlayerCharacter extends AnimatedSprite {
       boolean var7 = false;
       int var2 = super.var_591 + this.var_26e;
       int var3 = super.var_5d1 + this.var_27f;
-      Class_17f.sub_ccb(0, var2 >> 8, var3 + -8192 >> 8, false, true);
+      GameRenderer.setCameraPosition(0, var2 >> 8, var3 + -8192 >> 8, false, true);
       if (var4 < 0) {
          var4 += 256;
       }
@@ -1438,9 +1438,9 @@ final class PlayerCharacter extends AnimatedSprite {
 
    public final void sub_487(Graphics var1) {
       int var2 = (super.var_824 & 1024) != 0 ? 3 : 0;
-      this.var_30e.var_11 = super.var_11 = (byte[])Class_17f.sub_9d4(GameManager.var_6d1[var2]);
+      this.var_30e.var_11 = super.var_11 = (byte[]) GameRenderer.getResource(GameManager.var_6d1[var2]);
       if (GameManager.var_a0a != 9 && (super.var_824 & 1) != 0) {
-         var1.drawImage(GameManager.var_686[0].var_8a[0], GameManager.var_ccb + Class_17f.viewOffsetX + ((super.var_409[0] + super.var_409[2] >> 1) + super.var_743 >> 8) - 10, GameManager.var_d14 + Class_17f.viewOffsetY + ((super.var_409[1] + super.var_409[3] >> 1) + super.var_77c >> 8) - 4, 20);
+         var1.drawImage(GameManager.var_686[0].var_8a[0], GameManager.var_ccb + GameRenderer.viewOffsetX + ((super.var_409[0] + super.var_409[2] >> 1) + super.var_743 >> 8) - 10, GameManager.var_d14 + GameRenderer.viewOffsetY + ((super.var_409[1] + super.var_409[3] >> 1) + super.var_77c >> 8) - 4, 20);
          super.var_679 = GameManager.var_ccb;
          super.var_6c3 = GameManager.var_d14;
          if (super.var_954 != 3) {
@@ -1463,7 +1463,7 @@ final class PlayerCharacter extends AnimatedSprite {
                var10000.var_6c3 = var10001 + var10002;
             }
 
-            this.var_30e.sub_2ce(var1, GameManager.var_ccb + (Class_17f.sub_d60(0, super.var_591 + this.var_30e.var_615) >> 8), GameManager.var_d14 + (Class_17f.sub_db8(0, super.var_5d1 + this.var_30e.var_640) >> 8));
+            this.var_30e.sub_2ce(var1, GameManager.var_ccb + (GameRenderer.worldToScreenFixedX(0, super.var_591 + this.var_30e.var_615) >> 8), GameManager.var_d14 + (GameRenderer.worldToScreenFixedY(0, super.var_5d1 + this.var_30e.var_640) >> 8));
             if ((super.var_824 & 2) == 0) {
                this.var_30e.sub_315();
             }

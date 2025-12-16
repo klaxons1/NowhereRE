@@ -1,6 +1,6 @@
 import javax.microedition.lcdui.Graphics;
 
-final class Class_17f {
+final class GameRenderer {
    static int screenWidth;
    static int screenHeight;
    public static int viewWidth;
@@ -10,10 +10,10 @@ final class Class_17f {
    public static int marginX;
    public static int marginY;
    public static int viewportFlags;
-   public static int var_238;
-   public static int var_24c;
-   public static int var_289;
-   public static int var_2c5;
+   public static int boundsLeft;
+   public static int boundsTop;
+   public static int boundsRight;
+   public static int boundsBottom;
    public static byte inputState;
    public static boolean inputChanged;
    public static int lastKeyCode;
@@ -31,51 +31,51 @@ final class Class_17f {
    static int languageId;
    static Sprite[] fontSprites;
    static Object[] fontData;
-   static int var_696;
-   static int var_6e3;
-   static int var_735;
-   static int var_795;
-   static int var_7a4;
-   static int var_7fb;
-   static int var_851;
-   static int var_87e;
-   static int var_8df;
-   static int var_936;
-   static int var_971;
-   static int var_9c5;
-   static int var_a20;
-   static int var_a7e;
-   static int var_ab7;
-   static int var_ac9;
-   static int var_ae8;
-   static char[] var_b49;
-   static int[] var_ba2;
+   static int dialogState;
+   static int dialogFlags;
+   static int stringId;
+   static int startLineIndex;
+   static int dialogNavigation;
+   static int textDisplayTimer;
+   static int maxTextTimer;
+   static int currentIconId;
+   static int previousIconId;
+   static int dialogNavigationType;
+   static int lineVisibilityMask;
+   static int dialogWidth;
+   static int dialogHeight;
+   static int currentFontHeight;
+   static int currentFontId;
+   static int iconFontId;
+   static int charAnimationCounter;
+   static char[] savedFontChars;
+   static int[] savedStringTable;
    protected static int[] resourceIds = null;
    protected static Object[] resourceCache = null;
-   static int var_c77;
-   static int[] var_cb6;
-   static TileMap[] var_cd8;
-   static Sprite[] var_d07;
-   static int var_d50;
-   static int var_d6b;
-   static byte[] var_dcb;
-   static int var_e25;
+   static int layerCount;
+   static int[] layerProperties;
+   static TileMap[] tileMaps;
+   static Sprite[] layerSprites;
+   static int defaultPaletteId;
+   static int mapFlags;
+   static byte[] mapDataBuffer;
+   static int mapLoadProgress;
    static int viewportLeft;
    static int viewportTop;
    static int viewportWidth;
    static int viewportHeight;
-   static int var_f77;
-   static short[] var_f81;
-   static int var_fd5;
-   static int var_1013;
-   static int var_1026;
-   static Object[] var_1059;
-   static byte[] var_1064;
+   static int zoneCount;
+   static short[] zoneData;
+   static int foundWarpZone;
+   static int foundEventZone;
+   static int foundTriggerZone;
+   static Object[] objectArray;
+   static byte[] collisionMap;
    static int var_10a3;
    static int var_10eb;
-   public static int var_1129;
+   public static int mapBackgroundColor;
 
-   static void sub_3b(Graphics var0, Sprite var1, byte var2) {
+   static void drawAlignedSprite(Graphics var0, Sprite var1, byte var2) {
       int var10000;
       int var3;
       int var5;
@@ -121,7 +121,7 @@ final class Class_17f {
       var0.drawImage(var1.var_8a[0], var5, var6, 20);
    }
 
-   static void sub_7f(Graphics var0, int var1, int var2, int var3, int var4, Sprite var5, int var6, int var7, int var8) {
+   static void drawTiledPattern(Graphics var0, int var1, int var2, int var3, int var4, Sprite var5, int var6, int var7, int var8) {
       var1 += viewOffsetX;
       var2 += viewOffsetY;
       var6 *= var7;
@@ -150,13 +150,13 @@ final class Class_17f {
       }
    }
 
-   public static void sub_9a() {
+   public static void resetInput() {
       inputState = 0;
       lastKeyCode = 0;
       inputChanged = false;
    }
 
-   static void sub_b2(int var0, boolean var1) {
+   static void handleKeyPress(int var0, boolean var1) {
       byte var2;
       byte var3;
       label54: {
@@ -210,12 +210,12 @@ final class Class_17f {
 
    }
 
-   static int sub_cd(int var0, int var1) {
+   static int randomInRange(int var0, int var1) {
       int var2 = GameEngine.random.nextInt();
       return var0 + Math.abs(var2) % (var1 - var0 + 1);
    }
 
-   private static int sub_10a(int var0, int var1, int var2) {
+   private static int interpolateColor(int var0, int var1, int var2) {
       label14: {
          short var10000;
          if (var2 < 0) {
@@ -243,7 +243,7 @@ final class Class_17f {
       return var3 << 16 | var4 << 8 | var5;
    }
 
-   public static void sub_14a(int var0, int var1, boolean var2) {
+   public static void setViewDimensions(int var0, int var1, boolean var2) {
       viewWidth = var0 <= 0 ? screenWidth : var0;
       viewHeight = var1 <= 0 ? screenHeight : var1;
       viewOffsetX = screenWidth - viewWidth >> 1;
@@ -254,7 +254,7 @@ final class Class_17f {
 
    }
 
-   private static void sub_16a() {
+   private static void updateViewportFlags() {
       viewportFlags &= -241;
       if (viewportWidth < viewWidth) {
          if (viewportLeft > 0) {
@@ -278,7 +278,7 @@ final class Class_17f {
 
    }
 
-   public static void sub_1c2(Graphics var0, int var1) {
+   public static void drawViewportBorders(Graphics var0, int var1) {
       if ((viewportFlags & 240) != 0) {
          var0.setColor(var1);
          if ((viewportFlags & 128) != 0) {
@@ -300,7 +300,7 @@ final class Class_17f {
 
    }
 
-   private static void sub_21d(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
+   private static void drawVerticalGradient(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
       int var8;
       int var12 = (var8 = var4 / var7) * var7;
       int var9 = 255 / var7;
@@ -310,7 +310,7 @@ final class Class_17f {
 
       int var10;
       for(var10 = 0; var10 < var12; var11 += var9) {
-         var0.setColor(sub_10a(var5, var6, var11));
+         var0.setColor(interpolateColor(var5, var6, var11));
          var0.fillRect(var1, var2 + var10, var3, var8);
          var10 += var8;
       }
@@ -324,18 +324,18 @@ final class Class_17f {
             return;
          }
 
-         var0.setColor(sub_10a(var5, var6, var11));
+         var0.setColor(interpolateColor(var5, var6, var11));
          var0.fillRect(var1, var2 + var10, var3, var8);
          var10000 = var10 + var8;
       }
    }
 
-   public static int sub_244(int var0, byte[] var1) {
+   public static int getAnimationFrameCount(int var0, byte[] var1) {
       var0 = 1 + ((var1[0] & 255) << 1) + (var0 << 2);
       return var1[var0 + 1] & 255;
    }
 
-   public static int sub_265(int var0, int var1, byte[] var2) {
+   public static int getAnimationSpriteCount(int var0, int var1, byte[] var2) {
       int var3 = (var1 = 1 + ((var2[0] & 255) << 1) + (var1 << 2)) + 2 + (var0 << 1);
       int var4 = var1 + ((var2[var3 + 1] & 255) << 8) + (var2[var3] & 255);
       if ((var2[var4 + 0] & 2) != 0) {
@@ -346,7 +346,7 @@ final class Class_17f {
       }
    }
 
-   static boolean sub_292(Graphics var0, int var1, int var2, int var3, int var4, int var5, boolean var6, int var7, byte[] var8) {
+   static boolean drawCompositeSprite(Graphics var0, int var1, int var2, int var3, int var4, int var5, boolean var6, int var7, byte[] var8) {
       var3 = 1 + ((var8[0] & 255) << 1) + (var3 << 2);
       int var9 = var8[var3 + 1] & 255;
       boolean var10000;
@@ -365,10 +365,10 @@ final class Class_17f {
       if (var9 == 0) {
          return var30;
       } else {
-         var_238 = Integer.MAX_VALUE;
-         var_24c = Integer.MAX_VALUE;
-         var_289 = -1;
-         var_2c5 = -1;
+         boundsLeft = Integer.MAX_VALUE;
+         boundsTop = Integer.MAX_VALUE;
+         boundsRight = -1;
+         boundsBottom = -1;
          var1 += viewOffsetX;
          var2 += viewOffsetY;
 
@@ -451,63 +451,63 @@ final class Class_17f {
                   var27 += var13;
                }
 
-               if (var26 < var_238) {
-                  var_238 = var26;
+               if (var26 < boundsLeft) {
+                  boundsLeft = var26;
                }
 
-               if (var27 < var_24c) {
-                  var_24c = var27;
+               if (var27 < boundsTop) {
+                  boundsTop = var27;
                }
 
-               if (var26 + var14 > var_289) {
-                  var_289 = var26 + var14;
+               if (var26 + var14 > boundsRight) {
+                  boundsRight = var26 + var14;
                }
 
-               if (var27 + var15 > var_2c5) {
-                  var_2c5 = var27 + var15;
+               if (var27 + var15 > boundsBottom) {
+                  boundsBottom = var27 + var15;
                }
             }
 
             ++var11;
          }
 
-         var_289 -= var_238;
-         var_2c5 -= var_24c;
+         boundsRight -= boundsLeft;
+         boundsBottom -= boundsTop;
          return var30;
       }
    }
 
-   static int sub_2ad(byte[] var0, int var1) {
+   static int readInt32LE(byte[] var0, int var1) {
       return ((var0[var1 + 3] & 255) << 24) + ((var0[var1 + 2] & 255) << 16) + ((var0[var1 + 1] & 255) << 8) + (var0[var1] & 255);
    }
 
-   static short sub_2e5(byte[] var0, int var1) {
+   static short readInt16LE(byte[] var0, int var1) {
       return (short)(((var0[var1 + 1] & 255) << 8) + (var0[var1] & 255));
    }
 
-   static void sub_300(byte[] var0, int var1, int var2) {
+   static void writeInt32LE(byte[] var0, int var1, int var2) {
       var0[var1 + 3] = (byte)(var2 >> 24 & 255);
       var0[var1 + 2] = (byte)(var2 >> 16 & 255);
       var0[var1 + 1] = (byte)(var2 >> 8 & 255);
       var0[var1 + 0] = (byte)(var2 & 255);
    }
 
-   static void sub_344(byte[] var0, int var1, short var2) {
+   static void writeInt16LE(byte[] var0, int var1, short var2) {
       var0[var1 + 1] = (byte)(var2 >> 8 & 255);
       var0[var1 + 0] = (byte)(var2 & 255);
    }
 
-   static boolean sub_39b(byte[] var0, int var1, int var2, int var3, int var4) {
+   static boolean getBitInArray(byte[] var0, int var1, int var2, int var3, int var4) {
       int var5 = var1 * var3 + var2;
       return (var0[var4 + (var5 >> 3)] & 1 << 7 - var5 % 8) != 0;
    }
 
-   static void sub_3b0(byte[] var0, int var1, int var2, int var3, int var4) {
+   static void setBitInArray(byte[] var0, int var1, int var2, int var3, int var4) {
       int var5 = var1 * var3 + var2;
       var0[var4 + (var5 >> 3)] = (byte)(var0[var4 + (var5 >> 3)] | 1 << 7 - var5 % 8);
    }
 
-   static void sub_3d7(int var0) {
+   static void initFontSystem(int var0) {
       fontSprites = new Sprite[var0];
       fontData = new Object[var0];
       numberBuffer = new char[10];
@@ -515,8 +515,8 @@ final class Class_17f {
       languageId = 0;
    }
 
-   static void sub_437() {
-      sub_499(-1);
+   static void disposeFonts() {
+      unloadFont(-1);
       fontSprites = null;
       fontData = null;
       numberBuffer = null;
@@ -525,10 +525,10 @@ final class Class_17f {
          iconSprite = null;
       }
 
-      sub_4d7();
+      clearCurrentFont();
    }
 
-   static void sub_485(int var0, int var1, int var2) {
+   static void loadFont(int var0, int var1, int var2) {
       fontSprites[var0] = GameEngine.loadSpriteSet(var1);
       BinaryReader var5;
       int var3 = ((var5 = GameEngine.openDataStream(var2)).buffer[var5.position++] & 255) + ((var5.buffer[var5.position++] & 255) << 8) + ((var5.buffer[var5.position++] & 255) << 16) + ((var5.buffer[var5.position++] & 255) << 24);
@@ -539,7 +539,7 @@ final class Class_17f {
       var4[435] = 5;
    }
 
-   private static void sub_499(int var0) {
+   private static void unloadFont(int var0) {
       for(int var1 = 0; var1 < fontSprites.length; ++var1) {
          if (var0 == -1 || var0 == var1) {
             if (fontSprites[var1] != null) {
@@ -553,28 +553,28 @@ final class Class_17f {
          }
       }
 
-      sub_4d7();
+      clearCurrentFont();
    }
 
-   public static void sub_4d7() {
+   public static void clearCurrentFont() {
       fontChars = null;
       stringTable = null;
    }
 
-   public static void sub_4f7(char[] var0, int[] var1) {
+   public static void setCurrentFont(char[] var0, int[] var1) {
       fontChars = var0;
       stringTable = var1;
    }
 
-   public static int sub_52a(int var0) {
+   public static int loadStringTable(int var0) {
       BinaryReader var3;
       byte[] var2 = GameEngine.readBytes(var3 = GameEngine.openDataStream(languageId * 174 + var0), GameEngine.getStreamSize(var3));
       var3.buffer = null;
-      fontChars = sub_b90(var2, var2.length);
-      return sub_546();
+      fontChars = decodeString(var2, var2.length);
+      return parseStringTable();
    }
 
-   public static int sub_546() {
+   public static int parseStringTable() {
       stringTable = null;
       if (fontChars == null) {
          return 0;
@@ -621,11 +621,11 @@ final class Class_17f {
       }
    }
 
-   public static int sub_5a0(int var0) {
+   public static int getFontHeight(int var0) {
       return ((byte[]) fontData[var0])[2];
    }
 
-   public static int sub_5f5(int var0, int var1) {
+   public static int getStringWidth(int var0, int var1) {
       if (fontChars != null && var1 < stringTable.length) {
          int var3 = stringTable[var1] >> 16;
          int var4 = stringTable[var1] & '\uffff';
@@ -654,7 +654,7 @@ final class Class_17f {
       }
    }
 
-   public static int sub_645(Graphics var0, char var1, int var2, int var3, int var4, int var5) {
+   public static int drawCharacter(Graphics var0, char var1, int var2, int var3, int var4, int var5) {
       int var9 = var1 & 255;
       byte var8;
       byte[] var12;
@@ -679,7 +679,7 @@ final class Class_17f {
       return var2;
    }
 
-   public static int sub_657(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
+   public static int drawString(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
       int var22 = var5 >> 24;
       int var23 = var5 >> 16 & 255;
       var5 &= 65535;
@@ -699,7 +699,7 @@ final class Class_17f {
          int var24;
          if (var5 == 0) {
             var19 = var2;
-            var24 = sub_5f5(var7, var1);
+            var24 = getStringWidth(var7, var1);
             switch(var4 & 255) {
             case 11:
                var2 -= var24 >> 1;
@@ -710,7 +710,7 @@ final class Class_17f {
             }
 
             if (var0 != null) {
-               var19 = sub_6a9(var0, fontChars, var10, var9, var2, var3, var7);
+               var19 = drawStringInternal(var0, fontChars, var10, var9, var2, var3, var7);
             }
 
             var3 += var17 + var18;
@@ -798,7 +798,7 @@ final class Class_17f {
                         var13 = var3 - (var17 + var18 >> 1);
                      }
 
-                     var19 = sub_6a9(var0, fontChars, var10 + var15, var8, var12, var13, var7);
+                     var19 = drawStringInternal(var0, fontChars, var10 + var15, var8, var12, var13, var7);
                      var3 += var17 + var18;
                      if (var22 != 0 && var23 != 0) {
                         --var23;
@@ -834,7 +834,7 @@ final class Class_17f {
       }
    }
 
-   private static int sub_6a9(Graphics var0, char[] var1, int var2, int var3, int var4, int var5, int var6) {
+   private static int drawStringInternal(Graphics var0, char[] var1, int var2, int var3, int var4, int var5, int var6) {
       var4 += viewOffsetX;
       var5 += viewOffsetY;
       var3 += var2;
@@ -877,7 +877,7 @@ final class Class_17f {
       return var4 - viewOffsetX;
    }
 
-   public static int sub_6de(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6) {
+   public static int drawNumber(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6) {
       int var8 = 0;
       byte var14 = 0;
       var2 += viewOffsetX;
@@ -973,11 +973,11 @@ final class Class_17f {
       }
    }
 
-   static void sub_738(int var0, int var1, int var2, char[] var3, int var4, int var5) {
+   static void insertValueInText(int var0, int var1, int var2, char[] var3, int var4, int var5) {
       boolean var11 = false;
       boolean var12 = false;
       boolean var13 = false;
-      int var14 = var3 == null ? sub_6de((Graphics)null, var2, 0, 0, 0, -2, 0) : 0;
+      int var14 = var3 == null ? drawNumber((Graphics)null, var2, 0, 0, 0, -2, 0) : 0;
       int var10 = 0;
 
       for(int var7 = var0; var7 < stringTable.length; ++var7) {
@@ -1032,179 +1032,179 @@ final class Class_17f {
 
    }
 
-   static void sub_785(int var0, int var1, int var2, int var3, int var4, int var5) {
-      var_ab7 = var3;
-      var_a7e = sub_5a0(var3);
-      var_9c5 = var2;
-      var_a20 = 10 + (var_a7e + 1) * 3;
-      if ((var_a20 & 1) != 0) {
-         ++var_a20;
+   static void initDialog(int var0, int var1, int var2, int var3, int var4, int var5) {
+      currentFontId = var3;
+      currentFontHeight = getFontHeight(var3);
+      dialogWidth = var2;
+      dialogHeight = 10 + (currentFontHeight + 1) * 3;
+      if ((dialogHeight & 1) != 0) {
+         ++dialogHeight;
       }
 
-      var_795 = var1;
-      var_735 = var0;
-      var_696 = 30;
-      var_6e3 = var5;
-      var_6e3 &= -65;
-      var_8df = -1;
-      var_87e = -1;
-      var_971 = 0;
-      var_ac9 = var4;
-      var_7a4 = 0;
-      var_ae8 = 1;
+      startLineIndex = var1;
+      stringId = var0;
+      dialogState = 30;
+      dialogFlags = var5;
+      dialogFlags &= -65;
+      previousIconId = -1;
+      currentIconId = -1;
+      lineVisibilityMask = 0;
+      iconFontId = var4;
+      dialogNavigation = 0;
+      charAnimationCounter = 1;
    }
 
-   private static void sub_7bd() {
-      var_936 = 0;
-      var_b49 = null;
-      var_ba2 = null;
-      sub_4d7();
+   private static void closeDialog() {
+      dialogNavigationType = 0;
+      savedFontChars = null;
+      savedStringTable = null;
+      clearCurrentFont();
    }
 
-   public static void sub_81d(int var0) {
-      if (var_696 == 34) {
-         int var1 = var_7a4 & 255;
-         int var2 = var_7a4 >> 8 & 255;
-         if (var_7a4 != 0 && var_7a4 != 16777216 && var1 != 0 && var2 > 0) {
+   public static void handleDialogInput(int var0) {
+      if (dialogState == 34) {
+         int var1 = dialogNavigation & 255;
+         int var2 = dialogNavigation >> 8 & 255;
+         if (dialogNavigation != 0 && dialogNavigation != 16777216 && var1 != 0 && var2 > 0) {
             if (inputState == 8) {
-               var_7a4 &= 65535;
-               var_6e3 |= 1;
+               dialogNavigation &= 65535;
+               dialogFlags |= 1;
                return;
             }
 
             if (inputState == 16) {
-               var_7a4 = 65536 | var_7a4 & '\uffff';
-               var_6e3 |= 1;
+               dialogNavigation = 65536 | dialogNavigation & '\uffff';
+               dialogFlags |= 1;
                return;
             }
 
             if ((inputState & 1) != 0) {
-               ++var_7fb;
-               var_6e3 |= 1;
+               ++textDisplayTimer;
+               dialogFlags |= 1;
                return;
             }
          } else {
             if ((inputState & 5) != 0) {
-               if (var_ae8 != 0) {
-                  var_ae8 = 0;
+               if (charAnimationCounter != 0) {
+                  charAnimationCounter = 0;
                } else {
-                  var_ae8 = 1;
-                  ++var_7fb;
+                  charAnimationCounter = 1;
+                  ++textDisplayTimer;
                }
 
-               var_6e3 |= 1;
+               dialogFlags |= 1;
                return;
             }
 
             if (var0 == -6) {
-               var_7fb = var_851;
-               var_696 = 35;
+               textDisplayTimer = maxTextTimer;
+               dialogState = 35;
             }
          }
 
       }
    }
 
-   public static boolean sub_831() {
-      sub_4f7(var_b49, var_ba2);
+   public static boolean updateDialog() {
+      setCurrentFont(savedFontChars, savedStringTable);
       int var0;
       int var1;
-      switch(var_696) {
+      switch(dialogState) {
       case 30:
-         sub_52a(var_735);
-         var_b49 = fontChars;
-         var_ba2 = stringTable;
-         var_7a4 = 0;
-         var_7fb = 0;
-         var_851 = sub_89d((Graphics)null, 0, 0, 0);
-         var_6e3 |= 1;
-         var_696 = 31;
+         loadStringTable(stringId);
+         savedFontChars = fontChars;
+         savedStringTable = stringTable;
+         dialogNavigation = 0;
+         textDisplayTimer = 0;
+         maxTextTimer = renderDialogText((Graphics)null, 0, 0, 0);
+         dialogFlags |= 1;
+         dialogState = 31;
       case 31:
       default:
          break;
       case 32:
-         var_696 = 34;
+         dialogState = 34;
          break;
       case 33:
-         if (var_971 != 0) {
-            var0 = var_7a4 & 255;
-            var1 = var_7a4 >> 8 & 255;
+         if (lineVisibilityMask != 0) {
+            var0 = dialogNavigation & 255;
+            var1 = dialogNavigation >> 8 & 255;
             int var2 = (fontChars[2] | 32) - 97;
             int var3 = (fontChars[3] | 32) - 97;
-            if (var_971 != 1 && (var2 != 0 || var3 != 0)) {
-               if (var_971 == 2) {
+            if (lineVisibilityMask != 1 && (var2 != 0 || var3 != 0)) {
+               if (lineVisibilityMask == 2) {
                   ++var1;
-                  var_7a4 = ((var_6e3 & 16) != 0 ? 0 : 1) << 16 | (var1 & 255) << 8 | var0 & 255;
+                  dialogNavigation = ((dialogFlags & 16) != 0 ? 0 : 1) << 16 | (var1 & 255) << 8 | var0 & 255;
                } else {
-                  var_7a4 = 16777216;
-                  if (var_971 == 3 && var2 > 0) {
-                     var_795 = 3;
-                  } else if (var_971 == 4 && var3 > 0) {
-                     var_795 = 3 + var2;
+                  dialogNavigation = 16777216;
+                  if (lineVisibilityMask == 3 && var2 > 0) {
+                     startLineIndex = 3;
+                  } else if (lineVisibilityMask == 4 && var3 > 0) {
+                     startLineIndex = 3 + var2;
                   } else {
-                     var_696 = 35;
+                     dialogState = 35;
                   }
                }
 
-               var_851 = sub_89d((Graphics)null, 0, 0, 0);
-               var_7fb = 0;
-               var_6e3 |= 1;
-               var_696 = 34;
-               var_971 = 0;
+               maxTextTimer = renderDialogText((Graphics)null, 0, 0, 0);
+               textDisplayTimer = 0;
+               dialogFlags |= 1;
+               dialogState = 34;
+               lineVisibilityMask = 0;
             } else {
-               var_696 = 35;
+               dialogState = 35;
             }
          }
          break;
       case 34:
-         if (var_7fb >= var_851) {
-            if ((var0 = var_7a4 & 255) != 0 && (var1 = var_7a4 >> 8 & 255) <= var0) {
+         if (textDisplayTimer >= maxTextTimer) {
+            if ((var0 = dialogNavigation & 255) != 0 && (var1 = dialogNavigation >> 8 & 255) <= var0) {
                if (var1 == 0) {
                   ++var1;
-                  var_7a4 = ((var_6e3 & 16) != 0 ? 0 : 1) << 16 | (var1 & 255) << 8 | var0 & 255;
-                  var_851 = sub_89d((Graphics)null, 0, 0, 0);
-                  var_7fb = 0;
-                  var_6e3 |= 1;
+                  dialogNavigation = ((dialogFlags & 16) != 0 ? 0 : 1) << 16 | (var1 & 255) << 8 | var0 & 255;
+                  maxTextTimer = renderDialogText((Graphics)null, 0, 0, 0);
+                  textDisplayTimer = 0;
+                  dialogFlags |= 1;
                } else {
-                  var_696 = 33;
+                  dialogState = 33;
                }
             } else {
-               var_696 = 35;
+               dialogState = 35;
             }
          }
          break;
       case 35:
-         sub_7bd();
+         closeDialog();
          return true;
       }
 
       return false;
    }
 
-   public static boolean sub_83e(Graphics var0, int var1, int var2, int var3) {
-      if (var_696 == 35) {
+   public static boolean drawDialog(Graphics var0, int var1, int var2, int var3) {
+      if (dialogState == 35) {
          return false;
       } else {
          var0.setColor(9961472);
-         var0.fillRect(viewOffsetX + var1, viewOffsetY + var2, viewWidth, var_a20);
-         sub_21d(var0, var1 + 2, var2 + 2, var_9c5 - 4, var_a20 - 4, 4737080, 0, 16);
-         sub_4f7(var_b49, var_ba2);
-         if (var_696 != 34) {
+         var0.fillRect(viewOffsetX + var1, viewOffsetY + var2, viewWidth, dialogHeight);
+         drawVerticalGradient(var0, var1 + 2, var2 + 2, dialogWidth - 4, dialogHeight - 4, 4737080, 0, 16);
+         setCurrentFont(savedFontChars, savedStringTable);
+         if (dialogState != 34) {
             return true;
          } else {
-            var_6e3 &= -2;
+            dialogFlags &= -2;
             int var4;
-            if ((var4 = var_7fb) >= var_851) {
-               var4 = var_851 - 1;
+            if ((var4 = textDisplayTimer) >= maxTextTimer) {
+               var4 = maxTextTimer - 1;
             }
 
-            sub_89d(var0, var3, var2, var4);
-            if (var_ae8 != 0) {
-               var_ae8 += 2;
+            renderDialogText(var0, var3, var2, var4);
+            if (charAnimationCounter != 0) {
+               charAnimationCounter += 2;
             }
 
-            if (var_7fb < var_851 - 1 && frameCounter % 20 != 0) {
-               sub_645(var0, '°', var3 + var_9c5 - sub_645((Graphics)null, '°', 0, 0, var_ab7, -1) - 2, var2 + var_a20 - var_a7e, var_ab7, -1);
+            if (textDisplayTimer < maxTextTimer - 1 && frameCounter % 20 != 0) {
+               drawCharacter(var0, '°', var3 + dialogWidth - drawCharacter((Graphics)null, '°', 0, 0, currentFontId, -1) - 2, var2 + dialogHeight - currentFontHeight, currentFontId, -1);
             }
 
             return true;
@@ -1212,7 +1212,7 @@ final class Class_17f {
       }
    }
 
-   private static int sub_89d(Graphics var0, int var1, int var2, int var3) {
+   private static int renderDialogText(Graphics var0, int var1, int var2, int var3) {
       int var9;
       int var10;
       int var11;
@@ -1229,21 +1229,21 @@ final class Class_17f {
             var10 = 0;
             var11 = 0;
             boolean var12 = false;
-            if ((var_7a4 & 16777216) == 0 && stringTable[0] >> 16 >= 7 && fontChars[0] == '@' && (fontChars[1] | 32) == 122) {
+            if ((dialogNavigation & 16777216) == 0 && stringTable[0] >> 16 >= 7 && fontChars[0] == '@' && (fontChars[1] | 32) == 122) {
                int var15 = (fontChars[2] | 32) - 97;
                int var16 = (fontChars[3] | 32) - 97;
                var14 = (fontChars[4] | 32) - 97;
                var9 = (fontChars[5] | 32) - 97;
-               var10 = var_7a4 >> 8 & 255;
-               var11 = var_7a4 >> 16 & 255;
+               var10 = dialogNavigation >> 8 & 255;
+               var11 = dialogNavigation >> 16 & 255;
                if (var10 == 0 && var14 == 0) {
                   ++var10;
-                  var_7a4 = ((var_6e3 & 16) != 0 ? 0 : 1) << 16 | (var10 & 255) << 8 | var9 & 255;
+                  dialogNavigation = ((dialogFlags & 16) != 0 ? 0 : 1) << 16 | (var10 & 255) << 8 | var9 & 255;
                }
 
                if (var10 == 0) {
                   var13 = 3 + var15 + var16;
-                  var_7a4 = ((var_6e3 & 16) != 0 ? 0 : 1) << 16 | var9;
+                  dialogNavigation = ((dialogFlags & 16) != 0 ? 0 : 1) << 16 | var9;
                   break label74;
                }
 
@@ -1257,13 +1257,13 @@ final class Class_17f {
                   break label86;
                }
             } else {
-               if (var_795 == -1) {
+               if (startLineIndex == -1) {
                   var13 = 0;
                   var10000 = -1;
                   break label86;
                }
 
-               var13 = var_795;
+               var13 = startLineIndex;
             }
 
             var10000 = 1;
@@ -1272,42 +1272,42 @@ final class Class_17f {
          var14 = var10000;
       }
 
-      int var17 = sub_8eb(var0, var1 + 5, var2 + 5, var3, var_9c5 - 10, var13, var14);
-      if (var0 != null && var9 != 0 && var10 > 0 && var_7fb >= var_851 - 1) {
-         var13 = sub_645((Graphics)null, '±', 0, 0, var_ac9, -1) * 2;
-         int var4 = sub_5f5(var_ab7, 2);
-         var17 += var2 + var_a20 - var_a7e - 1 - var17 >> 1;
+      int var17 = drawWrappedText(var0, var1 + 5, var2 + 5, var3, dialogWidth - 10, var13, var14);
+      if (var0 != null && var9 != 0 && var10 > 0 && textDisplayTimer >= maxTextTimer - 1) {
+         var13 = drawCharacter((Graphics)null, '±', 0, 0, iconFontId, -1) * 2;
+         int var4 = getStringWidth(currentFontId, 2);
+         var17 += var2 + dialogHeight - currentFontHeight - 1 - var17 >> 1;
          if (var11 == 0) {
-            sub_645(var0, '±', var1 + 8 + (GameEngine.cos(frameCounter * 32) * 3 >> 16), var17, var_ac9, -1);
+            drawCharacter(var0, '±', var1 + 8 + (GameEngine.cos(frameCounter * 32) * 3 >> 16), var17, iconFontId, -1);
          }
 
-         sub_6a9(var0, fontChars, stringTable[1] & '\uffff', stringTable[1] >> 16, var1 + 0 + 8 + var13, var17, var_ab7);
+         drawStringInternal(var0, fontChars, stringTable[1] & '\uffff', stringTable[1] >> 16, var1 + 0 + 8 + var13, var17, currentFontId);
          if (var11 == 1) {
-            sub_645(var0, '±', var1 + var_9c5 - var4 - var13 - 8 + (GameEngine.cos(frameCounter * 32) * 3 >> 16), var17, var_ac9, -1);
+            drawCharacter(var0, '±', var1 + dialogWidth - var4 - var13 - 8 + (GameEngine.cos(frameCounter * 32) * 3 >> 16), var17, iconFontId, -1);
          }
 
-         sub_6a9(var0, fontChars, stringTable[2] & '\uffff', stringTable[2] >> 16, var1 + 0 + var_9c5 - var4 - 8, var17, var_ab7);
-         var10000 = var_6e3 | 128;
+         drawStringInternal(var0, fontChars, stringTable[2] & '\uffff', stringTable[2] >> 16, var1 + 0 + dialogWidth - var4 - 8, var17, currentFontId);
+         var10000 = dialogFlags | 128;
       } else {
-         var10000 = var_6e3 & -129;
+         var10000 = dialogFlags & -129;
       }
 
-      var_6e3 = var10000;
+      dialogFlags = var10000;
       return var17;
    }
 
-   private static int sub_8eb(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6) {
+   private static int drawWrappedText(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6) {
       boolean var17 = false;
       boolean var19 = false;
       int var20 = var5;
       int var21 = var6 == -1 ? -1 : var5 + var6 - 1;
       if (var0 != null) {
-         var_8df = var_87e;
+         previousIconId = currentIconId;
       }
 
-      byte[] var18 = (byte[]) fontData[var_ab7];
+      byte[] var18 = (byte[]) fontData[currentFontId];
       charCounter = 0;
-      charLimit = var_ae8;
+      charLimit = charAnimationCounter;
       int var16 = 0;
       boolean var12 = false;
       int var11 = 0;
@@ -1317,7 +1317,7 @@ final class Class_17f {
          int var9 = stringTable[var20] & '\uffff';
          int var14 = 0;
          int var15 = 0;
-         if (var_936 != 0 && (var_936 & 1 << var20) == 0) {
+         if (dialogNavigationType != 0 && (dialogNavigationType & 1 << var20) == 0) {
             var14 = var8;
          }
 
@@ -1347,7 +1347,7 @@ final class Class_17f {
                      }
 
                      if (var0 != null) {
-                        var_87e = (fontChars[var9 + var7] | 32) - 97;
+                        currentIconId = (fontChars[var9 + var7] | 32) - 97;
                      }
                   } else {
                      if (fontChars[var9 + var7] == ' ') {
@@ -1370,12 +1370,12 @@ final class Class_17f {
                if (!var12) {
                   if (var0 != null && var16 == var3) {
                      var13 = var15 - var14 + 1;
-                     sub_6a9(var0, fontChars, var9 + var14, var13, var1, var2, var_ab7);
+                     drawStringInternal(var0, fontChars, var9 + var14, var13, var1, var2, currentFontId);
                      if (textOverflow) {
                         var19 = true;
                      }
 
-                     var2 += var_a7e + 1;
+                     var2 += currentFontHeight + 1;
                   }
 
                   var14 = var15 + 2;
@@ -1398,7 +1398,7 @@ final class Class_17f {
       } while(var21 == -1 && var20 < stringTable.length || var21 != -1 && var20 <= var21);
 
       if (var0 != null && !var19) {
-         var_ae8 = 0;
+         charAnimationCounter = 0;
       }
 
       if (!var17) {
@@ -1407,14 +1407,14 @@ final class Class_17f {
 
       charCounter = 0;
       charLimit = 0;
-      if (var0 != null && var_8df != -1 && var_8df != var_87e) {
-         var_6e3 |= 64;
+      if (var0 != null && previousIconId != -1 && previousIconId != currentIconId) {
+         dialogFlags |= 64;
       }
 
       return var0 == null ? var16 : var2;
    }
 
-   public static void sub_901(int var0) {
+   public static void initResourceCache(int var0) {
       resourceIds = new int[var0];
       resourceCache = new Object[var0];
 
@@ -1425,7 +1425,7 @@ final class Class_17f {
 
    }
 
-   public static void sub_90c() {
+   public static void clearResourceCache() {
       resourceIds = null;
       if (resourceCache != null) {
          for(int var0 = 0; var0 < resourceCache.length; ++var0) {
@@ -1436,7 +1436,7 @@ final class Class_17f {
       resourceCache = null;
    }
 
-   private static int sub_94a(int var0, int var1) {
+   private static int findResourceInCache(int var0, int var1) {
       int var2 = var1 < 0 ? var0 & '\uffff' : (var1 << 16) + (var0 & '\uffff');
 
       for(int var3 = 0; var3 < resourceIds.length; ++var3) {
@@ -1448,7 +1448,7 @@ final class Class_17f {
       return -1;
    }
 
-   public static int sub_97a(int var0, int var1, int var2) {
+   public static int loadResource(int var0, int var1, int var2) {
       int var3 = var1 < 0 ? var0 & '\uffff' : (var1 << 16) + (var0 & '\uffff');
 
       int var6;
@@ -1458,7 +1458,7 @@ final class Class_17f {
          }
       }
 
-      var6 = sub_a31();
+      var6 = findFreeSlot();
       Sprite var10;
       switch(var2) {
       case 0:
@@ -1466,7 +1466,7 @@ final class Class_17f {
          break;
       case 1:
          var10 = GameEngine.loadSpriteSet(var0);
-         resourceCache[var6] = GameEngine.recolorSprite(var10, sub_afd(var1), -1);
+         resourceCache[var6] = GameEngine.recolorSprite(var10, loadPalette(var1), -1);
          GameEngine.freeSprite(var10);
          break;
       case 2:
@@ -1494,11 +1494,11 @@ final class Class_17f {
             }
 
             int var7;
-            if ((var7 = sub_94a(var10000, var10001)) == -1) {
-               var7 = sub_a31();
+            if ((var7 = findResourceInCache(var10000, var10001)) == -1) {
+               var7 = findFreeSlot();
                var10 = GameEngine.loadSpriteSet(var0);
                if ((var9[var4] & 128) != 0 && var1 != -1) {
-                  resourceCache[var7] = GameEngine.recolorSprite(var10, sub_afd(var1), -1);
+                  resourceCache[var7] = GameEngine.recolorSprite(var10, loadPalette(var1), -1);
                   GameEngine.freeSprite(var10);
                } else {
                   resourceCache[var7] = var10;
@@ -1512,9 +1512,9 @@ final class Class_17f {
 
          for(var4 = 1; var4 < 1 + var5 * 2; var4 += 2) {
             int var8;
-            if ((var8 = sub_94a(var0 = 437 + (var9[var4 + 1] & 255), -1)) == -1) {
-               var8 = sub_a31();
-               resourceCache[var8] = sub_b55(var0);
+            if ((var8 = findResourceInCache(var0 = 437 + (var9[var4 + 1] & 255), -1)) == -1) {
+               var8 = findFreeSlot();
+               resourceCache[var8] = loadRawData(var0);
                resourceIds[var8] = var0 & '\uffff';
             }
 
@@ -1526,18 +1526,18 @@ final class Class_17f {
          resourceCache[var6] = GameEngine.openDataStream(var0);
          break;
       case 5:
-         resourceCache[var6] = sub_afd(var0);
+         resourceCache[var6] = loadPalette(var0);
       }
 
       resourceIds[var6] = var3;
       return var6;
    }
 
-   public static Object sub_9d4(int var0) {
+   public static Object getResource(int var0) {
       return resourceCache[var0];
    }
 
-   public static boolean sub_9fa(int var0, int var1) {
+   public static boolean freeResource(int var0, int var1) {
       if (var0 < 0) {
          return false;
       } else {
@@ -1573,7 +1573,7 @@ final class Class_17f {
       }
    }
 
-   private static int sub_a31() {
+   private static int findFreeSlot() {
       for(int var0 = 0; var0 < resourceIds.length; ++var0) {
          if (resourceIds[var0] == -1 && resourceCache[var0] == null) {
             return var0;
@@ -1583,7 +1583,7 @@ final class Class_17f {
       return -1;
    }
 
-   public static byte[] sub_a5d(int var0) {
+   public static byte[] loadByteArray(int var0) {
       BinaryReader var1;
       GameEngine.readInt32LE(var1 = GameEngine.openDataStream(var0));
       int var2 = (var1.buffer[var1.position++] & 255) + ((var1.buffer[var1.position++] & 255) << 8) + ((var1.buffer[var1.position++] & 255) << 16) + ((var1.buffer[var1.position++] & 255) << 24);
@@ -1592,7 +1592,7 @@ final class Class_17f {
       return var3;
    }
 
-   public static short[] sub_aaf(int var0) {
+   public static short[] loadShortArray(int var0) {
       BinaryReader var1;
       GameEngine.readInt32LE(var1 = GameEngine.openDataStream(var0));
       int var2;
@@ -1607,7 +1607,7 @@ final class Class_17f {
       return var4;
    }
 
-   public static int[] sub_ac4(int var0) {
+   public static int[] loadIntArray(int var0) {
       BinaryReader var1;
       GameEngine.readInt32LE(var1 = GameEngine.openDataStream(var0));
       int var2;
@@ -1624,7 +1624,7 @@ final class Class_17f {
       return var4;
    }
 
-   private static byte[] sub_afd(int var0) {
+   private static byte[] loadPalette(int var0) {
       BinaryReader var1;
       GameEngine.readInt32LE(var1 = GameEngine.openDataStream(var0));
       byte[] var3 = GameEngine.readBytes(var1, 48);
@@ -1639,7 +1639,7 @@ final class Class_17f {
       return var4;
    }
 
-   private static byte[] sub_b55(int var0) {
+   private static byte[] loadRawData(int var0) {
       BinaryReader var1 = GameEngine.openDataStream(var0);
 
       for(int var2 = 0; var2 < 7; ++var2) {
@@ -1651,7 +1651,7 @@ final class Class_17f {
       return var4;
    }
 
-   private static char[] sub_b90(byte[] var0, int var1) {
+   private static char[] decodeString(byte[] var0, int var1) {
       Object var6 = null;
       byte var3 = 0;
       int var7 = var3 + 1;
@@ -1665,75 +1665,75 @@ final class Class_17f {
       return var8;
    }
 
-   public static void sub_bb1() {
-      var_cb6 = null;
-      var_cd8 = null;
-      var_d07 = null;
-      var_dcb = null;
-      var_f81 = null;
-      var_1064 = null;
-      var_c77 = 0;
-      var_f77 = 0;
-      var_e25 = 0;
-      var_fd5 = -1;
-      var_1013 = -1;
-      var_1026 = -1;
-      var_d50 = -1;
-      var_d6b = -1;
+   public static void initMapSystem() {
+      layerProperties = null;
+      tileMaps = null;
+      layerSprites = null;
+      mapDataBuffer = null;
+      zoneData = null;
+      collisionMap = null;
+      layerCount = 0;
+      zoneCount = 0;
+      mapLoadProgress = 0;
+      foundWarpZone = -1;
+      foundEventZone = -1;
+      foundTriggerZone = -1;
+      defaultPaletteId = -1;
+      mapFlags = -1;
    }
 
-   public static void sub_bed() {
-      sub_c0e();
+   public static void disposeMapSystem() {
+      clearMapData();
    }
 
-   public static void sub_c0e() {
-      var_f81 = null;
-      var_f77 = 0;
-      var_dcb = null;
-      var_1064 = null;
+   public static void clearMapData() {
+      zoneData = null;
+      zoneCount = 0;
+      mapDataBuffer = null;
+      collisionMap = null;
       int var0;
-      if (var_1059 != null) {
-         for(var0 = 0; var0 < var_1059.length; ++var0) {
-            var_1059[var0] = null;
+      if (objectArray != null) {
+         for(var0 = 0; var0 < objectArray.length; ++var0) {
+            objectArray[var0] = null;
          }
       }
 
-      var_1059 = null;
-      if (var_d07 != null) {
-         for(var0 = 0; var0 < var_d07.length; var0 += 2) {
+      objectArray = null;
+      if (layerSprites != null) {
+         for(var0 = 0; var0 < layerSprites.length; var0 += 2) {
             for(int var1 = 0; var1 < 2; ++var1) {
-               GameEngine.freeSprite(var_d07[var0 + var1]);
-               var_d07[var0 + var1] = null;
+               GameEngine.freeSprite(layerSprites[var0 + var1]);
+               layerSprites[var0 + var1] = null;
             }
          }
 
-         var_d07 = null;
+         layerSprites = null;
       }
 
-      if (var_cd8 != null) {
-         for(var0 = 0; var0 < var_cd8.length; ++var0) {
-            if (var_cd8[var0] != null) {
-               GameEngine.disposeTileMap(var_cd8[var0]);
+      if (tileMaps != null) {
+         for(var0 = 0; var0 < tileMaps.length; ++var0) {
+            if (tileMaps[var0] != null) {
+               GameEngine.disposeTileMap(tileMaps[var0]);
             }
 
-            var_cd8[var0] = null;
+            tileMaps[var0] = null;
          }
 
-         var_cd8 = null;
+         tileMaps = null;
       }
 
-      var_cb6 = null;
-      var_c77 = 0;
+      layerProperties = null;
+      layerCount = 0;
    }
 
-   public static void sub_c18(int var0, int var1, int var2, int var3) {
+   public static void setMapViewport(int var0, int var1, int var2, int var3) {
       viewportLeft = var0;
       viewportTop = var1;
       viewportWidth = var2;
       viewportHeight = var3;
       int var5 = 0;
 
-      for(int var4 = 0; var4 < var_c77; var5 += 23) {
+      for(int var4 = 0; var4 < layerCount; var5 += 23) {
          label21: {
             int var6;
             int[] var10000;
@@ -1742,24 +1742,24 @@ final class Class_17f {
             int[] var10003;
             int var10004;
             byte var10005;
-            if ((var6 = var_cb6[var5 + 21]) == 5) {
-               var10000 = var_cb6;
+            if ((var6 = layerProperties[var5 + 21]) == 5) {
+               var10000 = layerProperties;
                var10001 = var5 + 20;
-               var10002 = viewportHeight - var_cb6[var5 + 20];
-               var10003 = var_cb6;
+               var10002 = viewportHeight - layerProperties[var5 + 20];
+               var10003 = layerProperties;
                var10004 = var5;
                var10005 = 5;
             } else {
                if (var6 == 7) {
-                  var_cb6[var5 + 20] = viewportHeight - var_cb6[var5 + 20] - var_cb6[var5 + 5];
+                  layerProperties[var5 + 20] = viewportHeight - layerProperties[var5 + 20] - layerProperties[var5 + 5];
                } else if (var6 != 2) {
                   break label21;
                }
 
-               var10000 = var_cb6;
+               var10000 = layerProperties;
                var10001 = var5 + 19;
-               var10002 = viewportWidth - var_cb6[var5 + 19];
-               var10003 = var_cb6;
+               var10002 = viewportWidth - layerProperties[var5 + 19];
+               var10003 = layerProperties;
                var10004 = var5;
                var10005 = 4;
             }
@@ -1770,53 +1770,53 @@ final class Class_17f {
          ++var4;
       }
 
-      sub_16a();
+      updateViewportFlags();
    }
 
-   public static void sub_c7b(int var0, int var1, int var2, boolean var3) {
+   public static void setCameraSize(int var0, int var1, int var2, boolean var3) {
       int var4 = 23 * var0;
       if (var3) {
-         if (var1 > var_cb6[var4 + 4]) {
-            var1 = var_cb6[var4 + 4];
+         if (var1 > layerProperties[var4 + 4]) {
+            var1 = layerProperties[var4 + 4];
          }
 
-         if (var2 > var_cb6[var4 + 5]) {
-            var2 = var_cb6[var4 + 5];
+         if (var2 > layerProperties[var4 + 5]) {
+            var2 = layerProperties[var4 + 5];
          }
       }
 
-      var_cb6[var4 + 12] = var1;
-      var_cb6[var4 + 13] = var2;
-      var_cb6[var4 + 8] = var_cb6[var4 + 4] - var_cb6[var4 + 12];
-      var_cb6[var4 + 9] = var_cb6[var4 + 5] - var_cb6[var4 + 13];
+      layerProperties[var4 + 12] = var1;
+      layerProperties[var4 + 13] = var2;
+      layerProperties[var4 + 8] = layerProperties[var4 + 4] - layerProperties[var4 + 12];
+      layerProperties[var4 + 9] = layerProperties[var4 + 5] - layerProperties[var4 + 13];
    }
 
-   public static int sub_ccb(int var0, int var1, int var2, boolean var3, boolean var4) {
+   public static int setCameraPosition(int var0, int var1, int var2, boolean var3, boolean var4) {
       int var5 = var0 * 23;
       int var6 = var0 * 1;
       int var7 = 0;
-      var_cb6[var5 + 10] = var1;
-      var_cb6[var5 + 11] = var2;
+      layerProperties[var5 + 10] = var1;
+      layerProperties[var5 + 11] = var2;
       if (!var3) {
-         int[] var10000 = var_cb6;
-         var10000[var5 + 10] -= var_cb6[var5 + 12] >> 1;
-         var10000 = var_cb6;
-         var10000[var5 + 11] -= var_cb6[var5 + 13] >> 1;
+         int[] var10000 = layerProperties;
+         var10000[var5 + 10] -= layerProperties[var5 + 12] >> 1;
+         var10000 = layerProperties;
+         var10000[var5 + 11] -= layerProperties[var5 + 13] >> 1;
       }
 
       if (var4) {
          label34: {
             label28: {
                byte var8;
-               if (var_cb6[var5 + 10] < 0) {
-                  var_cb6[var5 + 10] = 0;
+               if (layerProperties[var5 + 10] < 0) {
+                  layerProperties[var5 + 10] = 0;
                   var8 = 4;
                } else {
-                  if (var_cb6[var5 + 10] <= var_cb6[var5 + 8]) {
+                  if (layerProperties[var5 + 10] <= layerProperties[var5 + 8]) {
                      break label28;
                   }
 
-                  var_cb6[var5 + 10] = var_cb6[var5 + 8];
+                  layerProperties[var5 + 10] = layerProperties[var5 + 8];
                   var8 = 8;
                }
 
@@ -1825,16 +1825,16 @@ final class Class_17f {
 
             byte var10001;
             int var9;
-            if (var_cb6[var5 + 11] < 0) {
-               var_cb6[var5 + 11] = 0;
+            if (layerProperties[var5 + 11] < 0) {
+               layerProperties[var5 + 11] = 0;
                var9 = var7;
                var10001 = 1;
             } else {
-               if (var_cb6[var5 + 11] <= var_cb6[var5 + 9]) {
+               if (layerProperties[var5 + 11] <= layerProperties[var5 + 9]) {
                   break label34;
                }
 
-               var_cb6[var5 + 11] = var_cb6[var5 + 9];
+               layerProperties[var5 + 11] = layerProperties[var5 + 9];
                var9 = var7;
                var10001 = 2;
             }
@@ -1843,186 +1843,186 @@ final class Class_17f {
          }
       }
 
-      GameEngine.setViewport(var_cd8[var6], var_cb6[var5 + 10], var_cb6[var5 + 11], var_cb6[var5 + 12], var_cb6[var5 + 13]);
+      GameEngine.setViewport(tileMaps[var6], layerProperties[var5 + 10], layerProperties[var5 + 11], layerProperties[var5 + 12], layerProperties[var5 + 13]);
       return var7;
    }
 
-   public static void sub_cf9(int var0, Graphics var1, int var2, int var3, boolean var4) {
+   public static void drawMapLayer(int var0, Graphics var1, int var2, int var3, boolean var4) {
       int var5 = var0 * 23;
       if (var4) {
-         var2 = var2 - var_cb6[var5 + 12] >> 1;
-         var3 = var3 - var_cb6[var5 + 13] >> 1;
+         var2 = var2 - layerProperties[var5 + 12] >> 1;
+         var3 = var3 - layerProperties[var5 + 13] >> 1;
       }
 
-      var2 += viewOffsetX + viewportLeft + var_cb6[var5 + 19];
-      var3 += viewOffsetY + viewportTop + var_cb6[var5 + 20];
-      GameEngine.drawTileMap(var_cd8[var0 * 1], var1, var2, var3);
+      var2 += viewOffsetX + viewportLeft + layerProperties[var5 + 19];
+      var3 += viewOffsetY + viewportTop + layerProperties[var5 + 20];
+      GameEngine.drawTileMap(tileMaps[var0 * 1], var1, var2, var3);
    }
 
-   static int sub_d20(int var0, int var1) {
-      return viewportLeft + var_cb6[23 * var0 + 19] + var1 - var_cb6[23 * var0 + 10];
+   static int worldToScreenX(int var0, int var1) {
+      return viewportLeft + layerProperties[23 * var0 + 19] + var1 - layerProperties[23 * var0 + 10];
    }
 
-   static int sub_d31(int var0, int var1) {
-      return viewportTop + var_cb6[23 * var0 + 20] + var1 - var_cb6[23 * var0 + 11];
+   static int worldToScreenY(int var0, int var1) {
+      return viewportTop + layerProperties[23 * var0 + 20] + var1 - layerProperties[23 * var0 + 11];
    }
 
-   static int sub_d60(int var0, int var1) {
-      return viewportLeft + var_cb6[23 * var0 + 19] + (var1 >> 8) - var_cb6[23 * var0 + 10] << 8;
+   static int worldToScreenFixedX(int var0, int var1) {
+      return viewportLeft + layerProperties[23 * var0 + 19] + (var1 >> 8) - layerProperties[23 * var0 + 10] << 8;
    }
 
-   static int sub_db8(int var0, int var1) {
-      return viewportTop + var_cb6[23 * var0 + 20] + (var1 >> 8) - var_cb6[23 * var0 + 11] << 8;
+   static int worldToScreenFixedY(int var0, int var1) {
+      return viewportTop + layerProperties[23 * var0 + 20] + (var1 >> 8) - layerProperties[23 * var0 + 11] << 8;
    }
 
-   static int sub_dd0(int var0, int var1) {
-      int var2 = var_cb6[23 * var0 + 6];
+   static int snapToGridCenterX(int var0, int var1) {
+      int var2 = layerProperties[23 * var0 + 6];
       return (var1 >> 8) / var2 * var2 + (var2 >> 1) << 8;
    }
 
-   static int sub_de9(int var0, int var1) {
-      int var2 = var_cb6[23 * var0 + 7];
+   static int snapToGridCenterY(int var0, int var1) {
+      int var2 = layerProperties[23 * var0 + 7];
       return (var1 >> 8) / var2 * var2 + (var2 >> 1) << 8;
    }
 
-   public static boolean sub_e12(int var0, int var1, int var2, int var3) {
+   public static boolean loadMapChunk(int var0, int var1, int var2, int var3) {
       boolean var8 = false;
       boolean var16 = false;
       int var5;
       int var6;
       int var10;
       int var17;
-      if (var_dcb == null) {
-         var_d50 = -1;
-         var_d6b = -1;
+      if (mapDataBuffer == null) {
+         defaultPaletteId = -1;
+         mapFlags = -1;
          BinaryReader var15;
          if ((var15 = GameEngine.openDataStream(var0)) == null) {
             return false;
          }
 
-         var_dcb = GameEngine.readBytes(var15, GameEngine.getStreamSize(var15));
+         mapDataBuffer = GameEngine.readBytes(var15, GameEngine.getStreamSize(var15));
          var15.buffer = null;
          var6 = 0;
          byte var4 = 0;
-         var_e25 = 0;
-         var10 = sub_2ad(var_dcb, 0);
+         mapLoadProgress = 0;
+         var10 = readInt32LE(mapDataBuffer, 0);
          var17 = var4 + 4;
          var17 += 4;
          if (var10 != 1280920903) {
-            var_dcb = null;
+            mapDataBuffer = null;
             return false;
          }
 
          ++var17;
-         var5 = var_dcb[8] & 255;
+         var5 = mapDataBuffer[8] & 255;
          ++var17;
-         var_c77 = var_dcb[9] & 255;
+         layerCount = mapDataBuffer[9] & 255;
          if ((var5 & 1) != 0) {
-            var_d50 = sub_2e5(var_dcb, 10);
+            defaultPaletteId = readInt16LE(mapDataBuffer, 10);
             var17 += 2;
          }
 
          if ((var5 & 2) != 0) {
-            var_d6b = var_dcb[var17++] & 255;
+            mapFlags = mapDataBuffer[var17++] & 255;
          }
 
-         if (var_c77 == 0) {
-            var_dcb = null;
+         if (layerCount == 0) {
+            mapDataBuffer = null;
             return false;
          }
 
-         var_cd8 = new TileMap[var_c77 * 1];
-         var_d07 = new Sprite[var_c77 * 2];
-         var_cb6 = new int[var_c77 * 23];
+         tileMaps = new TileMap[layerCount * 1];
+         layerSprites = new Sprite[layerCount * 2];
+         layerProperties = new int[layerCount * 23];
       } else {
-         var17 = var_e25 & '\uffff';
-         var6 = var_e25 >> 16;
+         var17 = mapLoadProgress & '\uffff';
+         var6 = mapLoadProgress >> 16;
       }
 
-      if ((var10 = sub_2ad(var_dcb, var17)) == 1162757152) {
-         var_dcb = null;
+      if ((var10 = readInt32LE(mapDataBuffer, var17)) == 1162757152) {
+         mapDataBuffer = null;
          return false;
       } else {
          if (var10 == 1279351122) {
-            int var12 = var17 + sub_2ad(var_dcb, var17 + 4);
+            int var12 = var17 + readInt32LE(mapDataBuffer, var17 + 4);
             var17 += 8;
             byte[] var14 = null;
-            var5 = var_dcb[var17++] & 255;
-            short var7 = sub_2e5(var_dcb, var17);
+            var5 = mapDataBuffer[var17++] & 255;
+            short var7 = readInt16LE(mapDataBuffer, var17);
             var17 += 2;
-            var_cb6[var6 * 23 + 22] = var7 - 88;
+            layerProperties[var6 * 23 + 22] = var7 - 88;
             int var9;
-            Sprite var13 = GameEngine.loadSpriteSet(var9 = var_dcb[var17++] & 255);
+            Sprite var13 = GameEngine.loadSpriteSet(var9 = mapDataBuffer[var17++] & 255);
             byte[] var10000;
             if ((var5 & 1) == 0 && var2 == -1) {
-               var_d07[var6 * 2] = var13;
-               var10000 = GameEngine.getSpritePalette(var_d07[var6 * 2]);
+               layerSprites[var6 * 2] = var13;
+               var10000 = GameEngine.getSpritePalette(layerSprites[var6 * 2]);
             } else {
-               int var18 = var2 != -1 ? var2 : sub_2e5(var_dcb, var17);
+               int var18 = var2 != -1 ? var2 : readInt16LE(mapDataBuffer, var17);
                if ((var5 & 1) != 0) {
                   var17 += 2;
                }
 
-               var14 = sub_afd(var18);
-               var_d07[var6 * 2] = GameEngine.recolorSprite(var13, var14, -1);
+               var14 = loadPalette(var18);
+               layerSprites[var6 * 2] = GameEngine.recolorSprite(var13, var14, -1);
                var16 = true;
                var10000 = var14;
             }
 
-            var_1129 = GameEngine.getPaletteColor(var10000, 0);
-            var_cb6[var6 * 23 + 19] = sub_2e5(var_dcb, var17);
+            mapBackgroundColor = GameEngine.getPaletteColor(var10000, 0);
+            layerProperties[var6 * 23 + 19] = readInt16LE(mapDataBuffer, var17);
             var17 += 2;
-            var_cb6[var6 * 23 + 20] = sub_2e5(var_dcb, var17);
+            layerProperties[var6 * 23 + 20] = readInt16LE(mapDataBuffer, var17);
             var17 += 2;
-            var_cb6[var6 * 23 + 21] = var_dcb[var17++] & 255;
-            if (!sub_e55(var6, var7, var_d07[var6 * 2])) {
-               sub_c0e();
-               var_dcb = null;
+            layerProperties[var6 * 23 + 21] = mapDataBuffer[var17++] & 255;
+            if (!loadTileLayer(var6, var7, layerSprites[var6 * 2])) {
+               clearMapData();
+               mapDataBuffer = null;
                return false;
             }
 
-            if ((var_cb6[var6 * 23 + 0] & 2) != 0) {
+            if ((layerProperties[var6 * 23 + 0] & 2) != 0) {
                if (var14 == null) {
                   var14 = GameEngine.extractPaletteData(var13.var_3b);
                }
 
-               var_d07[var6 * 2 + 1] = GameEngine.recolorSprite(var13, var14, var3);
+               layerSprites[var6 * 2 + 1] = GameEngine.recolorSprite(var13, var14, var3);
             }
 
             if (var16) {
                GameEngine.freeSprite(var13);
             }
 
-            var_cb6[var6 * 23 + 17] = var9;
+            layerProperties[var6 * 23 + 17] = var9;
 
             while(var17 < var12) {
-               if (sub_2ad(var_dcb, var17) == 1515146821) {
-                  var17 = sub_e9e(var6, var_dcb, var17);
-               } else if (sub_2ad(var_dcb, var17) == 1346458696) {
-                  var17 += sub_2ad(var_dcb, var17 + 4);
+               if (readInt32LE(mapDataBuffer, var17) == 1515146821) {
+                  var17 = loadMapZones(var6, mapDataBuffer, var17);
+               } else if (readInt32LE(mapDataBuffer, var17) == 1346458696) {
+                  var17 += readInt32LE(mapDataBuffer, var17 + 4);
                } else {
-                  var17 += sub_2ad(var_dcb, var17 + 4);
+                  var17 += readInt32LE(mapDataBuffer, var17 + 4);
                }
             }
 
             ++var6;
          } else {
-            var17 += sub_2ad(var_dcb, var17 + 4);
+            var17 += readInt32LE(mapDataBuffer, var17 + 4);
          }
 
-         var_e25 = var6 << 16 | var17 & '\uffff';
+         mapLoadProgress = var6 << 16 | var17 & '\uffff';
          return true;
       }
    }
 
-   private static boolean sub_e55(int var0, int var1, Sprite var2) {
+   private static boolean loadTileLayer(int var0, int var1, Sprite var2) {
       int var19 = var0 * 23;
       int var20 = var0 * 1;
       BinaryReader var21;
       byte[] var18 = GameEngine.readBytes(var21 = GameEngine.openDataStream(var1), GameEngine.getStreamSize(var21));
       var21.buffer = null;
       byte var9 = 0;
-      if (sub_2ad(var18, 0) != 1347174745) {
+      if (readInt32LE(var18, 0) != 1347174745) {
          return false;
       } else {
          int var22 = var9 + 8;
@@ -2034,31 +2034,31 @@ final class Class_17f {
          int var8 = var18[13] & 255;
          int var17 = var18[14] & 255;
          var22 += 7;
-         var_cb6[var19 + 18] = var17;
+         layerProperties[var19 + 18] = var17;
          if ((var13 & 1) != 0) {
             var7 = 1 << var7;
             var8 = 1 << var8;
          }
 
-         var_cb6[var19 + 1] = var5;
-         var_cb6[var19 + 2] = var6;
-         var_cb6[var19 + 6] = var7;
-         var_cb6[var19 + 7] = var8;
-         var_cb6[var19 + 3] = var5 * var6;
-         var_cb6[var19 + 4] = var5 * var7;
-         var_cb6[var19 + 5] = var6 * var8;
-         var_cb6[var19 + 14] = var2.var_8a[0].getWidth() / var7;
-         var_cb6[var19 + 16] = 0;
-         var_cb6[var19 + 10] = 0;
-         var_cb6[var19 + 11] = 0;
-         var_cd8[var20] = new TileMap(var5, var6, var2, var7, var8);
+         layerProperties[var19 + 1] = var5;
+         layerProperties[var19 + 2] = var6;
+         layerProperties[var19 + 6] = var7;
+         layerProperties[var19 + 7] = var8;
+         layerProperties[var19 + 3] = var5 * var6;
+         layerProperties[var19 + 4] = var5 * var7;
+         layerProperties[var19 + 5] = var6 * var8;
+         layerProperties[var19 + 14] = var2.var_8a[0].getWidth() / var7;
+         layerProperties[var19 + 16] = 0;
+         layerProperties[var19 + 10] = 0;
+         layerProperties[var19 + 11] = 0;
+         tileMaps[var20] = new TileMap(var5, var6, var2, var7, var8);
          boolean var12 = false;
          boolean var11 = false;
          int[] var10000;
          byte var23;
          byte var25;
          if ((var13 & 4) != 0) {
-            var10000 = var_cb6;
+            var10000 = layerProperties;
             var10000[var19 + 0] |= 4;
             var23 = 4;
             var25 = 8;
@@ -2069,7 +2069,7 @@ final class Class_17f {
 
          byte var24 = var25;
          if ((var13 & 2) != 0) {
-            var10000 = var_cb6;
+            var10000 = layerProperties;
             var10000[var19 + 0] |= 2;
          } else {
             var24 = 1;
@@ -2103,7 +2103,7 @@ final class Class_17f {
                   }
                }
 
-               GameEngine.setTile(var_cd8[var20], var3, var4, var10, var16, false);
+               GameEngine.setTile(tileMaps[var20], var3, var4, var10, var16, false);
             }
          }
 
@@ -2112,29 +2112,29 @@ final class Class_17f {
       }
    }
 
-   private static int sub_e9e(int var0, byte[] var1, int var2) {
-      if (sub_2ad(var1, var2) != 1515146821) {
+   private static int loadMapZones(int var0, byte[] var1, int var2) {
+      if (readInt32LE(var1, var2) != 1515146821) {
          return var2;
       } else {
          var2 += 8;
-         var_f77 = var1[var2++] & 255;
-         if (var_f77 == 0) {
+         zoneCount = var1[var2++] & 255;
+         if (zoneCount == 0) {
             return var2;
          } else {
-            int[] var10000 = var_cb6;
+            int[] var10000 = layerProperties;
             var10000[var0 * 23 + 0] |= 1;
-            var_f81 = new short[var_f77 * 5];
+            zoneData = new short[zoneCount * 5];
             int var3 = 0;
 
-            for(int var4 = 0; var3 < var_f77; var4 += 5) {
-               var_f81[var4] = sub_2e5(var1, var2);
+            for(int var4 = 0; var3 < zoneCount; var4 += 5) {
+               zoneData[var4] = readInt16LE(var1, var2);
                var2 += 2;
-               var_f81[var4 + 1] = (short)(sub_2e5(var1, var2) << 1);
+               zoneData[var4 + 1] = (short)(readInt16LE(var1, var2) << 1);
                var2 += 2;
-               var_f81[var4 + 2] = (short)(sub_2e5(var1, var2) << 1);
+               zoneData[var4 + 2] = (short)(readInt16LE(var1, var2) << 1);
                var2 += 2;
-               var_f81[var4 + 3] = (short)(var_f81[var4 + 1] + ((var1[var2++] & 255) << 1));
-               var_f81[var4 + 4] = (short)(var_f81[var4 + 2] + ((var1[var2++] & 255) << 1));
+               zoneData[var4 + 3] = (short)(zoneData[var4 + 1] + ((var1[var2++] & 255) << 1));
+               zoneData[var4 + 4] = (short)(zoneData[var4 + 2] + ((var1[var2++] & 255) << 1));
                ++var3;
             }
 
@@ -2143,47 +2143,47 @@ final class Class_17f {
       }
    }
 
-   static int sub_edd(int var0, int var1, int var2, int var3) {
+   static int detectZonesAtPos(int var0, int var1, int var2, int var3) {
       var0 >>= 8;
       var2 >>= 8;
       var1 >>= 8;
       var3 >>= 8;
       int var5 = 0;
       int var4 = 0;
-      var_fd5 = -1;
-      var_1013 = -1;
-      var_1026 = -1;
+      foundWarpZone = -1;
+      foundEventZone = -1;
+      foundTriggerZone = -1;
       int var12 = 0;
 
       while(true) {
-         while(var4 < var_f77) {
+         while(var4 < zoneCount) {
             int var11;
-            if ((var11 = var_f81[var5] & '\ue000') != 0 && var11 != 8192 && var11 != 57344 && var11 != 32768) {
-               int var10 = var_f81[var5++] & 8191;
-               short var6 = var_f81[var5++];
-               short var7 = var_f81[var5++];
-               short var8 = var_f81[var5++];
-               short var9 = var_f81[var5++];
+            if ((var11 = zoneData[var5] & '\ue000') != 0 && var11 != 8192 && var11 != 57344 && var11 != 32768) {
+               int var10 = zoneData[var5++] & 8191;
+               short var6 = zoneData[var5++];
+               short var7 = zoneData[var5++];
+               short var8 = zoneData[var5++];
+               short var9 = zoneData[var5++];
                if (var2 >= var6 && var3 >= var7 && var0 <= var8 && var1 <= var9) {
                   label67: {
                      switch(var11) {
                      case 16384:
-                        if (var_fd5 != -1 || (var10 & 4096) != 0) {
+                        if (foundWarpZone != -1 || (var10 & 4096) != 0) {
                            break label67;
                         }
 
-                        var_fd5 = (var4 & '\uffff') << 16 | (var10 & '\uffff') << 0;
+                        foundWarpZone = (var4 & '\uffff') << 16 | (var10 & '\uffff') << 0;
                         break;
                      case 24576:
-                        if (var_1013 != -1) {
+                        if (foundEventZone != -1) {
                            break label67;
                         }
 
-                        var_1013 = var10;
+                        foundEventZone = var10;
                         break;
                      case 40960:
-                        if (var_1026 == -1) {
-                           var_1026 = var4 << 16 | var10 & '\uffff';
+                        if (foundTriggerZone == -1) {
+                           foundTriggerZone = var4 << 16 | var10 & '\uffff';
                            break;
                         }
                      default:
@@ -2205,13 +2205,13 @@ final class Class_17f {
       }
    }
 
-   static boolean sub_efa(int var0) {
+   static boolean buildCollisionMap(int var0) {
       int var14 = 23 * var0;
-      var_1064 = new byte[var_cb6[var14 + 3]];
+      collisionMap = new byte[layerProperties[var14 + 3]];
 
       int var1;
-      for(var1 = 0; var1 < var_1064.length; ++var1) {
-         var_1064[var1] = 1;
+      for(var1 = 0; var1 < collisionMap.length; ++var1) {
+         collisionMap[var1] = 1;
       }
 
       int var11 = 0;
@@ -2250,52 +2250,52 @@ final class Class_17f {
 
          while(true) {
             while(true) {
-               if (var1 >= var_f77) {
+               if (var1 >= zoneCount) {
                   continue label98;
                }
 
-               if ((var_f81[var2] & '\ue000') == var10) {
-                  if (var9 == 2 && (var_f81[var2] & 4096) == 0 || var9 == 3 && (var_f81[var2] & 4096) == 0) {
+               if ((zoneData[var2] & '\ue000') == var10) {
+                  if (var9 == 2 && (zoneData[var2] & 4096) == 0 || var9 == 3 && (zoneData[var2] & 4096) == 0) {
                      var2 += 5;
                      ++var1;
                      continue;
                   }
 
                   if (var9 == 1) {
-                     var11 = (var_f81[var2] & 1) == 0 ? 1 : 3;
+                     var11 = (zoneData[var2] & 1) == 0 ? 1 : 3;
                   }
 
-                  int var12 = var_f81[var2++] & 8191;
+                  int var12 = zoneData[var2++] & 8191;
                   if (var9 == 3) {
                      var12 = (var12 &= 4032) >> 6;
                      var11 = (var11 &= 3) | var12 << 2;
                   }
 
-                  int var3 = var_f81[var2++] / var_cb6[var14 + 6];
-                  int var4 = var_f81[var2++] / var_cb6[var14 + 7];
-                  int var5 = (var_f81[var2++] + (var_cb6[var14 + 6] >> 1)) / var_cb6[var14 + 6];
-                  int var6 = (var_f81[var2++] + (var_cb6[var14 + 7] >> 1)) / var_cb6[var14 + 7];
-                  if (var3 > var_cb6[var14 + 1]) {
-                     var3 = var_cb6[var14 + 1];
+                  int var3 = zoneData[var2++] / layerProperties[var14 + 6];
+                  int var4 = zoneData[var2++] / layerProperties[var14 + 7];
+                  int var5 = (zoneData[var2++] + (layerProperties[var14 + 6] >> 1)) / layerProperties[var14 + 6];
+                  int var6 = (zoneData[var2++] + (layerProperties[var14 + 7] >> 1)) / layerProperties[var14 + 7];
+                  if (var3 > layerProperties[var14 + 1]) {
+                     var3 = layerProperties[var14 + 1];
                   }
 
-                  if (var5 > var_cb6[var14 + 1]) {
-                     var5 = var_cb6[var14 + 1];
+                  if (var5 > layerProperties[var14 + 1]) {
+                     var5 = layerProperties[var14 + 1];
                   }
 
-                  if (var4 > var_cb6[var14 + 2]) {
-                     var4 = var_cb6[var14 + 2];
+                  if (var4 > layerProperties[var14 + 2]) {
+                     var4 = layerProperties[var14 + 2];
                   }
 
-                  if (var6 > var_cb6[var14 + 2]) {
-                     var6 = var_cb6[var14 + 2];
+                  if (var6 > layerProperties[var14 + 2]) {
+                     var6 = layerProperties[var14 + 2];
                   }
 
                   for(int var8 = var4; var8 < var6; ++var8) {
-                     int var13 = var8 * var_cb6[var14 + 1];
+                     int var13 = var8 * layerProperties[var14 + 1];
 
                      for(int var7 = var3; var7 < var5; ++var7) {
-                        var_1064[var13 + var7] = (byte)var11;
+                        collisionMap[var13 + var7] = (byte)var11;
                      }
                   }
                } else {
@@ -2310,7 +2310,7 @@ final class Class_17f {
       return true;
    }
 
-   static void sub_f4f(int var0, int var1, int var2, int var3, int var4, byte var5) {
+   static void setCollisionRect(int var0, int var1, int var2, int var3, int var4, byte var5) {
       int var11;
       int var12;
       int var13;
@@ -2319,8 +2319,8 @@ final class Class_17f {
       int var10000;
       label63: {
          var15 = 23 * var0;
-         int var9 = var_cb6[var15 + 6];
-         int var10 = var_cb6[var15 + 7];
+         int var9 = layerProperties[var15 + 6];
+         int var10 = layerProperties[var15 + 7];
          var11 = (var1 >> 8) / var9;
          var12 = (var2 >> 8) / var10;
          var13 = ((var3 >> 8) + var9 - 1) / var9;
@@ -2328,11 +2328,11 @@ final class Class_17f {
          if (var11 < 0) {
             var10000 = 0;
          } else {
-            if (var11 <= var_cb6[var15 + 1]) {
+            if (var11 <= layerProperties[var15 + 1]) {
                break label63;
             }
 
-            var10000 = var_cb6[var15 + 1];
+            var10000 = layerProperties[var15 + 1];
          }
 
          var11 = var10000;
@@ -2342,11 +2342,11 @@ final class Class_17f {
          if (var13 < 0) {
             var10000 = 0;
          } else {
-            if (var13 <= var_cb6[var15 + 1]) {
+            if (var13 <= layerProperties[var15 + 1]) {
                break label57;
             }
 
-            var10000 = var_cb6[var15 + 1];
+            var10000 = layerProperties[var15 + 1];
          }
 
          var13 = var10000;
@@ -2356,11 +2356,11 @@ final class Class_17f {
          if (var12 < 0) {
             var10000 = 0;
          } else {
-            if (var12 <= var_cb6[var15 + 2]) {
+            if (var12 <= layerProperties[var15 + 2]) {
                break label51;
             }
 
-            var10000 = var_cb6[var15 + 2];
+            var10000 = layerProperties[var15 + 2];
          }
 
          var12 = var10000;
@@ -2370,77 +2370,77 @@ final class Class_17f {
          if (var14 < 0) {
             var10000 = 0;
          } else {
-            if (var14 <= var_cb6[var15 + 2]) {
+            if (var14 <= layerProperties[var15 + 2]) {
                break label45;
             }
 
-            var10000 = var_cb6[var15 + 2];
+            var10000 = layerProperties[var15 + 2];
          }
 
          var14 = var10000;
       }
 
       for(int var7 = var12; var7 < var14; ++var7) {
-         int var8 = var7 * var_cb6[var15 + 1];
+         int var8 = var7 * layerProperties[var15 + 1];
 
          for(int var6 = var11; var6 < var13; ++var6) {
-            var_1064[var8 + var6] = var5;
+            collisionMap[var8 + var6] = var5;
          }
       }
 
    }
 
-   static void sub_f76(int var0, int var1, int var2, byte var3) {
+   static void setCollisionAt(int var0, int var1, int var2, byte var3) {
       int var4 = 23 * var0;
-      var1 = (var1 >> 8) / var_cb6[var4 + 6];
-      var2 = (var2 >> 8) / var_cb6[var4 + 7];
-      if (var1 >= 0 && var1 < var_cb6[var4 + 1] && var2 >= 0 && var2 < var_cb6[var4 + 2]) {
-         var_1064[var2 * var_cb6[var4 + 1] + var1] = var3;
+      var1 = (var1 >> 8) / layerProperties[var4 + 6];
+      var2 = (var2 >> 8) / layerProperties[var4 + 7];
+      if (var1 >= 0 && var1 < layerProperties[var4 + 1] && var2 >= 0 && var2 < layerProperties[var4 + 2]) {
+         collisionMap[var2 * layerProperties[var4 + 1] + var1] = var3;
       }
    }
 
-   static int sub_fa2(int var0, int var1, int var2) {
+   static int getCollisionAt(int var0, int var1, int var2) {
       int var3 = 23 * var0;
-      var1 = (var1 >> 8) / var_cb6[var3 + 6];
-      var2 = (var2 >> 8) / var_cb6[var3 + 7];
-      return var1 >= 0 && var1 < var_cb6[var3 + 1] && var2 >= 0 && var2 < var_cb6[var3 + 2] ? var_1064[var2 * var_cb6[var3 + 1] + var1] & 3 : 1;
+      var1 = (var1 >> 8) / layerProperties[var3 + 6];
+      var2 = (var2 >> 8) / layerProperties[var3 + 7];
+      return var1 >= 0 && var1 < layerProperties[var3 + 1] && var2 >= 0 && var2 < layerProperties[var3 + 2] ? collisionMap[var2 * layerProperties[var3 + 1] + var1] & 3 : 1;
    }
 
-   static int sub_fc6(int var0, int var1, int var2, boolean var3) {
+   static int getWalkableDirections(int var0, int var1, int var2, boolean var3) {
       int var5 = -1;
       int var4 = 23 * var0;
-      int var6 = var_cb6[var4 + 1];
-      int var7 = var_cb6[var4 + 2];
-      var1 = (var1 >> 8) / var_cb6[var4 + 6];
-      if ((var2 = (var2 >> 8) / var_cb6[var4 + 7]) >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = var_1064[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
+      int var6 = layerProperties[var4 + 1];
+      int var7 = layerProperties[var4 + 2];
+      var1 = (var1 >> 8) / layerProperties[var4 + 6];
+      if ((var2 = (var2 >> 8) / layerProperties[var4 + 7]) >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = collisionMap[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
          var5 = -17;
       }
 
       --var2;
-      if (var2 >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = var_1064[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
+      if (var2 >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = collisionMap[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
          var5 &= -2;
       }
 
       var2 += 2;
-      if (var2 >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = var_1064[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
+      if (var2 >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = collisionMap[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
          var5 &= -5;
       }
 
       --var2;
       ++var1;
-      if (var2 >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = var_1064[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
+      if (var2 >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = collisionMap[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
          var5 &= -3;
       }
 
       var1 -= 2;
-      if (var2 >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = var_1064[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
+      if (var2 >= 0 && var2 < var7 && var1 >= 0 && var1 < var6 && ((var4 = collisionMap[var2 * var6 + var1] & 3) == 0 || var4 == 3 && var3)) {
          var5 &= -9;
       }
 
       return var5;
    }
 
-   public static int sub_fdd(int var0, int[] var1, int var2, int var3, int var4, int var5) {
+   public static int findTilesInRect(int var0, int[] var1, int var2, int var3, int var4, int var5) {
       int var10;
       int var10000;
       label75: {
@@ -2449,18 +2449,18 @@ final class Class_17f {
          var4 >>= 8;
          var3 >>= 8;
          var5 >>= 8;
-         var2 /= var_cb6[var10 + 6];
-         var3 /= var_cb6[var10 + 7];
-         var4 /= var_cb6[var10 + 6];
-         var5 /= var_cb6[var10 + 7];
+         var2 /= layerProperties[var10 + 6];
+         var3 /= layerProperties[var10 + 7];
+         var4 /= layerProperties[var10 + 6];
+         var5 /= layerProperties[var10 + 7];
          if (var2 < 0) {
             var10000 = 0;
          } else {
-            if (var2 < var_cb6[var10 + 1]) {
+            if (var2 < layerProperties[var10 + 1]) {
                break label75;
             }
 
-            var10000 = var_cb6[var10 + 1] - 1;
+            var10000 = layerProperties[var10 + 1] - 1;
          }
 
          var2 = var10000;
@@ -2470,11 +2470,11 @@ final class Class_17f {
          if (var4 < 0) {
             var10000 = 0;
          } else {
-            if (var4 < var_cb6[var10 + 1]) {
+            if (var4 < layerProperties[var10 + 1]) {
                break label69;
             }
 
-            var10000 = var_cb6[var10 + 1] - 1;
+            var10000 = layerProperties[var10 + 1] - 1;
          }
 
          var4 = var10000;
@@ -2484,11 +2484,11 @@ final class Class_17f {
          if (var3 < 0) {
             var10000 = 0;
          } else {
-            if (var3 < var_cb6[var10 + 2]) {
+            if (var3 < layerProperties[var10 + 2]) {
                break label63;
             }
 
-            var10000 = var_cb6[var10 + 2] - 1;
+            var10000 = layerProperties[var10 + 2] - 1;
          }
 
          var3 = var10000;
@@ -2498,11 +2498,11 @@ final class Class_17f {
          if (var5 < 0) {
             var10000 = 0;
          } else {
-            if (var5 < var_cb6[var10 + 2]) {
+            if (var5 < layerProperties[var10 + 2]) {
                break label57;
             }
 
-            var10000 = var_cb6[var10 + 2] - 1;
+            var10000 = layerProperties[var10 + 2] - 1;
          }
 
          var5 = var10000;
@@ -2512,9 +2512,9 @@ final class Class_17f {
 
       for(int var7 = var3; var7 <= var5; ++var7) {
          for(int var6 = var2; var6 <= var4; ++var6) {
-            int var9 = var7 * var_cb6[var10 + 1] + var6;
+            int var9 = var7 * layerProperties[var10 + 1] + var6;
             int var8;
-            if (((var8 = var_1064[var9] & 255) & 3) == 2) {
+            if (((var8 = collisionMap[var9] & 255) & 3) == 2) {
                if (var1 == null) {
                   ++var11;
                   break;
