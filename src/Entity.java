@@ -819,7 +819,7 @@ final class Entity extends AnimatedSprite {
                   GameManager.sub_11a8(343);
                   GameManager.requestMusic(GameRenderer.mapFlags, 6);
                } else if ((this.var_1b4 & 2) != 0) {
-                  GameManager.sub_a7();
+                  GameManager.stopAllMusic();
                }
             } else {
                this.sub_385();

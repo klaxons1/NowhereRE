@@ -131,7 +131,7 @@ final class GameManager {
       }
    }
 
-   static void sub_a7() {
+   static void stopAllMusic() {
       GameEngine.stopMusic();
       GameEngine.isLoopEnabled = false;
       lastPlayedMusicId = -1;
@@ -139,7 +139,7 @@ final class GameManager {
       musicFlags &= -2;
    }
 
-   static void stopAllMusic() {
+   static void initMenuState() {
       menuState = new int[33];
       int var0 = GameCanvas.gameState * 9;
       menuState[0] = stateConfigs[var0 + 0];
@@ -273,10 +273,10 @@ final class GameManager {
          var10000[var10001] = var10002;
       }
 
-      sub_143();
+      loadMenuResources();
    }
 
-   static void sub_11c() {
+   static void disposeMenuResources() {
       versionChars = null;
       GameEngine.freeSprite(uiSprite);
       GameEngine.freeSprite(checkmarkSprite);
@@ -298,7 +298,7 @@ final class GameManager {
       GameRenderer.clearCurrentFont();
    }
 
-   private static void sub_143() {
+   private static void loadMenuResources() {
       int var2 = GameRenderer.getFontHeight(menuState[32]);
       int var3 = (GameRenderer.viewHeight - 108) / var2 - 1;
       if (menuState != null) {
@@ -430,7 +430,7 @@ final class GameManager {
          } else {
             sub_21b();
             if ((GameCanvas.stateFlags & 1048576) != 0) {
-               sub_11c();
+               disposeMenuResources();
                GameCanvas.stateFlags |= 266;
                return true;
             } else {
@@ -473,7 +473,7 @@ final class GameManager {
                      }
 
                      GameCanvas.nextState = var10000[var10001];
-                     sub_11c();
+                     disposeMenuResources();
                      if (GameCanvas.nextState == -1) {
                         GameCanvas.stateFlags |= 256;
                      }
@@ -2424,7 +2424,7 @@ final class GameManager {
       if (GameRenderer.mapFlags != -1) {
          requestMusic(GameRenderer.mapFlags, 2);
       } else {
-         sub_a7();
+         stopAllMusic();
       }
 
       if ((var_9d8 & 4096) != 0) {

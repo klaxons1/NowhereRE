@@ -84,7 +84,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
    private static void destroyGame() {
       stateFlags |= 8;
       stateFlags &= -786433;
-      GameManager.sub_a7();
+      GameManager.stopAllMusic();
       cleanupLevel();
       unloadFont();
       GameEngine.destroy();
@@ -105,7 +105,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
       }
 
       if (gameState < 13) {
-         GameManager.sub_11c();
+         GameManager.disposeMenuResources();
       } else {
          GameManager.sub_b8b();
       }
@@ -393,7 +393,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
       isPaused = true;
       stateFlags |= 262144;
       if (!threadStopped) {
-         GameManager.sub_a7();
+         GameManager.stopAllMusic();
       }
 
    }
@@ -418,7 +418,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
       GameRenderer.frameCounter = 0;
       stateFlags &= -9;
       if (gameState < 13) {
-         GameManager.stopAllMusic();
+         GameManager.initMenuState();
          stateFlags &= -131073;
       } else {
          GameManager.sub_b34();
