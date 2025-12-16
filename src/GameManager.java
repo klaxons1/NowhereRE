@@ -929,7 +929,7 @@ final class GameManager {
          GameRenderer.drawMapLayer(0, var0, 0, GameRenderer.viewHeight - GameRenderer.layerProperties[5], false);
          var6 = GameRenderer.getFontHeight(menuState[32]);
          sub_161f(var0, 0);
-         logoAnimation.sub_2ce(var0, GameRenderer.viewWidth >> 1, (GameRenderer.viewHeight >> 1) + -20);
+         logoAnimation.render(var0, GameRenderer.viewWidth >> 1, (GameRenderer.viewHeight >> 1) + -20);
          logoAnimation.sub_315();
          var1 = uiSprite.var_8a[0].getWidth();
          var2 = GameRenderer.viewHeight - var6;
@@ -1568,7 +1568,7 @@ final class GameManager {
       }
 
       if (var0) {
-         ((PlayerCharacter)var_670[0]).sub_51(var0);
+         ((PlayerCharacter)var_670[0]).reset(var0);
          var_670[0] = null;
       }
 
@@ -1870,7 +1870,7 @@ final class GameManager {
          var23 <<= 8;
          if (var4 == null) {
             var11 = 0;
-            var_a69.sub_1eb(var20, var21, var22, var23, (Entity)null, 1);
+            var_a69.checkCollisions(var20, var21, var22, var23, (Entity)null, 1);
             if (var15 != GameRenderer.layerProperties[4] - 1 << 8 && var16 != GameRenderer.layerProperties[5] - 1 << 8 && var15 != 0 && var16 != 0) {
                int var10001;
                byte var10002;
@@ -2292,7 +2292,7 @@ final class GameManager {
 
       if (((var1 = var_57c[var_ff5[8] * 8 + 3]) & 512) != 0) {
          var_ff5[5] = 0;
-         var_a69.var_160 = var_ff5[5];
+         var_a69.currentWeaponId = var_ff5[5];
       }
 
       int var10001;
@@ -2316,9 +2316,9 @@ final class GameManager {
 
       if ((var1 & 1024) != 0) {
          GameRenderer.writeInt16LE(var_ff5, 2, (short)var_a69.maxHealth);
-         var_a69.sub_e3();
+         var_a69.updateMaxHealth();
          var_ff5[5] = 0;
-         var_a69.var_160 = var_ff5[5];
+         var_a69.currentWeaponId = var_ff5[5];
       }
 
       var_eab = 0;
@@ -2342,9 +2342,9 @@ final class GameManager {
       var_6a4[1] = 0;
       var_670[0].initEntity(var_6a4);
       var_a69 = (PlayerCharacter)var_670[0];
-      var_a69.sub_a6();
+      var_a69.initPlayer();
       var_9d8 |= 2;
-      var_a69.var_160 = var_ff5[5];
+      var_a69.currentWeaponId = var_ff5[5];
       var_e42 = 0;
    }
 
@@ -2410,7 +2410,7 @@ final class GameManager {
       var_9d8 |= 2;
       var_aab = new int[51];
       var_ac5 = 0;
-      var_a69.sub_133();
+      var_a69.spawnOnMap();
       sub_707();
       var_a0a = 1;
       var_f43 = -1;
@@ -2531,7 +2531,7 @@ final class GameManager {
             sub_1757(var_10ca, 0);
             GameRenderer.writeInt32LE(var_ff5, 27, var0);
             sub_ea2();
-            var_a69.sub_a6();
+            var_a69.initPlayer();
             sub_49a(1);
             var_a0a = 0;
             var_9d8 &= -17;
@@ -3215,7 +3215,7 @@ final class GameManager {
                         var13.statusFlags &= -17;
                         var_a69.aiState = 0;
                         var_ff5[5] = (byte)var4;
-                        var_a69.var_160 = var_ff5[5];
+                        var_a69.currentWeaponId = var_ff5[5];
                         var_d55 |= 1;
                         var_d55 &= -17;
                      } else {
@@ -3840,7 +3840,7 @@ final class GameManager {
          }
 
          GameRenderer.lineVisibilityMask = var16 ? 3 : 4;
-         var_a69.sub_e3();
+         var_a69.updateMaxHealth();
          sub_13a3();
       }
    }
@@ -3856,7 +3856,7 @@ final class GameManager {
    }
 
    public static int sub_13d2(int var0, int var1) {
-      return var1 != 6 && var1 != 5 ? var_607[var_a69.var_160 * 9 + 4] : var0;
+      return var1 != 6 && var1 != 5 ? var_607[var_a69.currentWeaponId * 9 + 4] : var0;
    }
 
    static void sub_1409(int var0, Entity var1) {

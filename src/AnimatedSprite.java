@@ -187,7 +187,7 @@ class AnimatedSprite {
       return (this.frameConfig >> 16 & 255) == this.frameTimer;
    }
 
-   public final void sub_2ce(Graphics var1, int var2, int var3) {
+   public final void render(Graphics var1, int var2, int var3) {
       int var4;
       if ((var4 = this.animationData[this.frameDataOffset + 1] & 255) != 0) {
          this.boundsLeft = Integer.MAX_VALUE;
@@ -561,7 +561,7 @@ class AnimatedSprite {
       if ((this.statusFlags & 1) != 0) {
          int var2 = (this.screenX + this.renderOffsetX >> 8) + this.pivotOffsetX + GameRenderer.var_418;
          int var3 = (this.screenY + this.renderOffsetY >> 8) + this.pivotOffsetY + GameRenderer.var_43a;
-         this.sub_2ce(var1, var2, var3);
+         this.render(var1, var2, var3);
       }
 
       if ((this.statusFlags & 6) == 0) {

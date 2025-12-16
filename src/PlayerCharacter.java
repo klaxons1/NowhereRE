@@ -2,31 +2,31 @@ import javax.microedition.lcdui.Graphics;
 
 final class PlayerCharacter extends AnimatedSprite {
    int maxHealth;
-   int var_26;
-   int var_87;
-   int var_bf;
-   int var_d0;
-   int var_11b;
-   int var_160;
-   int var_1a1;
-   int var_1b2;
-   int var_1cc;
-   int var_215;
-   int var_242;
-   int var_24f;
-   int var_26e;
-   int var_27f;
-   int var_2c4;
-   int var_2ed;
-   AnimatedSprite var_30e;
+   int knockbackVelocityX;
+   int knockbackVelocityY;
+   int damageDirection;
+   int warpPositionX;
+   int warpPositionY;
+   int currentWeaponId;
+   int attackAnimTimer;
+   int lowHealthBlinkTimer;
+   int lastGridPosition;
+   int healEffectPosition;
+   int movementFlags;
+   int cameraAngle;
+   int cameraOffsetX;
+   int cameraOffsetY;
+   int targetCameraOffsetX;
+   int targetCameraOffsetY;
+   AnimatedSprite weaponSprite;
 
    PlayerCharacter() {
       super.entityId = 0;
-      this.var_30e = new AnimatedSprite();
+      this.weaponSprite = new AnimatedSprite();
       super.facing = 2;
    }
 
-   public final void initEntity(int[] var1) {
+   public final void setSpawnPosition(int[] var1) {
       super.x = var1[0];
       super.y = var1[1];
       super.statusFlags = 9;
@@ -34,14 +34,14 @@ final class PlayerCharacter extends AnimatedSprite {
 
    public final void sub_2a() {
       this.sub_6f();
-      if (this.var_30e != null) {
-         this.var_30e.sub_6f();
-         this.var_30e = null;
+      if (this.weaponSprite != null) {
+         this.weaponSprite.sub_6f();
+         this.weaponSprite = null;
       }
 
    }
 
-   public final void sub_51(boolean var1) {
+   public final void reset(boolean var1) {
       this.sub_be();
       if (var1) {
          this.sub_2a();
@@ -49,22 +49,22 @@ final class PlayerCharacter extends AnimatedSprite {
 
    }
 
-   public final void sub_a6() {
+   public final void initPlayer() {
       super.statusFlags |= 1;
       super.aiState = 0;
-      this.var_30e.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[0]);
-      this.var_30e.sub_14(-65536);
+      this.weaponSprite.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[0]);
+      this.weaponSprite.sub_14(-65536);
       super.renderOffsetX = super.renderOffsetY = 0;
       super.pivotOffsetX = super.pivotOffsetY = 0;
-      this.sub_e3();
+      this.updateMaxHealth();
       GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)this.maxHealth);
    }
 
-   final void sub_e3() {
+   final void updateMaxHealth() {
       this.maxHealth = GameManager.sub_1654(GameManager.var_ff5[1] & 255);
    }
 
-   public final void sub_133() {
+   public final void spawnOnMap() {
       int var11 = GameManager.var_c45 >> 9 & 3;
       int var12 = GameManager.sub_1914(7);
       super.var_8fb = 0;
@@ -115,11 +115,11 @@ final class PlayerCharacter extends AnimatedSprite {
                var10002 = var9 - var8;
                var10003 = 128;
             } else {
-               super.x = var6 + ((var7 - var6) * this.var_d0 >> 8);
+               super.x = var6 + ((var7 - var6) * this.warpPositionX >> 8);
                var10000 = this;
                var14 = var8;
                var10002 = var9 - var8;
-               var10003 = this.var_11b;
+               var10003 = this.warpPositionY;
             }
 
             var10000.y = var14 + (var10002 * var10003 >> 8);
@@ -128,24 +128,24 @@ final class PlayerCharacter extends AnimatedSprite {
       }
 
       if (!var13) {
-         this.var_242 = 1 << super.facing;
+         this.movementFlags = 1 << super.facing;
          short var15;
          PlayerCharacter var16;
-         if ((this.var_242 & 8) != 0) {
-            this.var_24f = 128;
-            this.var_2c4 = this.var_26e = -8192;
+         if ((this.movementFlags & 8) != 0) {
+            this.cameraAngle = 128;
+            this.targetCameraOffsetX = this.cameraOffsetX = -8192;
             var10000 = this;
             var16 = this;
             var15 = 0;
-         } else if ((this.var_242 & 2) != 0) {
-            this.var_24f = 0;
-            this.var_2c4 = this.var_26e = 8192;
+         } else if ((this.movementFlags & 2) != 0) {
+            this.cameraAngle = 0;
+            this.targetCameraOffsetX = this.cameraOffsetX = 8192;
             var10000 = this;
             var16 = this;
             var15 = 0;
          } else {
             short var17;
-            if ((this.var_242 & 1) != 0) {
+            if ((this.movementFlags & 1) != 0) {
                var10000 = this;
                var17 = 192;
             } else {
@@ -153,14 +153,14 @@ final class PlayerCharacter extends AnimatedSprite {
                var17 = 64;
             }
 
-            var10000.var_24f = var17;
-            this.var_2c4 = this.var_26e = 0;
+            var10000.cameraAngle = var17;
+            this.targetCameraOffsetX = this.cameraOffsetX = 0;
             var10000 = this;
             var16 = this;
             var15 = -8192;
          }
 
-         var10000.var_2ed = var16.var_27f = var15;
+         var10000.targetCameraOffsetY = var16.cameraOffsetY = var15;
       }
 
       super.x <<= 8;
@@ -169,39 +169,39 @@ final class PlayerCharacter extends AnimatedSprite {
       super.screenX = GameRenderer.worldToScreenFixedX(0, super.x);
       super.screenY = GameRenderer.worldToScreenFixedY(0, super.y);
       this.sub_42d(false);
-      GameRenderer.setCameraPosition(0, super.x + this.var_26e, super.y + this.var_27f, false, true);
+      GameRenderer.setCameraPosition(0, super.x + this.cameraOffsetX, super.y + this.cameraOffsetY, false, true);
       super.aiState = 0;
-      this.var_215 = 0;
+      this.healEffectPosition = 0;
    }
 
-   private boolean sub_196() {
-      if (this.var_160 != 5 && GameManager.var_a0a != 9) {
+   private boolean handleWeaponAttack() {
+      if (this.currentWeaponId != 5 && GameManager.var_a0a != 9) {
          boolean var7 = false;
-         this.var_1a1 = 32;
+         this.attackAnimTimer = 32;
          int var1 = super.x + super.transformedBounds[4];
          int var2 = super.y + super.transformedBounds[5];
          int var3 = super.x + super.transformedBounds[6];
          int var4 = super.y + super.transformedBounds[7];
-         if (this.sub_1eb(var1, var2, var3, var4, (Entity)null, 3)) {
-            if (this.var_160 != 1 && this.var_160 != 7) {
-               this.var_160 = 0;
+         if (this.checkCollisions(var1, var2, var3, var4, (Entity)null, 3)) {
+            if (this.currentWeaponId != 1 && this.currentWeaponId != 7) {
+               this.currentWeaponId = 0;
             }
-         } else if (this.var_160 == 0 && (super.statusFlags & 16) == 0) {
+         } else if (this.currentWeaponId == 0 && (super.statusFlags & 16) == 0) {
             var7 = true;
          }
 
-         if (GameManager.var_607[this.var_160 * 9 + 6] != -1 && (super.statusFlags & 128) == 0) {
+         if (GameManager.var_607[this.currentWeaponId * 9 + 6] != -1 && (super.statusFlags & 128) == 0) {
             if (GameManager.var_ff5[10 + GameManager.var_ff5[5]] == 0) {
                GameManager.sub_1576(false);
             }
 
             if (GameManager.var_ff5[10 + GameManager.var_ff5[5]] == 0) {
                GameManager.var_ff5[5] = 1;
-               this.var_160 = GameManager.var_ff5[5];
+               this.currentWeaponId = GameManager.var_ff5[5];
             } else {
-               this.var_160 = GameManager.var_ff5[5];
+               this.currentWeaponId = GameManager.var_ff5[5];
                if ((super.statusFlags & 128) == 0 && (GameManager.var_ff5[31] & 2) == 0) {
-                  --GameManager.var_ff5[10 + this.var_160];
+                  --GameManager.var_ff5[10 + this.currentWeaponId];
                }
             }
          }
@@ -217,12 +217,12 @@ final class PlayerCharacter extends AnimatedSprite {
 
          this.sub_3fc();
          if (AnimatedSprite.sub_1d8(this)) {
-            if (GameManager.var_607[this.var_160 * 9 + 1] == 1) {
-               GameManager.sub_8ea(GameManager.var_607[this.var_160 * 9 + 2], super.x, super.y, super.facing, (Entity)null, this.var_160, 0);
+            if (GameManager.var_607[this.currentWeaponId * 9 + 1] == 1) {
+               GameManager.sub_8ea(GameManager.var_607[this.currentWeaponId * 9 + 2], super.x, super.y, super.facing, (Entity)null, this.currentWeaponId, 0);
                GameManager.sub_1576(false);
             }
 
-            if (GameManager.var_607[this.var_160 * 9 + 8] != 0) {
+            if (GameManager.var_607[this.currentWeaponId * 9 + 8] != 0) {
                GameManager.sub_81a();
             }
          }
@@ -231,9 +231,9 @@ final class PlayerCharacter extends AnimatedSprite {
          var2 = super.y + super.transformedBounds[9];
          var3 = super.x + super.transformedBounds[10];
          var4 = super.y + super.transformedBounds[11];
-         this.sub_1eb(var1, var2, var3, var4, (Entity)null, 0);
+         this.checkCollisions(var1, var2, var3, var4, (Entity)null, 0);
          if (var7) {
-            this.var_160 = GameManager.var_ff5[5];
+            this.currentWeaponId = GameManager.var_ff5[5];
             super.aiState = 0;
             super.statusFlags &= -17;
          }
@@ -244,7 +244,7 @@ final class PlayerCharacter extends AnimatedSprite {
       }
    }
 
-   public final boolean sub_1eb(int var1, int var2, int var3, int var4, Entity var5, int var6) {
+   public final boolean checkCollisions(int var1, int var2, int var3, int var4, Entity var5, int var6) {
       boolean var11 = false;
       if (var1 == var3) {
          return false;
@@ -285,7 +285,7 @@ final class PlayerCharacter extends AnimatedSprite {
                            return true;
                         }
 
-                        this.var_160 = 0;
+                        this.currentWeaponId = 0;
                         this.sub_296(var12);
                         return true;
                      }
@@ -308,7 +308,7 @@ final class PlayerCharacter extends AnimatedSprite {
                            }
 
                            var15.var_63d = var10001;
-                           var12.sub_20a(GameManager.sub_13d2(0, var6), this.var_160 >= 0, -GameManager.var_607[this.var_160 * 9 + 5] << 8, var12.sub_370(super.x, super.y));
+                           var12.sub_20a(GameManager.sub_13d2(0, var6), this.currentWeaponId >= 0, -GameManager.var_607[this.currentWeaponId * 9 + 5] << 8, var12.sub_370(super.x, super.y));
                         }
                      }
                   }
@@ -319,7 +319,7 @@ final class PlayerCharacter extends AnimatedSprite {
          if (var6 != 3 && GameRenderer.findTilesInRect(0, GameManager.var_6be, var1, var2, var3, var4) > 0) {
             int var13 = GameManager.var_6be[0] >> 8;
             int var9 = GameRenderer.collisionMap[var13] >> 2;
-            if ((this.var_160 == 3 || this.var_160 == 7) && (var9 == 3 || var9 == 27) || (this.var_160 == 5 || this.var_160 == 7) && (var9 == 5 || var9 == 18)) {
+            if ((this.currentWeaponId == 3 || this.currentWeaponId == 7) && (var9 == 3 || var9 == 27) || (this.currentWeaponId == 5 || this.currentWeaponId == 7) && (var9 == 5 || var9 == 18)) {
                GameManager.sub_93e(0, var13);
             }
 
@@ -330,7 +330,7 @@ final class PlayerCharacter extends AnimatedSprite {
       }
    }
 
-   private boolean sub_233(int var1, boolean var2) {
+   private boolean takeDamage(int var1, boolean var2) {
       super.statusFlags |= 96;
       if (var1 > 0) {
          int var3;
@@ -366,36 +366,36 @@ final class PlayerCharacter extends AnimatedSprite {
          return true;
       } else {
          if (var2) {
-            this.var_26 = this.var_87 = 0;
+            this.knockbackVelocityX = this.knockbackVelocityY = 0;
             byte var10001;
             PlayerCharacter var4;
-            if (this.var_bf == 0) {
-               this.var_87 = -2048;
+            if (this.damageDirection == 0) {
+               this.knockbackVelocityY = -2048;
                super.facing = 2;
                var4 = this;
                var10001 = 4;
-            } else if (this.var_bf == 2) {
-               this.var_87 = 2048;
+            } else if (this.damageDirection == 2) {
+               this.knockbackVelocityY = 2048;
                super.facing = 0;
                var4 = this;
                var10001 = 1;
-            } else if (this.var_bf == 3) {
-               this.var_26 = -2048;
+            } else if (this.damageDirection == 3) {
+               this.knockbackVelocityX = -2048;
                super.facing = 1;
                var4 = this;
                var10001 = 2;
             } else {
-               if (this.var_bf != 1) {
+               if (this.damageDirection != 1) {
                   return false;
                }
 
-               this.var_26 = 2048;
+               this.knockbackVelocityX = 2048;
                super.facing = 3;
                var4 = this;
                var10001 = 8;
             }
 
-            var4.var_242 = var10001;
+            var4.movementFlags = var10001;
          }
 
          return false;
@@ -504,9 +504,9 @@ final class PlayerCharacter extends AnimatedSprite {
          Entity var8;
          if (((var8 = (Entity) GameManager.var_670[1 + var1]).var_21a & 16) == 0 && (var8.statusFlags & 8) != 0 && AnimatedSprite.sub_106(var8) && var8.x + var8.transformedBounds[10] >= var2 && var8.y + var8.transformedBounds[11] >= var4 && var8.x + var8.transformedBounds[8] <= var3 && var8.y + var8.transformedBounds[9] <= var5) {
             if ((super.statusFlags & 32) == 0 && (var8.stateFlags & 2) != 0) {
-               this.var_bf = var8.var_19d;
+               this.damageDirection = var8.var_19d;
                if ((super.statusFlags & 65536) == 0) {
-                  this.sub_233(var8.sub_45b(), true);
+                  this.takeDamage(var8.sub_45b(), true);
                }
 
                if (var8.animationSetId == 1) {
@@ -569,22 +569,22 @@ final class PlayerCharacter extends AnimatedSprite {
             short var7 = GameRenderer.zoneData[var10++];
             short var8 = GameRenderer.zoneData[var10++];
             short var9 = GameRenderer.zoneData[var10];
-            this.var_d0 = ((super.x >> 8) - var6 << 8) / (var8 - var6);
-            this.var_11b = ((super.y >> 8) - var7 << 8) / (var9 - var7);
-            if (this.var_11b > 255) {
-               this.var_11b = 255;
+            this.warpPositionX = ((super.x >> 8) - var6 << 8) / (var8 - var6);
+            this.warpPositionY = ((super.y >> 8) - var7 << 8) / (var9 - var7);
+            if (this.warpPositionY > 255) {
+               this.warpPositionY = 255;
             }
 
-            if (this.var_11b < 0) {
-               this.var_11b = 0;
+            if (this.warpPositionY < 0) {
+               this.warpPositionY = 0;
             }
 
-            if (this.var_d0 > 255) {
-               this.var_d0 = 255;
+            if (this.warpPositionX > 255) {
+               this.warpPositionX = 255;
             }
 
-            if (this.var_d0 < 0) {
-               this.var_d0 = 0;
+            if (this.warpPositionX < 0) {
+               this.warpPositionX = 0;
             }
          }
 
@@ -638,9 +638,9 @@ final class PlayerCharacter extends AnimatedSprite {
          if (super.aiState != 3) {
             if ((super.statusFlags & 65536) != 0) {
                GameManager.var_ff5[5] = 7;
-               this.var_160 = GameManager.var_ff5[5];
+               this.currentWeaponId = GameManager.var_ff5[5];
                GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)this.maxHealth);
-               this.sub_e3();
+               this.updateMaxHealth();
                if ((GameManager.var_57c[GameManager.var_ff5[8] * 8 + 3] & 8192) != 0 && (super.statusFlags & 1024) == 0) {
                   --GameManager.var_e42;
                }
@@ -648,11 +648,11 @@ final class PlayerCharacter extends AnimatedSprite {
                if (GameManager.var_e42 < 0) {
                   GameManager.var_e42 = 0;
                   GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)0);
-                  this.sub_233(0, false);
+                  this.takeDamage(0, false);
                }
-            } else if (this.var_160 == 7) {
+            } else if (this.currentWeaponId == 7) {
                GameManager.var_ff5[5] = 0;
-               this.var_160 = GameManager.var_ff5[5];
+               this.currentWeaponId = GameManager.var_ff5[5];
             } else if ((super.statusFlags & 64) != 0) {
                super.aiState = 5;
             }
@@ -664,16 +664,16 @@ final class PlayerCharacter extends AnimatedSprite {
             if (super.aiState == 1) {
                var11 = GameRenderer.snapToGridCenterX(0, super.x) >> 8;
                var12 = GameRenderer.snapToGridCenterY(0, super.y) >> 8;
-               if (var11 != this.var_1cc >> 16 && (short)var12 != (short)this.var_1cc) {
+               if (var11 != this.lastGridPosition >> 16 && (short)var12 != (short)this.lastGridPosition) {
                   GameManager.sub_a29(super.x >> 8, super.y >> 8, 2, 111, 0, 4, 0);
-                  this.var_1cc = (var11 << 16) + (short)var12;
+                  this.lastGridPosition = (var11 << 16) + (short)var12;
                }
 
                var6 = 0;
                var7 = 0;
             }
          } else {
-            this.var_1cc = 0;
+            this.lastGridPosition = 0;
          }
 
          PlayerCharacter var10000;
@@ -699,11 +699,11 @@ final class PlayerCharacter extends AnimatedSprite {
          label277: {
             if (GameRenderer.readInt16LE(GameManager.var_ff5, 2) <= (short)(this.maxHealth >> 1) && super.aiState != 3) {
                super.statusFlags |= 16384;
-               if (++this.var_1b2 <= 160) {
-                  if (this.var_1b2 > 152) {
+               if (++this.lowHealthBlinkTimer <= 160) {
+                  if (this.lowHealthBlinkTimer > 152) {
                      label175: {
                         short var10002;
-                        if (this.var_1b2 > 156) {
+                        if (this.lowHealthBlinkTimer > 156) {
                            super.statusFlags ^= 32768;
                            if ((super.statusFlags & '耀') != 0) {
                               var10000 = this;
@@ -731,7 +731,7 @@ final class PlayerCharacter extends AnimatedSprite {
                      }
 
                      var10000.renderOffsetX = var10001;
-                     this.var_30e.renderOffsetX = super.renderOffsetX;
+                     this.weaponSprite.renderOffsetX = super.renderOffsetX;
                      return 0;
                   }
                   break label277;
@@ -747,15 +747,15 @@ final class PlayerCharacter extends AnimatedSprite {
                   var10001 = 0;
                }
 
-               var10000.var_215 = var10001;
+               var10000.healEffectPosition = var10001;
                var10000 = this;
             } else {
-               this.var_215 = 0;
+               this.healEffectPosition = 0;
                super.statusFlags &= -16385;
                var10000 = this;
             }
 
-            var10000.var_1b2 = 0;
+            var10000.lowHealthBlinkTimer = 0;
          }
 
          switch(super.aiState) {
@@ -767,7 +767,7 @@ final class PlayerCharacter extends AnimatedSprite {
                GameManager.sub_11a8(291);
             }
 
-            this.var_160 = GameManager.var_ff5[5] = 0;
+            this.currentWeaponId = GameManager.var_ff5[5] = 0;
             --super.var_8fb;
             break;
          case 4:
@@ -786,12 +786,12 @@ final class PlayerCharacter extends AnimatedSprite {
             }
             break;
          default:
-            if (this.var_160 == 5) {
+            if (this.currentWeaponId == 5) {
                int var1 = super.x + super.transformedBounds[8];
                int var2 = super.y + super.transformedBounds[9];
                int var3 = super.x + super.transformedBounds[10];
                int var4 = super.y + super.transformedBounds[11];
-               if (this.sub_1eb(var1, var2, var3, var4, (Entity)null, 1)) {
+               if (this.checkCollisions(var1, var2, var3, var4, (Entity)null, 1)) {
                   label233: {
                      short var14;
                      switch(super.facing) {
@@ -822,7 +822,7 @@ final class PlayerCharacter extends AnimatedSprite {
                byte var15;
                label222: {
                   if ((super.statusFlags & 2048) != 0) {
-                     if (this.var_24f > 64 && this.var_24f <= 192) {
+                     if (this.cameraAngle > 64 && this.cameraAngle <= 192) {
                         var10000 = this;
                         var15 = 3;
                         break label222;
@@ -831,7 +831,7 @@ final class PlayerCharacter extends AnimatedSprite {
                      var10000 = this;
                   } else {
                      int var5;
-                     if ((var5 = this.var_24f + 32) > 256) {
+                     if ((var5 = this.cameraAngle + 32) > 256) {
                         var5 -= 256;
                      }
 
@@ -841,7 +841,7 @@ final class PlayerCharacter extends AnimatedSprite {
                         super.facing = 0;
                      }
 
-                     if (this.var_24f >= 0) {
+                     if (this.cameraAngle >= 0) {
                         break label223;
                      }
 
@@ -855,7 +855,7 @@ final class PlayerCharacter extends AnimatedSprite {
             }
 
             if (GameManager.var_d22 <= 0 && ((GameRenderer.inputState & 1) != 0 || (super.statusFlags & 16) != 0)) {
-               var10 = this.sub_196();
+               var10 = this.handleWeaponAttack();
             }
 
             if (var10) {
@@ -871,10 +871,10 @@ final class PlayerCharacter extends AnimatedSprite {
                      int var16;
                      label198: {
                         if ((GameRenderer.inputState & 2) != 0) {
-                           this.var_242 |= 1;
-                           this.var_242 &= -5;
+                           this.movementFlags |= 1;
+                           this.movementFlags &= -5;
                            if ((GameRenderer.inputState & 16) == 0 && (GameRenderer.inputState & 8) == 0) {
-                              this.var_242 &= -11;
+                              this.movementFlags &= -11;
                            }
 
                            var13 = 0;
@@ -884,10 +884,10 @@ final class PlayerCharacter extends AnimatedSprite {
                               break label198;
                            }
 
-                           this.var_242 |= 4;
-                           this.var_242 &= -2;
+                           this.movementFlags |= 4;
+                           this.movementFlags &= -2;
                            if ((GameRenderer.inputState & 16) == 0 && (GameRenderer.inputState & 8) == 0) {
-                              this.var_242 &= -11;
+                              this.movementFlags &= -11;
                            }
 
                            var13 = 2;
@@ -898,10 +898,10 @@ final class PlayerCharacter extends AnimatedSprite {
                      }
 
                      if ((GameRenderer.inputState & 8) != 0) {
-                        this.var_242 |= 8;
-                        this.var_242 &= -3;
+                        this.movementFlags |= 8;
+                        this.movementFlags &= -3;
                         if ((GameRenderer.inputState & 2) == 0 && (GameRenderer.inputState & 4) == 0) {
-                           this.var_242 &= -6;
+                           this.movementFlags &= -6;
                         }
 
                         var13 = 3;
@@ -911,10 +911,10 @@ final class PlayerCharacter extends AnimatedSprite {
                            break label265;
                         }
 
-                        this.var_242 |= 2;
-                        this.var_242 &= -9;
+                        this.movementFlags |= 2;
+                        this.movementFlags &= -9;
                         if ((GameRenderer.inputState & 2) == 0 && (GameRenderer.inputState & 4) == 0) {
-                           this.var_242 &= -6;
+                           this.movementFlags &= -6;
                         }
 
                         var13 = 1;
@@ -930,7 +930,7 @@ final class PlayerCharacter extends AnimatedSprite {
                   this.sub_388();
                } else if ((super.statusFlags & 16) == 0) {
                   super.aiState = 1;
-                  this.var_1a1 = 32;
+                  this.attackAnimTimer = 32;
                   this.sub_3c7(var11, var12, true);
                }
 
@@ -978,14 +978,14 @@ final class PlayerCharacter extends AnimatedSprite {
       int var10001;
       PlayerCharacter var10002;
       int var10003;
-      if (this.var_160 != 5 && (super.statusFlags & 256) == 0) {
+      if (this.currentWeaponId != 5 && (super.statusFlags & 256) == 0) {
          var10000 = this;
          var10003 = 1024;
          var10002 = this;
          var10001 = 1024;
       } else {
          var10000 = this;
-         var10003 = this.var_160 == 5 && (super.statusFlags & 256) != 0 ? 192 : 384;
+         var10003 = this.currentWeaponId == 5 && (super.statusFlags & 256) != 0 ? 192 : 384;
          var10002 = this;
          var10001 = var10003;
       }
@@ -1011,17 +1011,17 @@ final class PlayerCharacter extends AnimatedSprite {
       int var36 = super.x + super.transformedBounds[2];
       int var38 = super.y + super.transformedBounds[3];
       if ((super.statusFlags & 64) != 0) {
-         var1 += this.var_26;
-         var2 += this.var_87;
-         if (Math.abs(this.var_26) > 256) {
-            this.var_26 -= this.var_26 > 0 ? 1280 : -1280;
-            if (Math.abs(this.var_26) < 256) {
-               this.var_26 = this.var_26 > 0 ? 256 : -256;
+         var1 += this.knockbackVelocityX;
+         var2 += this.knockbackVelocityY;
+         if (Math.abs(this.knockbackVelocityX) > 256) {
+            this.knockbackVelocityX -= this.knockbackVelocityX > 0 ? 1280 : -1280;
+            if (Math.abs(this.knockbackVelocityX) < 256) {
+               this.knockbackVelocityX = this.knockbackVelocityX > 0 ? 256 : -256;
             }
-         } else if (Math.abs(this.var_87) > 256) {
-            this.var_87 -= this.var_87 > 0 ? 1280 : -1280;
-            if (Math.abs(this.var_87) < 256) {
-               this.var_87 = this.var_87 > 0 ? 256 : -256;
+         } else if (Math.abs(this.knockbackVelocityY) > 256) {
+            this.knockbackVelocityY -= this.knockbackVelocityY > 0 ? 1280 : -1280;
+            if (Math.abs(this.knockbackVelocityY) < 256) {
+               this.knockbackVelocityY = this.knockbackVelocityY > 0 ? 256 : -256;
             }
          }
       }
@@ -1276,18 +1276,18 @@ final class PlayerCharacter extends AnimatedSprite {
                            break label91;
                         }
 
-                        var10000 = (super.statusFlags & 16384) != 0 && (this.var_1a1 <= 0 || this.var_160 == 0 || this.var_160 == 3) && this.var_160 != 5 ? 106 : (super.aiState == 1 ? 66 : 50);
+                        var10000 = (super.statusFlags & 16384) != 0 && (this.attackAnimTimer <= 0 || this.currentWeaponId == 0 || this.currentWeaponId == 3) && this.currentWeaponId != 5 ? 106 : (super.aiState == 1 ? 66 : 50);
                      }
 
                      var1 = var10000;
                   }
 
-                  --this.var_1a1;
-                  if (this.var_1a1 <= 0 && this.var_160 != 5 && (super.statusFlags & 65536) == 0) {
+                  --this.attackAnimTimer;
+                  if (this.attackAnimTimer <= 0 && this.currentWeaponId != 5 && (super.statusFlags & 65536) == 0) {
                      break label94;
                   }
 
-                  var10000 = var1 + this.var_160;
+                  var10000 = var1 + this.currentWeaponId;
                }
 
                var1 = var10000;
@@ -1321,15 +1321,15 @@ final class PlayerCharacter extends AnimatedSprite {
          }
 
          GameManager.sub_159c(this, var3, super.facing);
-         GameManager.sub_159c(this.var_30e, var4, super.facing);
+         GameManager.sub_159c(this.weaponSprite, var4, super.facing);
       }
    }
 
    public final void sub_42d(boolean var1) {
-      int var4 = GameManager.var_454[this.var_242 + 40] & 255;
+      int var4 = GameManager.var_454[this.movementFlags + 40] & 255;
       boolean var7 = false;
-      int var2 = super.x + this.var_26e;
-      int var3 = super.y + this.var_27f;
+      int var2 = super.x + this.cameraOffsetX;
+      int var3 = super.y + this.cameraOffsetY;
       GameRenderer.setCameraPosition(0, var2 >> 8, var3 + -8192 >> 8, false, true);
       if (var4 < 0) {
          var4 += 256;
@@ -1343,32 +1343,32 @@ final class PlayerCharacter extends AnimatedSprite {
       int var10001;
       int var8;
       label76: {
-         this.var_26e = this.var_2c4;
-         this.var_27f = this.var_2ed;
+         this.cameraOffsetX = this.targetCameraOffsetX;
+         this.cameraOffsetY = this.targetCameraOffsetY;
          var2 = GameEngine.mulBySin(8192L, var4);
          var3 = GameEngine.mulByCos(8192L, var4);
          if (var1) {
             var10000 = this;
             var10001 = var2;
          } else {
-            if ((var8 = GameEngine.abs(this.var_2c4 - var2 >> 2)) > 1536) {
+            if ((var8 = GameEngine.abs(this.targetCameraOffsetX - var2 >> 2)) > 1536) {
                var8 = 1536;
             }
 
-            if (this.var_26e < var2) {
+            if (this.cameraOffsetX < var2) {
                var10000 = this;
-               var10001 = this.var_2c4 + var8;
+               var10001 = this.targetCameraOffsetX + var8;
             } else {
-               if (this.var_26e <= var2) {
+               if (this.cameraOffsetX <= var2) {
                   break label76;
                }
 
                var10000 = this;
-               var10001 = this.var_2c4 - var8;
+               var10001 = this.targetCameraOffsetX - var8;
             }
          }
 
-         var10000.var_2c4 = var10001;
+         var10000.targetCameraOffsetX = var10001;
       }
 
       label68: {
@@ -1376,37 +1376,37 @@ final class PlayerCharacter extends AnimatedSprite {
             var10000 = this;
             var10001 = var3;
          } else {
-            if ((var8 = GameEngine.abs(this.var_2ed - var3 >> 2)) > 1536) {
+            if ((var8 = GameEngine.abs(this.targetCameraOffsetY - var3 >> 2)) > 1536) {
                var8 = 1536;
             }
 
-            if (this.var_27f < var3) {
+            if (this.cameraOffsetY < var3) {
                var10000 = this;
-               var10001 = this.var_2ed + var8;
+               var10001 = this.targetCameraOffsetY + var8;
             } else {
-               if (this.var_27f <= var3) {
+               if (this.cameraOffsetY <= var3) {
                   break label68;
                }
 
                var10000 = this;
-               var10001 = this.var_2ed - var8;
+               var10001 = this.targetCameraOffsetY - var8;
             }
          }
 
-         var10000.var_2ed = var10001;
+         var10000.targetCameraOffsetY = var10001;
       }
 
       byte var9 = 18;
-      if (this.var_160 == 5) {
+      if (this.currentWeaponId == 5) {
          var9 = 9;
       }
 
-      if (this.var_24f <= var4 + var9 && this.var_24f >= var4 - var9) {
+      if (this.cameraAngle <= var4 + var9 && this.cameraAngle >= var4 - var9) {
          var10000 = this;
          var10001 = var4;
       } else {
-         int var5 = var4 - this.var_24f;
-         int var6 = this.var_24f - var4;
+         int var5 = var4 - this.cameraAngle;
+         int var6 = this.cameraAngle - var4;
          if (var5 < 0) {
             var5 += 256;
          }
@@ -1417,20 +1417,20 @@ final class PlayerCharacter extends AnimatedSprite {
 
          if (var5 < var6) {
             var10000 = this;
-            var10001 = this.var_24f + var9;
+            var10001 = this.cameraAngle + var9;
          } else {
             var10000 = this;
-            var10001 = this.var_24f - var9;
+            var10001 = this.cameraAngle - var9;
          }
       }
 
-      var10000.var_24f = var10001;
-      if (this.var_24f < 0) {
-         this.var_24f += 256;
+      var10000.cameraAngle = var10001;
+      if (this.cameraAngle < 0) {
+         this.cameraAngle += 256;
       }
 
-      if (this.var_24f > 256) {
-         this.var_24f -= 256;
+      if (this.cameraAngle > 256) {
+         this.cameraAngle -= 256;
       }
 
       GameManager.sub_707();
@@ -1438,7 +1438,7 @@ final class PlayerCharacter extends AnimatedSprite {
 
    public final void sub_487(Graphics var1) {
       int var2 = (super.statusFlags & 1024) != 0 ? 3 : 0;
-      this.var_30e.animationData = super.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[var2]);
+      this.weaponSprite.animationData = super.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[var2]);
       if (GameManager.var_a0a != 9 && (super.statusFlags & 1) != 0) {
          var1.drawImage(GameManager.var_686[0].var_8a[0], GameManager.var_ccb + GameRenderer.viewOffsetX + ((super.transformedBounds[0] + super.transformedBounds[2] >> 1) + super.screenX >> 8) - 10, GameManager.var_d14 + GameRenderer.viewOffsetY + ((super.transformedBounds[1] + super.transformedBounds[3] >> 1) + super.screenY >> 8) - 4, 20);
          super.pivotOffsetX = GameManager.var_ccb;
@@ -1448,24 +1448,24 @@ final class PlayerCharacter extends AnimatedSprite {
                PlayerCharacter var10000;
                int var10001;
                int var10002;
-               if (this.var_30e.sub_3b3(0) == 0) {
-                  super.pivotOffsetX += this.var_30e.transformedBounds[8] + this.var_30e.transformedBounds[10] >> 1 >> 8;
+               if (this.weaponSprite.sub_3b3(0) == 0) {
+                  super.pivotOffsetX += this.weaponSprite.transformedBounds[8] + this.weaponSprite.transformedBounds[10] >> 1 >> 8;
                   var10000 = this;
                   var10001 = super.pivotOffsetY;
-                  var10002 = this.var_30e.transformedBounds[9] >> 8;
+                  var10002 = this.weaponSprite.transformedBounds[9] >> 8;
                } else {
-                  super.pivotOffsetX += this.var_30e.sub_3b3(0) >> 16;
+                  super.pivotOffsetX += this.weaponSprite.sub_3b3(0) >> 16;
                   var10000 = this;
                   var10001 = super.pivotOffsetY;
-                  var10002 = (short)this.var_30e.sub_3b3(0);
+                  var10002 = (short)this.weaponSprite.sub_3b3(0);
                }
 
                var10000.pivotOffsetY = var10001 + var10002;
             }
 
-            this.var_30e.sub_2ce(var1, GameManager.var_ccb + (GameRenderer.worldToScreenFixedX(0, super.x + this.var_30e.renderOffsetX) >> 8), GameManager.var_d14 + (GameRenderer.worldToScreenFixedY(0, super.y + this.var_30e.renderOffsetY) >> 8));
+            this.weaponSprite.render(var1, GameManager.var_ccb + (GameRenderer.worldToScreenFixedX(0, super.x + this.weaponSprite.renderOffsetX) >> 8), GameManager.var_d14 + (GameRenderer.worldToScreenFixedY(0, super.y + this.weaponSprite.renderOffsetY) >> 8));
             if ((super.statusFlags & 2) == 0) {
-               this.var_30e.sub_315();
+               this.weaponSprite.sub_315();
             }
          }
 

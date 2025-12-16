@@ -422,7 +422,7 @@ final class Entity extends AnimatedSprite {
 
                super.statusFlags |= 131072;
                super.aiState = 21;
-               this.var_719 = GameManager.var_a69.var_160;
+               this.var_719 = GameManager.var_a69.currentWeaponId;
                if ((super.statusFlags & 512) != 0) {
                   for(int var5 = 0; var5 < 16; ++var5) {
                      Entity var9;
@@ -439,7 +439,7 @@ final class Entity extends AnimatedSprite {
                if ((this.var_21a & 4) != 0) {
                   ++GameManager.var_ff5[1];
                   GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short) GameManager.sub_1654(GameManager.var_ff5[1] & 255));
-                  GameManager.var_a69.sub_e3();
+                  GameManager.var_a69.updateMaxHealth();
                }
             } else {
                if (var2 && (this.var_1b4 & 8) != 0) {
@@ -1016,7 +1016,7 @@ final class Entity extends AnimatedSprite {
                   }
                }
 
-               if ((GameManager.var_a69.statusFlags & 16384) != 0 && GameManager.var_a69.var_215 != 0 && (this.var_21a & 2048) != 0 && GameManager.sub_8bf(this, 3, 8, this.var_19d, GameManager.var_a69.var_215 >> 16 << 8, (short) GameManager.var_a69.var_215 << 8)) {
+               if ((GameManager.var_a69.statusFlags & 16384) != 0 && GameManager.var_a69.healEffectPosition != 0 && (this.var_21a & 2048) != 0 && GameManager.sub_8bf(this, 3, 8, this.var_19d, GameManager.var_a69.healEffectPosition >> 16 << 8, (short) GameManager.var_a69.healEffectPosition << 8)) {
                   super.statusFlags |= 128;
                }
 
@@ -1718,7 +1718,7 @@ final class Entity extends AnimatedSprite {
 
       int var1 = super.x + this.var_373;
       int var2 = super.y + this.var_3cd;
-      if (this.var_373 != 0 && (GameRenderer.getCollisionAt(0, var1 + 0, var2 + 0) == 1 || GameRenderer.getCollisionAt(0, var1 + 0, var2 + 0) == 2 || GameRenderer.getCollisionAt(0, var1 + 0, var2 + 0) == 3 && (super.statusFlags & 1048576) == 0 || var1 <= GameManager.var_a69.x - ((GameRenderer.viewWidth << 8 >> 1) - GameManager.var_a69.var_26e) && (this.var_1b4 & 268435456) != 0 || var1 >= GameManager.var_a69.x + (GameRenderer.viewWidth << 8 >> 1) + GameManager.var_a69.var_26e && (this.var_1b4 & 268435456) != 0)) {
+      if (this.var_373 != 0 && (GameRenderer.getCollisionAt(0, var1 + 0, var2 + 0) == 1 || GameRenderer.getCollisionAt(0, var1 + 0, var2 + 0) == 2 || GameRenderer.getCollisionAt(0, var1 + 0, var2 + 0) == 3 && (super.statusFlags & 1048576) == 0 || var1 <= GameManager.var_a69.x - ((GameRenderer.viewWidth << 8 >> 1) - GameManager.var_a69.cameraOffsetX) && (this.var_1b4 & 268435456) != 0 || var1 >= GameManager.var_a69.x + (GameRenderer.viewWidth << 8 >> 1) + GameManager.var_a69.cameraOffsetX && (this.var_1b4 & 268435456) != 0)) {
          var1 = super.x;
       }
 
@@ -1949,6 +1949,6 @@ final class Entity extends AnimatedSprite {
    }
 
    private void sub_48a(int var1) {
-      GameManager.var_a69.sub_1eb(super.x + super.transformedBounds[8], super.y + super.transformedBounds[9], super.x + super.transformedBounds[10], super.y + super.transformedBounds[11], this, var1);
+      GameManager.var_a69.checkCollisions(super.x + super.transformedBounds[8], super.y + super.transformedBounds[9], super.x + super.transformedBounds[10], super.y + super.transformedBounds[11], this, var1);
    }
 }
