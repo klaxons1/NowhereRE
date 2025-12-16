@@ -21,15 +21,15 @@ final class PlayerCharacter extends AnimatedSprite {
    AnimatedSprite var_30e;
 
    PlayerCharacter() {
-      super.var_9b3 = 0;
+      super.entityId = 0;
       this.var_30e = new AnimatedSprite();
-      super.var_721 = 2;
+      super.facing = 2;
    }
 
-   public final void sub_14(int[] var1) {
-      super.var_591 = var1[0];
-      super.var_5d1 = var1[1];
-      super.var_824 = 9;
+   public final void initEntity(int[] var1) {
+      super.x = var1[0];
+      super.y = var1[1];
+      super.statusFlags = 9;
    }
 
    public final void sub_2a() {
@@ -50,12 +50,12 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    public final void sub_a6() {
-      super.var_824 |= 1;
-      super.var_954 = 0;
-      this.var_30e.var_11 = (byte[]) GameRenderer.getResource(GameManager.var_6d1[0]);
+      super.statusFlags |= 1;
+      super.aiState = 0;
+      this.var_30e.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[0]);
       this.var_30e.sub_14(-65536);
-      super.var_615 = super.var_640 = 0;
-      super.var_679 = super.var_6c3 = 0;
+      super.renderOffsetX = super.renderOffsetY = 0;
+      super.pivotOffsetX = super.pivotOffsetY = 0;
       this.sub_e3();
       GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)this.maxHealth);
    }
@@ -68,9 +68,9 @@ final class PlayerCharacter extends AnimatedSprite {
       int var11 = GameManager.var_c45 >> 9 & 3;
       int var12 = GameManager.sub_1914(7);
       super.var_8fb = 0;
-      super.var_824 &= -545;
-      super.var_824 |= 1;
-      super.var_954 = 0;
+      super.statusFlags &= -545;
+      super.statusFlags |= 1;
+      super.aiState = 0;
       boolean var13 = false;
       int var2 = 0;
       int var1 = 0;
@@ -102,33 +102,33 @@ final class PlayerCharacter extends AnimatedSprite {
          short var7 = GameRenderer.zoneData[var2++];
          short var9 = GameRenderer.zoneData[var2];
          if (var13) {
-            super.var_591 = var6 + ((var7 - var6) * 128 >> 8);
-            super.var_5d1 = var8 + ((var9 - var8) * 128 >> 8);
+            super.x = var6 + ((var7 - var6) * 128 >> 8);
+            super.y = var8 + ((var9 - var8) * 128 >> 8);
          } else {
             short var14;
             int var10002;
             int var10003;
             if (var10 != var11) {
-               super.var_591 = var6 + ((var7 - var6) * 128 >> 8);
+               super.x = var6 + ((var7 - var6) * 128 >> 8);
                var10000 = this;
                var14 = var8;
                var10002 = var9 - var8;
                var10003 = 128;
             } else {
-               super.var_591 = var6 + ((var7 - var6) * this.var_d0 >> 8);
+               super.x = var6 + ((var7 - var6) * this.var_d0 >> 8);
                var10000 = this;
                var14 = var8;
                var10002 = var9 - var8;
                var10003 = this.var_11b;
             }
 
-            var10000.var_5d1 = var14 + (var10002 * var10003 >> 8);
-            super.var_721 = var10;
+            var10000.y = var14 + (var10002 * var10003 >> 8);
+            super.facing = var10;
          }
       }
 
       if (!var13) {
-         this.var_242 = 1 << super.var_721;
+         this.var_242 = 1 << super.facing;
          short var15;
          PlayerCharacter var16;
          if ((this.var_242 & 8) != 0) {
@@ -163,14 +163,14 @@ final class PlayerCharacter extends AnimatedSprite {
          var10000.var_2ed = var16.var_27f = var15;
       }
 
-      super.var_591 <<= 8;
-      super.var_5d1 <<= 8;
+      super.x <<= 8;
+      super.y <<= 8;
       this.sub_388();
-      super.var_743 = GameRenderer.worldToScreenFixedX(0, super.var_591);
-      super.var_77c = GameRenderer.worldToScreenFixedY(0, super.var_5d1);
+      super.screenX = GameRenderer.worldToScreenFixedX(0, super.x);
+      super.screenY = GameRenderer.worldToScreenFixedY(0, super.y);
       this.sub_42d(false);
-      GameRenderer.setCameraPosition(0, super.var_591 + this.var_26e, super.var_5d1 + this.var_27f, false, true);
-      super.var_954 = 0;
+      GameRenderer.setCameraPosition(0, super.x + this.var_26e, super.y + this.var_27f, false, true);
+      super.aiState = 0;
       this.var_215 = 0;
    }
 
@@ -178,19 +178,19 @@ final class PlayerCharacter extends AnimatedSprite {
       if (this.var_160 != 5 && GameManager.var_a0a != 9) {
          boolean var7 = false;
          this.var_1a1 = 32;
-         int var1 = super.var_591 + super.var_409[4];
-         int var2 = super.var_5d1 + super.var_409[5];
-         int var3 = super.var_591 + super.var_409[6];
-         int var4 = super.var_5d1 + super.var_409[7];
+         int var1 = super.x + super.transformedBounds[4];
+         int var2 = super.y + super.transformedBounds[5];
+         int var3 = super.x + super.transformedBounds[6];
+         int var4 = super.y + super.transformedBounds[7];
          if (this.sub_1eb(var1, var2, var3, var4, (Entity)null, 3)) {
             if (this.var_160 != 1 && this.var_160 != 7) {
                this.var_160 = 0;
             }
-         } else if (this.var_160 == 0 && (super.var_824 & 16) == 0) {
+         } else if (this.var_160 == 0 && (super.statusFlags & 16) == 0) {
             var7 = true;
          }
 
-         if (GameManager.var_607[this.var_160 * 9 + 6] != -1 && (super.var_824 & 128) == 0) {
+         if (GameManager.var_607[this.var_160 * 9 + 6] != -1 && (super.statusFlags & 128) == 0) {
             if (GameManager.var_ff5[10 + GameManager.var_ff5[5]] == 0) {
                GameManager.sub_1576(false);
             }
@@ -200,25 +200,25 @@ final class PlayerCharacter extends AnimatedSprite {
                this.var_160 = GameManager.var_ff5[5];
             } else {
                this.var_160 = GameManager.var_ff5[5];
-               if ((super.var_824 & 128) == 0 && (GameManager.var_ff5[31] & 2) == 0) {
+               if ((super.statusFlags & 128) == 0 && (GameManager.var_ff5[31] & 2) == 0) {
                   --GameManager.var_ff5[10 + this.var_160];
                }
             }
          }
 
-         if ((super.var_824 & 128) != 0 && AnimatedSprite.sub_240(this)) {
+         if ((super.statusFlags & 128) != 0 && AnimatedSprite.sub_240(this)) {
             var7 = true;
          }
 
-         if ((super.var_824 & 144) == 0) {
-            super.var_824 |= 144;
-            super.var_954 = 2;
+         if ((super.statusFlags & 144) == 0) {
+            super.statusFlags |= 144;
+            super.aiState = 2;
          }
 
          this.sub_3fc();
          if (AnimatedSprite.sub_1d8(this)) {
             if (GameManager.var_607[this.var_160 * 9 + 1] == 1) {
-               GameManager.sub_8ea(GameManager.var_607[this.var_160 * 9 + 2], super.var_591, super.var_5d1, super.var_721, (Entity)null, this.var_160, 0);
+               GameManager.sub_8ea(GameManager.var_607[this.var_160 * 9 + 2], super.x, super.y, super.facing, (Entity)null, this.var_160, 0);
                GameManager.sub_1576(false);
             }
 
@@ -227,15 +227,15 @@ final class PlayerCharacter extends AnimatedSprite {
             }
          }
 
-         var1 = super.var_591 + super.var_409[8];
-         var2 = super.var_5d1 + super.var_409[9];
-         var3 = super.var_591 + super.var_409[10];
-         var4 = super.var_5d1 + super.var_409[11];
+         var1 = super.x + super.transformedBounds[8];
+         var2 = super.y + super.transformedBounds[9];
+         var3 = super.x + super.transformedBounds[10];
+         var4 = super.y + super.transformedBounds[11];
          this.sub_1eb(var1, var2, var3, var4, (Entity)null, 0);
          if (var7) {
             this.var_160 = GameManager.var_ff5[5];
-            super.var_954 = 0;
-            super.var_824 &= -17;
+            super.aiState = 0;
+            super.statusFlags &= -17;
          }
 
          return var7;
@@ -252,13 +252,13 @@ final class PlayerCharacter extends AnimatedSprite {
          if (var6 != 8) {
             for(int var7 = 0; var7 < 16; ++var7) {
                Entity var12 = (Entity) GameManager.var_670[1 + var7];
-               if ((var6 != 1 || (var12.var_824 & 4194304) == 0) && (var6 == 7 || (var12.var_21a & 16) == 0) && var5 != var12 && (var12.var_824 & 8) != 0 && ((var12.var_873 & 8) != 0 || (var12.var_873 & 32) != 0 && AnimatedSprite.sub_106(var12) || var6 == 3 || var6 == 5)) {
+               if ((var6 != 1 || (var12.statusFlags & 4194304) == 0) && (var6 == 7 || (var12.var_21a & 16) == 0) && var5 != var12 && (var12.statusFlags & 8) != 0 && ((var12.stateFlags & 8) != 0 || (var12.stateFlags & 32) != 0 && AnimatedSprite.sub_106(var12) || var6 == 3 || var6 == 5)) {
                   byte var10;
                   label188: {
                      var10 = 0;
                      byte var10000;
-                     if (var12.var_9a0 != 11 || var6 != 3 && var6 != 0) {
-                        if ((var12.var_873 & 32) == 0) {
+                     if (var12.animationSetId != 11 || var6 != 3 && var6 != 0) {
+                        if ((var12.stateFlags & 32) == 0) {
                            break label188;
                         }
 
@@ -270,15 +270,15 @@ final class PlayerCharacter extends AnimatedSprite {
                      var10 = var10000;
                   }
 
-                  if (var12.var_591 + var12.var_409[2 + var10] != var12.var_591 + var12.var_409[0 + var10] && var12.var_591 + var12.var_409[2 + var10] >= var1 && var12.var_5d1 + var12.var_409[3 + var10] >= var2 && var12.var_591 + var12.var_409[0 + var10] <= var3 && var12.var_5d1 + var12.var_409[1 + var10] <= var4) {
+                  if (var12.x + var12.transformedBounds[2 + var10] != var12.x + var12.transformedBounds[0 + var10] && var12.x + var12.transformedBounds[2 + var10] >= var1 && var12.y + var12.transformedBounds[3 + var10] >= var2 && var12.x + var12.transformedBounds[0 + var10] <= var3 && var12.y + var12.transformedBounds[1 + var10] <= var4) {
                      var11 = true;
-                     if (var5 != null && var6 == 5 && var12.var_9a0 == 1) {
-                        var12.sub_20a(var5.var_954 == 12 ? 50 : 250, false, 0, var5.var_721);
+                     if (var5 != null && var6 == 5 && var12.animationSetId == 1) {
+                        var12.sub_20a(var5.aiState == 12 ? 50 : 250, false, 0, var5.facing);
                      }
 
                      if (var6 == 3) {
-                        if (var12.var_9a0 != 3 && (var12.var_1b4 & 65536) == 0) {
-                           if (var12.var_9a0 == 11) {
+                        if (var12.animationSetId != 3 && (var12.var_1b4 & 65536) == 0) {
+                           if (var12.animationSetId == 11) {
                               return false;
                            }
 
@@ -296,7 +296,7 @@ final class PlayerCharacter extends AnimatedSprite {
                            if ((var12.var_21a & 16) != 0) {
                               ++GameManager.var_ff5[9];
                            }
-                        } else if (var12.var_9a0 == 1) {
+                        } else if (var12.animationSetId == 1) {
                            Entity var15;
                            byte var10001;
                            if (var6 == 1) {
@@ -308,7 +308,7 @@ final class PlayerCharacter extends AnimatedSprite {
                            }
 
                            var15.var_63d = var10001;
-                           var12.sub_20a(GameManager.sub_13d2(0, var6), this.var_160 >= 0, -GameManager.var_607[this.var_160 * 9 + 5] << 8, var12.sub_370(super.var_591, super.var_5d1));
+                           var12.sub_20a(GameManager.sub_13d2(0, var6), this.var_160 >= 0, -GameManager.var_607[this.var_160 * 9 + 5] << 8, var12.sub_370(super.x, super.y));
                         }
                      }
                   }
@@ -331,7 +331,7 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    private boolean sub_233(int var1, boolean var2) {
-      super.var_824 |= 96;
+      super.statusFlags |= 96;
       if (var1 > 0) {
          int var3;
          label41: {
@@ -361,7 +361,7 @@ final class PlayerCharacter extends AnimatedSprite {
          GameManager.var_9d8 |= 16;
          GameManager.sub_c12();
          super.var_8fb = 64;
-         super.var_954 = 3;
+         super.aiState = 3;
          GameManager.var_9d8 |= 67108864;
          return true;
       } else {
@@ -371,17 +371,17 @@ final class PlayerCharacter extends AnimatedSprite {
             PlayerCharacter var4;
             if (this.var_bf == 0) {
                this.var_87 = -2048;
-               super.var_721 = 2;
+               super.facing = 2;
                var4 = this;
                var10001 = 4;
             } else if (this.var_bf == 2) {
                this.var_87 = 2048;
-               super.var_721 = 0;
+               super.facing = 0;
                var4 = this;
                var10001 = 1;
             } else if (this.var_bf == 3) {
                this.var_26 = -2048;
-               super.var_721 = 1;
+               super.facing = 1;
                var4 = this;
                var10001 = 2;
             } else {
@@ -390,7 +390,7 @@ final class PlayerCharacter extends AnimatedSprite {
                }
 
                this.var_26 = 2048;
-               super.var_721 = 3;
+               super.facing = 3;
                var4 = this;
                var10001 = 8;
             }
@@ -404,14 +404,14 @@ final class PlayerCharacter extends AnimatedSprite {
 
    public final void sub_296(Entity var1) {
       if ((var1.var_1b4 & 67108864) != 0) {
-         if ((super.var_824 & 65536) != 0) {
+         if ((super.statusFlags & 65536) != 0) {
             var1.sub_105(false);
-            GameManager.sub_a29(var1.var_591 >> 8, var1.var_5d1 >> 8, 2, 261, 0, 4, 0);
+            GameManager.sub_a29(var1.x >> 8, var1.y >> 8, 2, 261, 0, 4, 0);
             return;
          }
       } else if ((var1.var_1b4 & 65536) != 0) {
-         if (var1.var_954 != 12) {
-            var1.sub_267(super.var_814);
+         if (var1.aiState != 12) {
+            var1.sub_267(super.collisionRadius);
             return;
          }
       } else if ((var1.var_1b4 & '耀') != 0) {
@@ -436,24 +436,24 @@ final class PlayerCharacter extends AnimatedSprite {
             }
 
             var1.sub_292(var6);
-            if (var1.var_5d1 < 9216) {
+            if (var1.y < 9216) {
                return;
             }
 
-            var4 = GameRenderer.snapToGridCenterX(0, var1.var_591);
-            var10000 = GameRenderer.snapToGridCenterX(0, var1.var_5d1);
+            var4 = GameRenderer.snapToGridCenterX(0, var1.x);
+            var10000 = GameRenderer.snapToGridCenterX(0, var1.y);
          } else {
             if (var6 == -1 || AnimatedSprite.sub_22c(var1) == (var6 & 255)) {
                return;
             }
 
             var1.sub_292(var6);
-            if (var1.var_5d1 < 9216) {
+            if (var1.y < 9216) {
                return;
             }
 
-            var4 = GameRenderer.snapToGridCenterX(0, var1.var_591);
-            var10000 = var1.var_5d1 - 9216;
+            var4 = GameRenderer.snapToGridCenterX(0, var1.x);
+            var10000 = var1.y - 9216;
          }
 
          int var5 = var10000;
@@ -493,30 +493,30 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    private boolean sub_2ff() {
-      int var2 = super.var_591 + super.var_409[0];
-      int var4 = super.var_5d1 + super.var_409[1];
-      int var3 = super.var_591 + super.var_409[2];
-      int var5 = super.var_5d1 + super.var_409[3];
-      int var6 = super.var_954;
+      int var2 = super.x + super.transformedBounds[0];
+      int var4 = super.y + super.transformedBounds[1];
+      int var3 = super.x + super.transformedBounds[2];
+      int var5 = super.y + super.transformedBounds[3];
+      int var6 = super.aiState;
       boolean var7 = false;
 
       for(int var1 = 0; var1 < 16; ++var1) {
          Entity var8;
-         if (((var8 = (Entity) GameManager.var_670[1 + var1]).var_21a & 16) == 0 && (var8.var_824 & 8) != 0 && AnimatedSprite.sub_106(var8) && var8.var_591 + var8.var_409[10] >= var2 && var8.var_5d1 + var8.var_409[11] >= var4 && var8.var_591 + var8.var_409[8] <= var3 && var8.var_5d1 + var8.var_409[9] <= var5) {
-            if ((super.var_824 & 32) == 0 && (var8.var_873 & 2) != 0) {
+         if (((var8 = (Entity) GameManager.var_670[1 + var1]).var_21a & 16) == 0 && (var8.statusFlags & 8) != 0 && AnimatedSprite.sub_106(var8) && var8.x + var8.transformedBounds[10] >= var2 && var8.y + var8.transformedBounds[11] >= var4 && var8.x + var8.transformedBounds[8] <= var3 && var8.y + var8.transformedBounds[9] <= var5) {
+            if ((super.statusFlags & 32) == 0 && (var8.stateFlags & 2) != 0) {
                this.var_bf = var8.var_19d;
-               if ((super.var_824 & 65536) == 0) {
+               if ((super.statusFlags & 65536) == 0) {
                   this.sub_233(var8.sub_45b(), true);
                }
 
-               if (var8.var_9a0 == 1) {
+               if (var8.animationSetId == 1) {
                   var8.sub_20a(0, true, -2560, var8.var_19d);
-               } else if (var8.var_9a0 == 11) {
+               } else if (var8.animationSetId == 11) {
                   var8.sub_a4();
 
                   for(var1 = 0; var1 < 16; ++var1) {
                      Entity var9;
-                     if ((var9 = (Entity) GameManager.var_670[1 + var1]).var_9b3 == (var8.var_4f2 >> 26 & 63)) {
+                     if ((var9 = (Entity) GameManager.var_670[1 + var1]).entityId == (var8.var_4f2 >> 26 & 63)) {
                         --var9.var_596;
                         break;
                      }
@@ -527,13 +527,13 @@ final class PlayerCharacter extends AnimatedSprite {
                break;
             }
 
-            if ((var8.var_873 & 4) != 0) {
+            if ((var8.stateFlags & 4) != 0) {
                sub_2a0(var8);
             }
          }
       }
 
-      return super.var_954 != var6 || var7;
+      return super.aiState != var6 || var7;
    }
 
    private boolean sub_33f(int var1, int var2, int var3, int var4) {
@@ -569,8 +569,8 @@ final class PlayerCharacter extends AnimatedSprite {
             short var7 = GameRenderer.zoneData[var10++];
             short var8 = GameRenderer.zoneData[var10++];
             short var9 = GameRenderer.zoneData[var10];
-            this.var_d0 = ((super.var_591 >> 8) - var6 << 8) / (var8 - var6);
-            this.var_11b = ((super.var_5d1 >> 8) - var7 << 8) / (var9 - var7);
+            this.var_d0 = ((super.x >> 8) - var6 << 8) / (var8 - var6);
+            this.var_11b = ((super.y >> 8) - var7 << 8) / (var9 - var7);
             if (this.var_11b > 255) {
                this.var_11b = 255;
             }
@@ -588,7 +588,7 @@ final class PlayerCharacter extends AnimatedSprite {
             }
          }
 
-         super.var_824 &= -7425;
+         super.statusFlags &= -7425;
          if (GameRenderer.foundEventZone != -1) {
             PlayerCharacter var11;
             int var10001;
@@ -596,12 +596,12 @@ final class PlayerCharacter extends AnimatedSprite {
             switch(GameRenderer.foundEventZone) {
             case 4:
                var11 = this;
-               var10001 = super.var_824;
+               var10001 = super.statusFlags;
                var10002 = 1024;
                break;
             case 5:
                var11 = this;
-               var10001 = super.var_824;
+               var10001 = super.statusFlags;
                var10002 = 256;
                break;
             case 6:
@@ -609,19 +609,19 @@ final class PlayerCharacter extends AnimatedSprite {
                return false;
             case 7:
                var11 = this;
-               var10001 = super.var_824;
+               var10001 = super.statusFlags;
                var10002 = 2048;
                break;
             case 8:
                var11 = this;
-               var10001 = super.var_824;
+               var10001 = super.statusFlags;
                var10002 = 4096;
             }
 
-            var11.var_824 = var10001 | var10002;
+            var11.statusFlags = var10001 | var10002;
          }
       } else {
-         super.var_824 &= -7425;
+         super.statusFlags &= -7425;
       }
 
       return false;
@@ -635,13 +635,13 @@ final class PlayerCharacter extends AnimatedSprite {
          boolean var8 = false;
          short var6 = 0;
          short var7 = 0;
-         if (super.var_954 != 3) {
-            if ((super.var_824 & 65536) != 0) {
+         if (super.aiState != 3) {
+            if ((super.statusFlags & 65536) != 0) {
                GameManager.var_ff5[5] = 7;
                this.var_160 = GameManager.var_ff5[5];
                GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)this.maxHealth);
                this.sub_e3();
-               if ((GameManager.var_57c[GameManager.var_ff5[8] * 8 + 3] & 8192) != 0 && (super.var_824 & 1024) == 0) {
+               if ((GameManager.var_57c[GameManager.var_ff5[8] * 8 + 3] & 8192) != 0 && (super.statusFlags & 1024) == 0) {
                   --GameManager.var_e42;
                }
 
@@ -653,19 +653,19 @@ final class PlayerCharacter extends AnimatedSprite {
             } else if (this.var_160 == 7) {
                GameManager.var_ff5[5] = 0;
                this.var_160 = GameManager.var_ff5[5];
-            } else if ((super.var_824 & 64) != 0) {
-               super.var_954 = 5;
+            } else if ((super.statusFlags & 64) != 0) {
+               super.aiState = 5;
             }
          }
 
          int var11;
          int var12;
-         if ((super.var_824 & 4096) != 0) {
-            if (super.var_954 == 1) {
-               var11 = GameRenderer.snapToGridCenterX(0, super.var_591) >> 8;
-               var12 = GameRenderer.snapToGridCenterY(0, super.var_5d1) >> 8;
+         if ((super.statusFlags & 4096) != 0) {
+            if (super.aiState == 1) {
+               var11 = GameRenderer.snapToGridCenterX(0, super.x) >> 8;
+               var12 = GameRenderer.snapToGridCenterY(0, super.y) >> 8;
                if (var11 != this.var_1cc >> 16 && (short)var12 != (short)this.var_1cc) {
-                  GameManager.sub_a29(super.var_591 >> 8, super.var_5d1 >> 8, 2, 111, 0, 4, 0);
+                  GameManager.sub_a29(super.x >> 8, super.y >> 8, 2, 111, 0, 4, 0);
                   this.var_1cc = (var11 << 16) + (short)var12;
                }
 
@@ -680,69 +680,69 @@ final class PlayerCharacter extends AnimatedSprite {
          int var10001;
          label252: {
             if ((GameManager.var_9d8 & 512) != 0) {
-               super.var_824 &= -65;
+               super.statusFlags &= -65;
                var10000 = this;
-               var10001 = super.var_824 | 32;
+               var10001 = super.statusFlags | 32;
             } else {
-               if ((super.var_824 & 64) != 0) {
+               if ((super.statusFlags & 64) != 0) {
                   this.sub_3c7(0, 0, true);
                   break label252;
                }
 
                var10000 = this;
-               var10001 = super.var_824 & -33;
+               var10001 = super.statusFlags & -33;
             }
 
-            var10000.var_824 = var10001;
+            var10000.statusFlags = var10001;
          }
 
          label277: {
-            if (GameRenderer.readInt16LE(GameManager.var_ff5, 2) <= (short)(this.maxHealth >> 1) && super.var_954 != 3) {
-               super.var_824 |= 16384;
+            if (GameRenderer.readInt16LE(GameManager.var_ff5, 2) <= (short)(this.maxHealth >> 1) && super.aiState != 3) {
+               super.statusFlags |= 16384;
                if (++this.var_1b2 <= 160) {
                   if (this.var_1b2 > 152) {
                      label175: {
                         short var10002;
                         if (this.var_1b2 > 156) {
-                           super.var_824 ^= 32768;
-                           if ((super.var_824 & '耀') != 0) {
+                           super.statusFlags ^= 32768;
+                           if ((super.statusFlags & '耀') != 0) {
                               var10000 = this;
-                              var10001 = super.var_615 + 256;
+                              var10001 = super.renderOffsetX + 256;
                               break label175;
                            }
 
                            var10000 = this;
-                           var10001 = super.var_615;
+                           var10001 = super.renderOffsetX;
                            var10002 = 256;
                         } else {
-                           super.var_824 ^= 32768;
-                           if ((super.var_824 & '耀') != 0) {
+                           super.statusFlags ^= 32768;
+                           if ((super.statusFlags & '耀') != 0) {
                               var10000 = this;
-                              var10001 = super.var_615 + 512;
+                              var10001 = super.renderOffsetX + 512;
                               break label175;
                            }
 
                            var10000 = this;
-                           var10001 = super.var_615;
+                           var10001 = super.renderOffsetX;
                            var10002 = 512;
                         }
 
                         var10001 -= var10002;
                      }
 
-                     var10000.var_615 = var10001;
-                     this.var_30e.var_615 = super.var_615;
+                     var10000.renderOffsetX = var10001;
+                     this.var_30e.renderOffsetX = super.renderOffsetX;
                      return 0;
                   }
                   break label277;
                }
 
-               if ((GameManager.var_a69.var_824 & 1024) == 0) {
-                  GameManager.sub_a29(super.var_591 >> 8, super.var_5d1 >> 8, 2, 151, 0, 4, 0);
+               if ((GameManager.var_a69.statusFlags & 1024) == 0) {
+                  GameManager.sub_a29(super.x >> 8, super.y >> 8, 2, 151, 0, 4, 0);
                   var10000 = this;
-                  var10001 = (super.var_591 >> 8 << 16) + (super.var_5d1 >> 8 & '\uffff');
+                  var10001 = (super.x >> 8 << 16) + (super.y >> 8 & '\uffff');
                } else {
-                  GameManager.sub_a29(super.var_591 >> 8, super.var_5d1 >> 8, 2, 172, 0, 4, 0);
+                  GameManager.sub_a29(super.x >> 8, super.y >> 8, 2, 172, 0, 4, 0);
                   var10000 = this;
                   var10001 = 0;
                }
@@ -751,17 +751,17 @@ final class PlayerCharacter extends AnimatedSprite {
                var10000 = this;
             } else {
                this.var_215 = 0;
-               super.var_824 &= -16385;
+               super.statusFlags &= -16385;
                var10000 = this;
             }
 
             var10000.var_1b2 = 0;
          }
 
-         switch(super.var_954) {
+         switch(super.aiState) {
          case 3:
-            super.var_824 &= -8561;
-            super.var_721 = 1;
+            super.statusFlags &= -8561;
+            super.facing = 1;
             GameManager.var_9d8 = super.var_8fb >= 64 ? GameManager.var_9d8 & -67108865 : GameManager.var_9d8 | 67108864;
             if (super.var_8fb <= 0) {
                GameManager.sub_11a8(291);
@@ -774,27 +774,27 @@ final class PlayerCharacter extends AnimatedSprite {
             --super.var_8fb;
             if (super.var_8fb <= 0) {
                super.var_8fb = 32;
-               super.var_954 = 0;
+               super.aiState = 0;
             }
             break;
          case 5:
-            super.var_824 &= -17;
-            super.var_824 |= 32;
-            if (AnimatedSprite.sub_22c(this) == GameManager.var_412[232 + super.var_721] && AnimatedSprite.sub_240(this)) {
-               super.var_824 &= -97;
-               super.var_954 = 0;
+            super.statusFlags &= -17;
+            super.statusFlags |= 32;
+            if (AnimatedSprite.sub_22c(this) == GameManager.var_412[232 + super.facing] && AnimatedSprite.sub_240(this)) {
+               super.statusFlags &= -97;
+               super.aiState = 0;
             }
             break;
          default:
             if (this.var_160 == 5) {
-               int var1 = super.var_591 + super.var_409[8];
-               int var2 = super.var_5d1 + super.var_409[9];
-               int var3 = super.var_591 + super.var_409[10];
-               int var4 = super.var_5d1 + super.var_409[11];
+               int var1 = super.x + super.transformedBounds[8];
+               int var2 = super.y + super.transformedBounds[9];
+               int var3 = super.x + super.transformedBounds[10];
+               int var4 = super.y + super.transformedBounds[11];
                if (this.sub_1eb(var1, var2, var3, var4, (Entity)null, 1)) {
                   label233: {
                      short var14;
-                     switch(super.var_721) {
+                     switch(super.facing) {
                      case 0:
                         var7 = 3584;
                         break label233;
@@ -821,7 +821,7 @@ final class PlayerCharacter extends AnimatedSprite {
             label223: {
                byte var15;
                label222: {
-                  if ((super.var_824 & 2048) != 0) {
+                  if ((super.statusFlags & 2048) != 0) {
                      if (this.var_24f > 64 && this.var_24f <= 192) {
                         var10000 = this;
                         var15 = 3;
@@ -835,10 +835,10 @@ final class PlayerCharacter extends AnimatedSprite {
                         var5 -= 256;
                      }
 
-                     super.var_721 = var5 >> 6;
-                     ++super.var_721;
-                     if (super.var_721 > 3) {
-                        super.var_721 = 0;
+                     super.facing = var5 >> 6;
+                     ++super.facing;
+                     if (super.facing > 3) {
+                        super.facing = 0;
                      }
 
                      if (this.var_24f >= 0) {
@@ -851,16 +851,16 @@ final class PlayerCharacter extends AnimatedSprite {
                   var15 = 1;
                }
 
-               var10000.var_721 = var15;
+               var10000.facing = var15;
             }
 
-            if (GameManager.var_d22 <= 0 && ((GameRenderer.inputState & 1) != 0 || (super.var_824 & 16) != 0)) {
+            if (GameManager.var_d22 <= 0 && ((GameRenderer.inputState & 1) != 0 || (super.statusFlags & 16) != 0)) {
                var10 = this.sub_196();
             }
 
             if (var10) {
                if ((GameRenderer.inputState & 1) == 0) {
-                  super.var_824 &= -129;
+                  super.statusFlags &= -129;
                }
 
                byte var13 = -1;
@@ -878,7 +878,7 @@ final class PlayerCharacter extends AnimatedSprite {
                            }
 
                            var13 = 0;
-                           var16 = -super.var_7d4;
+                           var16 = -super.velocityY;
                         } else {
                            if ((GameRenderer.inputState & 4) == 0) {
                               break label198;
@@ -891,7 +891,7 @@ final class PlayerCharacter extends AnimatedSprite {
                            }
 
                            var13 = 2;
-                           var16 = super.var_7d4;
+                           var16 = super.velocityY;
                         }
 
                         var12 = var16;
@@ -905,7 +905,7 @@ final class PlayerCharacter extends AnimatedSprite {
                         }
 
                         var13 = 3;
-                        var16 = -super.var_7c3;
+                        var16 = -super.velocityX;
                      } else {
                         if ((GameRenderer.inputState & 16) == 0) {
                            break label265;
@@ -918,7 +918,7 @@ final class PlayerCharacter extends AnimatedSprite {
                         }
 
                         var13 = 1;
-                        var16 = super.var_7c3;
+                        var16 = super.velocityX;
                      }
 
                      var11 = var16;
@@ -926,16 +926,16 @@ final class PlayerCharacter extends AnimatedSprite {
                }
 
                if (var13 == -1) {
-                  super.var_954 = 0;
+                  super.aiState = 0;
                   this.sub_388();
-               } else if ((super.var_824 & 16) == 0) {
-                  super.var_954 = 1;
+               } else if ((super.statusFlags & 16) == 0) {
+                  super.aiState = 1;
                   this.var_1a1 = 32;
                   this.sub_3c7(var11, var12, true);
                }
 
-               if ((super.var_824 & 64) == 0) {
-                  this.sub_33f(super.var_591 - 1792, super.var_5d1 - 1792, super.var_591 + 1792, super.var_5d1 + 1792);
+               if ((super.statusFlags & 64) == 0) {
+                  this.sub_33f(super.x - 1792, super.y - 1792, super.x + 1792, super.y + 1792);
                }
             }
 
@@ -945,27 +945,27 @@ final class PlayerCharacter extends AnimatedSprite {
          }
 
          label184: {
-            if ((super.var_824 & 256) != 0) {
-               if ((super.var_824 & 8192) != 0) {
+            if ((super.statusFlags & 256) != 0) {
+               if ((super.statusFlags & 8192) != 0) {
                   break label184;
                }
 
                this.sub_388();
-               GameManager.sub_a29(super.var_591 >> 8, super.var_5d1 >> 8, 2, 66, 0, 4, 0);
+               GameManager.sub_a29(super.x >> 8, super.y >> 8, 2, 66, 0, 4, 0);
                var10000 = this;
-               var10001 = super.var_824 | 8192;
+               var10001 = super.statusFlags | 8192;
             } else {
-               if ((super.var_824 & 8192) == 0) {
+               if ((super.statusFlags & 8192) == 0) {
                   break label184;
                }
 
                this.sub_388();
-               GameManager.sub_a29(super.var_591 >> 8, super.var_5d1 >> 8, 2, 66, 0, 4, 0);
+               GameManager.sub_a29(super.x >> 8, super.y >> 8, 2, 66, 0, 4, 0);
                var10000 = this;
-               var10001 = super.var_824 & -8193;
+               var10001 = super.statusFlags & -8193;
             }
 
-            var10000.var_824 = var10001;
+            var10000.statusFlags = var10001;
          }
 
          this.sub_3fc();
@@ -978,20 +978,20 @@ final class PlayerCharacter extends AnimatedSprite {
       int var10001;
       PlayerCharacter var10002;
       int var10003;
-      if (this.var_160 != 5 && (super.var_824 & 256) == 0) {
+      if (this.var_160 != 5 && (super.statusFlags & 256) == 0) {
          var10000 = this;
          var10003 = 1024;
          var10002 = this;
          var10001 = 1024;
       } else {
          var10000 = this;
-         var10003 = this.var_160 == 5 && (super.var_824 & 256) != 0 ? 192 : 384;
+         var10003 = this.var_160 == 5 && (super.statusFlags & 256) != 0 ? 192 : 384;
          var10002 = this;
          var10001 = var10003;
       }
 
-      var10002.var_7d4 = var10003;
-      var10000.var_7c3 = var10001;
+      var10002.velocityY = var10003;
+      var10000.velocityX = var10001;
    }
 
    private boolean sub_3c7(int var1, int var2, boolean var3) {
@@ -1006,11 +1006,11 @@ final class PlayerCharacter extends AnimatedSprite {
       boolean var23 = false;
       boolean var25 = false;
       boolean var24 = false;
-      int var35 = super.var_591 + super.var_409[0];
-      int var37 = super.var_5d1 + super.var_409[1];
-      int var36 = super.var_591 + super.var_409[2];
-      int var38 = super.var_5d1 + super.var_409[3];
-      if ((super.var_824 & 64) != 0) {
+      int var35 = super.x + super.transformedBounds[0];
+      int var37 = super.y + super.transformedBounds[1];
+      int var36 = super.x + super.transformedBounds[2];
+      int var38 = super.y + super.transformedBounds[3];
+      if ((super.statusFlags & 64) != 0) {
          var1 += this.var_26;
          var2 += this.var_87;
          if (Math.abs(this.var_26) > 256) {
@@ -1030,8 +1030,8 @@ final class PlayerCharacter extends AnimatedSprite {
       int var28;
       int var29;
       label241: {
-         var28 = super.var_591 + var1;
-         var29 = super.var_5d1 + var2;
+         var28 = super.x + var1;
+         var29 = super.y + var2;
          if (var28 < 0) {
             var10000 = 0;
          } else {
@@ -1059,20 +1059,20 @@ final class PlayerCharacter extends AnimatedSprite {
          var29 = var10000;
       }
 
-      int var11 = var28 + super.var_409[0];
-      int var12 = var29 + super.var_409[1];
-      int var13 = var28 + super.var_409[2];
-      int var14 = var29 + super.var_409[3];
+      int var11 = var28 + super.transformedBounds[0];
+      int var12 = var29 + super.transformedBounds[1];
+      int var13 = var28 + super.transformedBounds[2];
+      int var14 = var29 + super.transformedBounds[3];
       if (var3) {
          for(int var4 = 0; var4 < 16; ++var4) {
             Entity var30;
-            if (((var30 = (Entity) GameManager.var_670[1 + var4]).var_52 & 2) != 0 && (var30.var_824 & 8) != 0 && (var30.var_873 & 1) != 0 && (var30.var_21a & 16) == 0 && var30.var_591 + var30.var_409[2] >= var11 && var30.var_5d1 + var30.var_409[3] >= var12 && var30.var_591 + var30.var_409[0] <= var13 && var30.var_5d1 + var30.var_409[1] <= var14) {
-               if (var30.var_591 + var30.var_409[2] >= var35 && var30.var_5d1 + var30.var_409[3] >= var37 && var30.var_591 + var30.var_409[0] <= var36 && var30.var_5d1 + var30.var_409[1] <= var38) {
+            if (((var30 = (Entity) GameManager.var_670[1 + var4]).animFlags & 2) != 0 && (var30.statusFlags & 8) != 0 && (var30.stateFlags & 1) != 0 && (var30.var_21a & 16) == 0 && var30.x + var30.transformedBounds[2] >= var11 && var30.y + var30.transformedBounds[3] >= var12 && var30.x + var30.transformedBounds[0] <= var13 && var30.y + var30.transformedBounds[1] <= var14) {
+               if (var30.x + var30.transformedBounds[2] >= var35 && var30.y + var30.transformedBounds[3] >= var37 && var30.x + var30.transformedBounds[0] <= var36 && var30.y + var30.transformedBounds[1] <= var38) {
                   var28 -= var1;
                   var29 -= var2;
                } else {
-                  if (var30.var_9a0 == 1) {
-                     var30.var_824 |= 128;
+                  if (var30.animationSetId == 1) {
+                     var30.statusFlags |= 128;
                      if (!var3) {
                         continue;
                      }
@@ -1246,44 +1246,44 @@ final class PlayerCharacter extends AnimatedSprite {
 
       var29 -= var41;
       var28 -= var40;
-      super.var_591 = var28;
-      super.var_5d1 = var29;
+      super.x = var28;
+      super.y = var29;
       return true;
    }
 
    private void sub_3fc() {
-      if ((super.var_824 & 4) == 0 && (super.var_824 & 2) == 0) {
+      if ((super.statusFlags & 4) == 0 && (super.statusFlags & 2) == 0) {
          int var1 = 0;
          int var10000;
-         if (super.var_954 == 3) {
-            var1 = (super.var_824 & 65536) != 0 ? 48 : 49;
+         if (super.aiState == 3) {
+            var1 = (super.statusFlags & 65536) != 0 ? 48 : 49;
             boolean var2 = false;
          } else {
             label94: {
-               if ((super.var_824 & 64) != 0) {
+               if ((super.statusFlags & 64) != 0) {
                   var10000 = 58;
                } else {
                   label91: {
-                     if (super.var_954 == 2) {
-                        if ((super.var_824 & 128) == 0) {
+                     if (super.aiState == 2) {
+                        if ((super.statusFlags & 128) == 0) {
                            break label91;
                         }
 
                         var10000 = 74;
                      } else {
-                        if ((super.var_824 & 2048) != 0) {
-                           var1 = super.var_954 == 1 ? 98 : 90;
+                        if ((super.statusFlags & 2048) != 0) {
+                           var1 = super.aiState == 1 ? 98 : 90;
                            break label91;
                         }
 
-                        var10000 = (super.var_824 & 16384) != 0 && (this.var_1a1 <= 0 || this.var_160 == 0 || this.var_160 == 3) && this.var_160 != 5 ? 106 : (super.var_954 == 1 ? 66 : 50);
+                        var10000 = (super.statusFlags & 16384) != 0 && (this.var_1a1 <= 0 || this.var_160 == 0 || this.var_160 == 3) && this.var_160 != 5 ? 106 : (super.aiState == 1 ? 66 : 50);
                      }
 
                      var1 = var10000;
                   }
 
                   --this.var_1a1;
-                  if (this.var_1a1 <= 0 && this.var_160 != 5 && (super.var_824 & 65536) == 0) {
+                  if (this.var_1a1 <= 0 && this.var_160 != 5 && (super.statusFlags & 65536) == 0) {
                      break label94;
                   }
 
@@ -1296,40 +1296,40 @@ final class PlayerCharacter extends AnimatedSprite {
 
          int var5;
          label69: {
-            if ((super.var_824 & 256) != 0) {
+            if ((super.statusFlags & 256) != 0) {
                var10000 = 37;
             } else {
-               if ((super.var_824 & 2048) != 0) {
-                  var5 = super.var_954 == 1 ? 40 : 39;
+               if ((super.statusFlags & 2048) != 0) {
+                  var5 = super.aiState == 1 ? 40 : 39;
                   break label69;
                }
 
-               var10000 = super.var_954 == 1 ? 36 : 35;
+               var10000 = super.aiState == 1 ? 36 : 35;
             }
 
             var5 = var10000;
          }
 
-         short var3 = GameManager.var_412[var1 * 4 + super.var_721];
-         short var4 = GameManager.var_412[var5 * 4 + super.var_721];
+         short var3 = GameManager.var_412[var1 * 4 + super.facing];
+         short var4 = GameManager.var_412[var5 * 4 + super.facing];
          if (var3 == -1) {
-            var3 = GameManager.var_412[50 + super.var_721];
+            var3 = GameManager.var_412[50 + super.facing];
          }
 
          if (var4 == -1) {
-            var4 = GameManager.var_412[35 + super.var_721];
+            var4 = GameManager.var_412[35 + super.facing];
          }
 
-         GameManager.sub_159c(this, var3, super.var_721);
-         GameManager.sub_159c(this.var_30e, var4, super.var_721);
+         GameManager.sub_159c(this, var3, super.facing);
+         GameManager.sub_159c(this.var_30e, var4, super.facing);
       }
    }
 
    public final void sub_42d(boolean var1) {
       int var4 = GameManager.var_454[this.var_242 + 40] & 255;
       boolean var7 = false;
-      int var2 = super.var_591 + this.var_26e;
-      int var3 = super.var_5d1 + this.var_27f;
+      int var2 = super.x + this.var_26e;
+      int var3 = super.y + this.var_27f;
       GameRenderer.setCameraPosition(0, var2 >> 8, var3 + -8192 >> 8, false, true);
       if (var4 < 0) {
          var4 += 256;
@@ -1437,34 +1437,34 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    public final void sub_487(Graphics var1) {
-      int var2 = (super.var_824 & 1024) != 0 ? 3 : 0;
-      this.var_30e.var_11 = super.var_11 = (byte[]) GameRenderer.getResource(GameManager.var_6d1[var2]);
-      if (GameManager.var_a0a != 9 && (super.var_824 & 1) != 0) {
-         var1.drawImage(GameManager.var_686[0].var_8a[0], GameManager.var_ccb + GameRenderer.viewOffsetX + ((super.var_409[0] + super.var_409[2] >> 1) + super.var_743 >> 8) - 10, GameManager.var_d14 + GameRenderer.viewOffsetY + ((super.var_409[1] + super.var_409[3] >> 1) + super.var_77c >> 8) - 4, 20);
-         super.var_679 = GameManager.var_ccb;
-         super.var_6c3 = GameManager.var_d14;
-         if (super.var_954 != 3) {
-            if ((super.var_824 & 256) == 0) {
+      int var2 = (super.statusFlags & 1024) != 0 ? 3 : 0;
+      this.var_30e.animationData = super.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[var2]);
+      if (GameManager.var_a0a != 9 && (super.statusFlags & 1) != 0) {
+         var1.drawImage(GameManager.var_686[0].var_8a[0], GameManager.var_ccb + GameRenderer.viewOffsetX + ((super.transformedBounds[0] + super.transformedBounds[2] >> 1) + super.screenX >> 8) - 10, GameManager.var_d14 + GameRenderer.viewOffsetY + ((super.transformedBounds[1] + super.transformedBounds[3] >> 1) + super.screenY >> 8) - 4, 20);
+         super.pivotOffsetX = GameManager.var_ccb;
+         super.pivotOffsetY = GameManager.var_d14;
+         if (super.aiState != 3) {
+            if ((super.statusFlags & 256) == 0) {
                PlayerCharacter var10000;
                int var10001;
                int var10002;
                if (this.var_30e.sub_3b3(0) == 0) {
-                  super.var_679 += this.var_30e.var_409[8] + this.var_30e.var_409[10] >> 1 >> 8;
+                  super.pivotOffsetX += this.var_30e.transformedBounds[8] + this.var_30e.transformedBounds[10] >> 1 >> 8;
                   var10000 = this;
-                  var10001 = super.var_6c3;
-                  var10002 = this.var_30e.var_409[9] >> 8;
+                  var10001 = super.pivotOffsetY;
+                  var10002 = this.var_30e.transformedBounds[9] >> 8;
                } else {
-                  super.var_679 += this.var_30e.sub_3b3(0) >> 16;
+                  super.pivotOffsetX += this.var_30e.sub_3b3(0) >> 16;
                   var10000 = this;
-                  var10001 = super.var_6c3;
+                  var10001 = super.pivotOffsetY;
                   var10002 = (short)this.var_30e.sub_3b3(0);
                }
 
-               var10000.var_6c3 = var10001 + var10002;
+               var10000.pivotOffsetY = var10001 + var10002;
             }
 
-            this.var_30e.sub_2ce(var1, GameManager.var_ccb + (GameRenderer.worldToScreenFixedX(0, super.var_591 + this.var_30e.var_615) >> 8), GameManager.var_d14 + (GameRenderer.worldToScreenFixedY(0, super.var_5d1 + this.var_30e.var_640) >> 8));
-            if ((super.var_824 & 2) == 0) {
+            this.var_30e.sub_2ce(var1, GameManager.var_ccb + (GameRenderer.worldToScreenFixedX(0, super.x + this.var_30e.renderOffsetX) >> 8), GameManager.var_d14 + (GameRenderer.worldToScreenFixedY(0, super.y + this.var_30e.renderOffsetY) >> 8));
+            if ((super.statusFlags & 2) == 0) {
                this.var_30e.sub_315();
             }
          }

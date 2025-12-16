@@ -779,7 +779,7 @@ final class GameManager {
          menuState[19] = GameRenderer.viewHeight * 24 / 320;
          logoAnimation = new AnimatedSprite();
          logoAnimationId = GameRenderer.loadResource(24, -1, 3);
-         logoAnimation.var_11 = (byte[]) GameRenderer.getResource(logoAnimationId);
+         logoAnimation.animationData = (byte[]) GameRenderer.getResource(logoAnimationId);
          logoAnimation.sub_292(0);
          GameRenderer.loadMapChunk(160, -1, -1, -1);
          GameRenderer.setMapViewport(0, 0, GameRenderer.viewWidth, GameRenderer.viewHeight);
@@ -1461,9 +1461,9 @@ final class GameManager {
    }
 
    static void sub_6f3(Entity var0) {
-      if (var0.var_9dd != -1) {
+      if (var0.mapObjectIndex != -1) {
          int[] var10000 = var_8e2;
-         int var10001 = var0.var_9dd;
+         int var10001 = var0.mapObjectIndex;
          var10000[var10001] |= 1;
       }
 
@@ -1510,20 +1510,20 @@ final class GameManager {
       for(var1 = 0; var1 < var_8e2.length; ++var1) {
          if ((var_8e2[var1] & 1) == 0 && (var_8e2[var1] & 2) != 0 && (var_8e2[var1] & 4) == 0) {
             var2 = var_96c[var1] & 255;
-            if (((var14 = (Entity)var_670[var2]).var_21a & 524288) == 0 && (var14.var_824 & 1048576) == 0) {
-               if (var14.var_954 == 12) {
-                  var14.var_591 += var14.var_28b * var14.var_373;
-                  var14.var_5d1 += var14.var_28b * var14.var_3cd;
+            if (((var14 = (Entity)var_670[var2]).var_21a & 524288) == 0 && (var14.statusFlags & 1048576) == 0) {
+               if (var14.aiState == 12) {
+                  var14.x += var14.var_28b * var14.var_373;
+                  var14.y += var14.var_28b * var14.var_3cd;
                }
 
                var10000 = var_96c;
-               int var10001 = var14.var_9dd;
+               int var10001 = var14.mapObjectIndex;
                var10000[var10001] &= 65535;
                var10000 = var_96c;
-               var10001 = var14.var_9dd;
-               var10000[var10001] |= var14.var_899 << 16;
-               var_89d[var1] = (short)(var14.var_591 >> 8);
-               var_8c7[var1] = (short)(var14.var_5d1 >> 8);
+               var10001 = var14.mapObjectIndex;
+               var10000[var10001] |= var14.health << 16;
+               var_89d[var1] = (short)(var14.x >> 8);
+               var_8c7[var1] = (short)(var14.y >> 8);
                var14.sub_a4();
                sub_1409(-1, (Entity)null);
                var10000 = var_8e2;
@@ -1542,9 +1542,9 @@ final class GameManager {
                   return;
                }
 
-               (var14 = (Entity)var_670[var2]).var_9dd = (byte)var1;
+               (var14 = (Entity)var_670[var2]).mapObjectIndex = (byte)var1;
                var14.var_355 = var_9a9[var1];
-               var14.var_899 = var_96c[var1] >> 16;
+               var14.health = var_96c[var1] >> 16;
                var10000 = var_96c;
                var10000[var1] &= -256;
                var10000 = var_96c;
@@ -1585,8 +1585,8 @@ final class GameManager {
    }
 
    static void sub_76f(int var0, int var1, int var2) {
-      var_670[var1].var_9a0 = var0;
-      var_670[var1].var_11 = (byte[]) GameRenderer.getResource(var2);
+      var_670[var1].animationSetId = var0;
+      var_670[var1].animationData = (byte[]) GameRenderer.getResource(var2);
       var_670[var1].sub_14(-65536);
    }
 
@@ -1647,11 +1647,11 @@ final class GameManager {
 
    public static void sub_81a() {
       PlayerCharacter var10000 = var_a69;
-      var10000.var_824 |= 512;
+      var10000.statusFlags |= 512;
 
       for(int var0 = 0; var0 < 16; ++var0) {
          Entity var2 = (Entity)var_670[1 + var0];
-         var2.var_824 |= 128;
+         var2.statusFlags |= 128;
       }
 
    }
@@ -1661,7 +1661,7 @@ final class GameManager {
 
       for(int var1 = 0; var1 < 16; ++var1) {
          Entity var3;
-         if (((var3 = (Entity)var_670[1 + var1]).var_824 & 8) != 0 && var3.var_9a0 == var0) {
+         if (((var3 = (Entity)var_670[1 + var1]).statusFlags & 8) != 0 && var3.animationSetId == var0) {
             ++var2;
          }
       }
@@ -1750,8 +1750,8 @@ final class GameManager {
       } else {
          int var10 = GameRenderer.layerProperties[6];
          int var11 = GameRenderer.layerProperties[7];
-         int var6 = (var0.var_591 >> 8) / var10;
-         int var7 = (var0.var_5d1 >> 8) / var11;
+         int var6 = (var0.x >> 8) / var10;
+         int var7 = (var0.y >> 8) / var11;
          int var8 = (var4 >> 8) / var10;
          int var9 = (var5 >> 8) / var11;
          if (var6 == var8 && var7 == var9) {
@@ -1906,15 +1906,15 @@ final class GameManager {
 
                   int var25;
                   int var26;
-                  if (var_a69.var_721 != 0 && var_a69.var_721 != 2) {
+                  if (var_a69.facing != 0 && var_a69.facing != 2) {
                      var25 = var15 >> 8;
-                     var26 = 0 + (var_a69.var_5d1 >> 8) + var_a69.var_6c3;
+                     var26 = 0 + (var_a69.y >> 8) + var_a69.pivotOffsetY;
                      if (AnimatedSprite.sub_15e(var_a69) > 0) {
                         var26 += AnimatedSprite.sub_1c7(var_a69, 0);
                      }
                   } else {
-                     var25 = var_a69.var_591 >> 8;
-                     var26 = (var16 >> 8) + var_a69.var_6c3;
+                     var25 = var_a69.x >> 8;
+                     var26 = (var16 >> 8) + var_a69.pivotOffsetY;
                      if (AnimatedSprite.sub_15e(var_a69) > 0) {
                         var25 += AnimatedSprite.sub_18e(var_a69, 0);
                      }
@@ -2197,7 +2197,7 @@ final class GameManager {
       var_9d8 |= 1032;
       var_9d8 &= -536577;
       PlayerCharacter var4 = var_a69;
-      var4.var_824 &= -17;
+      var4.statusFlags &= -17;
       return false;
    }
 
@@ -2299,13 +2299,13 @@ final class GameManager {
       PlayerCharacter var3;
       if ((var1 & 2048) != 0) {
          var3 = var_a69;
-         var10001 = var3.var_824 | 65536;
+         var10001 = var3.statusFlags | 65536;
       } else {
          var3 = var_a69;
-         var10001 = var3.var_824 & ~65536;
+         var10001 = var3.statusFlags & ~65536;
       }
 
-      var3.var_824 = var10001;
+      var3.statusFlags = var10001;
       if ((var1 & 4096) != 0) {
          var_e42 = 2560;
       }
@@ -2340,7 +2340,7 @@ final class GameManager {
       sub_76f(0, 0, var_6d1[0]);
       var_6a4[0] = 0;
       var_6a4[1] = 0;
-      var_670[0].sub_14(var_6a4);
+      var_670[0].initEntity(var_6a4);
       var_a69 = (PlayerCharacter)var_670[0];
       var_a69.sub_a6();
       var_9d8 |= 2;
@@ -2447,7 +2447,7 @@ final class GameManager {
             sub_ff6(GameRenderer.lastKeyCode, false);
          } else {
             if (var_a0a == 1 || var_a0a == 10) {
-               if (GameRenderer.lastKeyCode == 48 && var_a0a != 9 && GameRenderer.var_481 != 2 && var_a69.var_954 != 3) {
+               if (GameRenderer.lastKeyCode == 48 && var_a0a != 9 && GameRenderer.var_481 != 2 && var_a69.aiState != 3) {
                   if ((var_57c[var_ff5[8] * 8 + 3] & 512) != 0 && (var_9d8 & 128) == 0) {
                      var_b02 = 0;
                      var_aed = 280;
@@ -2586,20 +2586,20 @@ final class GameManager {
                }
 
                var_a69.sub_42d(false);
-               var_a69.var_743 = GameRenderer.worldToScreenFixedX(0, var_a69.var_591);
-               var_a69.var_77c = GameRenderer.worldToScreenFixedY(0, var_a69.var_5d1);
-               var_aab[var_ac5++] = (var_a69.var_591 >> 8 & 2047) << 7 | (var_a69.var_5d1 >> 8 & 2047) << 18 | (var_a69.var_9b3 & 127) << 0;
+               var_a69.screenX = GameRenderer.worldToScreenFixedX(0, var_a69.x);
+               var_a69.screenY = GameRenderer.worldToScreenFixedY(0, var_a69.y);
+               var_aab[var_ac5++] = (var_a69.x >> 8 & 2047) << 7 | (var_a69.y >> 8 & 2047) << 18 | (var_a69.entityId & 127) << 0;
                var_ff5[9] = 0;
 
                for(var0 = 0; var0 < 16; ++var0) {
                   Entity var2;
-                  if (((var2 = (Entity)var_670[1 + var0]).var_824 & 8) != 0) {
+                  if (((var2 = (Entity)var_670[1 + var0]).statusFlags & 8) != 0) {
                      var2.sub_2d1();
-                     if ((var2.var_824 & 8) != 0) {
-                        var2.var_743 = GameRenderer.worldToScreenFixedX(0, var2.var_591);
-                        var2.var_77c = GameRenderer.worldToScreenFixedY(0, var2.var_5d1);
+                     if ((var2.statusFlags & 8) != 0) {
+                        var2.screenX = GameRenderer.worldToScreenFixedX(0, var2.x);
+                        var2.screenY = GameRenderer.worldToScreenFixedY(0, var2.y);
                         if (var2.var_4af < 1024) {
-                           var_aab[var_ac5++] = (var2.var_591 >> 8 & 2047) << 7 | (var2.var_5d1 >> 8 & 2047) << 18 | (var2.var_9b3 & 127) << 0;
+                           var_aab[var_ac5++] = (var2.x >> 8 & 2047) << 7 | (var2.y >> 8 & 2047) << 18 | (var2.entityId & 127) << 0;
                         }
                      }
                   }
@@ -2676,7 +2676,7 @@ final class GameManager {
             if ((var_9d8 & 67108864) == 0) {
                for(int var1 = 0; var1 < 16; ++var1) {
                   Entity var2;
-                  if (((var2 = (Entity)var_670[1 + var1]).var_824 & 8) != 0 && var2.var_4af >= 1024) {
+                  if (((var2 = (Entity)var_670[1 + var1]).statusFlags & 8) != 0 && var2.var_4af >= 1024) {
                      var2.sub_487(var0);
                   }
                }
@@ -3212,8 +3212,8 @@ final class GameManager {
                   } else if (var4 < 8) {
                      if ((var_ff5[0] & 1 << var4) != 0) {
                         PlayerCharacter var13 = var_a69;
-                        var13.var_824 &= -17;
-                        var_a69.var_954 = 0;
+                        var13.statusFlags &= -17;
+                        var_a69.aiState = 0;
                         var_ff5[5] = (byte)var4;
                         var_a69.var_160 = var_ff5[5];
                         var_d55 |= 1;
@@ -3416,15 +3416,15 @@ final class GameManager {
 
          var_a45 = var1;
          var_9d8 |= 16;
-         if (var2 && (var_a69.var_824 & 2) == 0) {
+         if (var2 && (var_a69.statusFlags & 2) == 0) {
             var_9d8 |= 32;
             var10000 = var_a69;
-            var10000.var_824 |= 2;
+            var10000.statusFlags |= 2;
          }
       } else {
          if ((var_9d8 & 32) != 0) {
             var10000 = var_a69;
-            var10000.var_824 &= -3;
+            var10000.statusFlags &= -3;
          }
 
          var_9d8 &= -49;
@@ -3432,18 +3432,18 @@ final class GameManager {
 
       for(int var3 = 0; var3 < 16; ++var3) {
          Entity var4;
-         if (((var4 = (Entity)var_670[1 + var3]).var_824 & 8) != 0) {
+         if (((var4 = (Entity)var_670[1 + var3]).statusFlags & 8) != 0) {
             int var10001;
             Entity var5;
             if (var0) {
                var5 = var4;
-               var10001 = var4.var_824 | 2;
+               var10001 = var4.statusFlags | 2;
             } else {
                var5 = var4;
-               var10001 = var4.var_824 & -3;
+               var10001 = var4.statusFlags & -3;
             }
 
-            var5.var_824 = var10001;
+            var5.statusFlags = var10001;
          }
       }
 
@@ -3457,7 +3457,7 @@ final class GameManager {
    public static int sub_10f1(int var0, int var1, int var2, int var3, int var4, int var5, int var6) {
       for(int var7 = 0; var7 < 16; ++var7) {
          Entity var12;
-         if (((var12 = (Entity)var_670[1 + var7]).var_824 & 8) == 0) {
+         if (((var12 = (Entity)var_670[1 + var7]).statusFlags & 8) == 0) {
             switch(var2) {
             case 1:
                if (var6 == 0) {
@@ -3484,9 +3484,9 @@ final class GameManager {
                   }
 
                   var12.sub_1ac(var0, var1, var2, var13);
-                  var12.var_824 |= 512;
+                  var12.statusFlags |= 512;
                   var12.var_4f2 = var5;
-                  var12.var_9dd = -1;
+                  var12.mapObjectIndex = -1;
                }
                break;
             case 6:
@@ -3506,7 +3506,7 @@ final class GameManager {
 
    public static boolean sub_1146() {
       for(int var0 = 0; var0 < 16; ++var0) {
-         if ((((Entity)var_670[1 + var0]).var_824 & 8) == 0) {
+         if ((((Entity)var_670[1 + var0]).statusFlags & 8) == 0) {
             return true;
          }
       }
@@ -3518,7 +3518,7 @@ final class GameManager {
       int var1 = 0;
 
       for(int var0 = 0; var0 < 16; ++var0) {
-         if ((((Entity)var_670[1 + var0]).var_824 & 520) == 520) {
+         if ((((Entity)var_670[1 + var0]).statusFlags & 520) == 520) {
             ++var1;
          }
       }
@@ -3547,7 +3547,7 @@ final class GameManager {
       var_cba = 0;
       sub_1051(true, -1, true);
       PlayerCharacter var10000 = var_a69;
-      var10000.var_824 &= -17;
+      var10000.statusFlags &= -17;
       var_9d8 |= 128;
       GameRenderer.initDialog(var0, -1, GameRenderer.viewWidth, 0, 0, 0);
    }
@@ -3903,7 +3903,7 @@ final class GameManager {
       while(var0 < 16) {
          int var2;
          Entity var4;
-         if ((var2 = (var4 = (Entity)var_670[1 + var0]).var_9a0) == 1) {
+         if ((var2 = (var4 = (Entity)var_670[1 + var0]).animationSetId) == 1) {
             var2 = 1;
          }
 
@@ -3919,7 +3919,7 @@ final class GameManager {
          switch(sub_1539(var2, var3)) {
          case -2:
             if ((var4.var_21a & 524288) == 0) {
-               var4.var_824 &= -9;
+               var4.statusFlags &= -9;
             }
          default:
             ++var0;
@@ -4011,7 +4011,7 @@ final class GameManager {
                   GameRenderer.writeInt16LE(var_ff5, var4, (short)var6);
                   --var_ff5[var3 + 18];
                   var_9d8 |= 2;
-                  if ((var6 = sub_10f1(var_a69.var_591, var_a69.var_5d1, 6, var3, 1028, 0, 0)) != -1) {
+                  if ((var6 = sub_10f1(var_a69.x, var_a69.y, 6, var3, 1028, 0, 0)) != -1) {
                      sub_1051(true, -1, true);
                      ((Entity)var_670[var6]).sub_2b1();
                   }
@@ -4066,8 +4066,8 @@ final class GameManager {
          int var4 = GameRenderer.randomInRange(0, 256);
          int var1 = GameEngine.mulBySin((long)var3, var4);
          int var2 = GameEngine.mulByCos((long)var3, var4);
-         var_ec9[var0 + 0] = var_a69.var_591 + var1;
-         var_ec9[var0 + 1] = var_a69.var_5d1 + var2;
+         var_ec9[var0 + 0] = var_a69.x + var1;
+         var_ec9[var0 + 1] = var_a69.y + var2;
          var_ec9[var0 + 2] = -(var1 * GameRenderer.randomInRange(0, 2) >> 8);
          var_ec9[var0 + 3] = -(var2 * GameRenderer.randomInRange(0, 2) >> 8);
       }
