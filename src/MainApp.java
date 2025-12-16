@@ -3,28 +3,28 @@ import javax.microedition.midlet.MIDlet;
 
 public class MainApp extends MIDlet {
    public MainApp() {
-      if (Class_1d4.var_5e == null) {
-         Class_1d4.var_5e = new Class_1d4(this);
-         Class_1d4.sub_36();
-         Class_1d4.var_9d = null;
+      if (GameCanvas.instance == null) {
+         GameCanvas.instance = new GameCanvas(this);
+         GameCanvas.initGame();
+         GameCanvas.display = null;
       }
 
    }
 
    public void startApp() {
-      if (Class_1d4.var_9d == null) {
-         Class_1d4.var_9d = Display.getDisplay(this);
-         Class_1d4.var_9d.setCurrent(Class_1d4.var_5e);
+      if (GameCanvas.display == null) {
+         GameCanvas.display = Display.getDisplay(this);
+         GameCanvas.display.setCurrent(GameCanvas.instance);
       }
 
-      Class_1d4.var_5e.showNotify();
+      GameCanvas.instance.showNotify();
    }
 
    public void destroyApp(boolean var1) {
-      Class_1d4.sub_b3();
+      GameCanvas.exitGame();
    }
 
    public void pauseApp() {
-      Class_1d4.var_5e.hideNotify();
+      GameCanvas.instance.hideNotify();
    }
 }

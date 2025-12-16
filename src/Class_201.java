@@ -124,7 +124,7 @@ final class Class_201 {
          var_3e = var_1c;
          GameEngine.stopMusic();
          StringBuffer var0 = (new StringBuffer(4)).append("/m").append(var_3e);
-         GameEngine.playMusic(Class_1d4.var_22, var0.toString());
+         GameEngine.playMusic(GameCanvas.midlet, var0.toString());
          return true;
       } else {
          return false;
@@ -141,7 +141,7 @@ final class Class_201 {
 
    static void sub_c0() {
       var_228 = new int[33];
-      int var0 = Class_1d4.var_205 * 9;
+      int var0 = GameCanvas.gameState * 9;
       var_228[0] = var_307[var0 + 0];
       var_228[1] = var_307[var0 + 1];
       var_228[5] = var_307[var0 + 2];
@@ -171,7 +171,7 @@ final class Class_201 {
 
       label52: {
          var10000[var10001] = var10002;
-         switch(Class_1d4.var_205) {
+         switch(GameCanvas.gameState) {
          case 0:
          case 1:
             var_228[3] = 24;
@@ -215,7 +215,7 @@ final class Class_201 {
             var_228[11] = sub_170f() ? 1 : 0;
             var_228[21] = 2;
             var_228[22] = 3;
-            var_228[20] = Class_1d4.var_205 == 5 ? 11 : 9;
+            var_228[20] = GameCanvas.gameState == 5 ? 11 : 9;
             break label52;
          case 6:
             var10000 = var_228;
@@ -307,7 +307,7 @@ final class Class_201 {
          }
 
          if ((var_228[3] & 8) != 0) {
-            var_b7 = (var_228[3] & 1073741824) != 0 ? (Sprite) GameEngine.loadExternalFile(Class_1d4.var_22, var_1311 == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : GameEngine.loadSpriteSet(var_228[6]);
+            var_b7 = (var_228[3] & 1073741824) != 0 ? (Sprite) GameEngine.loadExternalFile(GameCanvas.midlet, var_1311 == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : GameEngine.loadSpriteSet(var_228[6]);
             if ((var_228[3] & 128) != 0) {
                var_228[10] = -var_b7.var_8a[0].getHeight();
             }
@@ -413,7 +413,7 @@ final class Class_201 {
          var10000 = var_228;
          var10000[3] |= 97;
          Class_17f.var_30f = 0;
-         Class_1d4.var_278 &= -65;
+         GameCanvas.stateFlags &= -65;
       }
    }
 
@@ -421,17 +421,17 @@ final class Class_201 {
       if (var_228 == null) {
          return false;
       } else {
-         if ((Class_1d4.var_278 & 65536) != 0 && sub_2f(var_228[25], 6)) {
-            Class_1d4.var_278 &= -65537;
+         if ((GameCanvas.stateFlags & 65536) != 0 && sub_2f(var_228[25], 6)) {
+            GameCanvas.stateFlags &= -65537;
          }
 
          if ((var_228[3] & 1) == 0) {
             return false;
          } else {
             sub_21b();
-            if ((Class_1d4.var_278 & 1048576) != 0) {
+            if ((GameCanvas.stateFlags & 1048576) != 0) {
                sub_11c();
-               Class_1d4.var_278 |= 266;
+               GameCanvas.stateFlags |= 266;
                return true;
             } else {
                int var10002 = var_228[24]++;
@@ -459,8 +459,8 @@ final class Class_201 {
                      }
                   }
 
-                  if ((Class_1d4.var_278 & 64) != 0 && (var_228[3] & 6) != 0) {
-                     Class_1d4.var_278 |= 10;
+                  if ((GameCanvas.stateFlags & 64) != 0 && (var_228[3] & 6) != 0) {
+                     GameCanvas.stateFlags |= 10;
                      var10000 = var_228;
                      var10000[3] &= -2;
                      byte var10001;
@@ -472,10 +472,10 @@ final class Class_201 {
                         var10001 = 0;
                      }
 
-                     Class_1d4.var_266 = var10000[var10001];
+                     GameCanvas.nextState = var10000[var10001];
                      sub_11c();
-                     if (Class_1d4.var_266 == -1) {
-                        Class_1d4.var_278 |= 256;
+                     if (GameCanvas.nextState == -1) {
+                        GameCanvas.stateFlags |= 256;
                      }
 
                      return true;
@@ -491,7 +491,7 @@ final class Class_201 {
    public static void sub_1ba(Graphics var0) {
       if (var_228 != null && (var_228[3] & 1) != 0) {
          int var5 = Class_17f.sub_5a0(var_228[32]);
-         Class_1d4.var_278 |= 64;
+         GameCanvas.stateFlags |= 64;
          int[] var10000;
          if ((var_228[3] & 64) != 0 && (var_228[3] & 32) != 0) {
             var0.setColor(var_228[8]);
@@ -523,7 +523,7 @@ final class Class_201 {
                }
             }
 
-            if (var_228[22] > 0 && Class_1d4.var_205 != 12 && (var_228[22] - 1 & 2) != 0) {
+            if (var_228[22] > 0 && GameCanvas.gameState != 12 && (var_228[22] - 1 & 2) != 0) {
                sub_439(var0);
             }
          }
@@ -546,7 +546,7 @@ final class Class_201 {
                   Class_17f.sub_3b(var0, var_b7, (byte)15);
                }
 
-               if (var_228[22] > 0 && Class_1d4.var_205 == 12 && (var_228[22] - 1 & 2) != 0) {
+               if (var_228[22] > 0 && GameCanvas.gameState == 12 && (var_228[22] - 1 & 2) != 0) {
                   if ((var_228[3] & 536870912) == 0) {
                      sub_3a2(var0, Class_17f.var_89, Class_17f.var_dd, true);
                   }
@@ -669,7 +669,7 @@ final class Class_201 {
    private static void sub_26f() {
       byte var0 = 0;
       boolean var1 = var_1311 != 0;
-      if (Class_1d4.var_205 == 3) {
+      if (GameCanvas.gameState == 3) {
          var_240 = new short[5];
          int var2 = var0 + 1;
          var_240[0] = 1284;
@@ -696,7 +696,7 @@ final class Class_201 {
       byte var10003;
       label52: {
          label51: {
-            switch(Class_1d4.var_205) {
+            switch(GameCanvas.gameState) {
             case 5:
                label46: {
                   var_10ca = var_228[18];
@@ -728,20 +728,20 @@ final class Class_201 {
             case 8:
             case 10:
                if (var_228[18] == 0) {
-                  if (Class_1d4.var_205 == 6) {
+                  if (GameCanvas.gameState == 6) {
                      sub_17a9(var_26c, 0, 0, 8);
                      sub_17b7();
                      var_228[0] = 5;
-                  } else if (Class_1d4.var_205 == 10) {
+                  } else if (GameCanvas.gameState == 10) {
                      GameEngine.setMuted(false);
-                     Class_1d4.sub_125(true);
+                     GameCanvas.handleMusicLoop(true);
                   }
 
                   var10000 = var_228;
                   break label51;
                }
 
-               if (Class_1d4.var_205 != 10) {
+               if (GameCanvas.gameState != 10) {
                   if (var_228[1] == -1) {
                      return;
                   }
@@ -773,7 +773,7 @@ final class Class_201 {
    }
 
    private static void sub_2f5() {
-      switch(Class_1d4.var_205) {
+      switch(GameCanvas.gameState) {
       case 2:
          var_9f = GameEngine.loadSpriteSet(48);
          var_228[19] = Class_17f.var_dd * 24 / 320;
@@ -808,7 +808,7 @@ final class Class_201 {
       case 7:
          var_228[14] = Class_17f.var_543.length;
          var_228[15] = 0;
-         Class_17f.sub_738(0, 0, 0, Class_1d4.var_22.getAppProperty("MIDlet-Version").toCharArray(), 0, Class_1d4.var_22.getAppProperty("MIDlet-Version").toCharArray().length);
+         Class_17f.sub_738(0, 0, 0, GameCanvas.midlet.getAppProperty("MIDlet-Version").toCharArray(), 0, GameCanvas.midlet.getAppProperty("MIDlet-Version").toCharArray().length);
          return;
       case 8:
          Class_17f.sub_e12(158, -1, -1, -1);
@@ -833,7 +833,7 @@ final class Class_201 {
       int[] var10000;
       byte var10001;
       int var10002;
-      if (Class_1d4.var_205 == 7) {
+      if (GameCanvas.gameState == 7) {
          var10000 = var_228;
          var10000[3] |= 96;
          var_228[7] = 96;
@@ -847,7 +847,7 @@ final class Class_201 {
          var10001 = 3;
          var10002 = var10000[3] | 2;
       } else {
-         if (Class_1d4.var_205 != 2) {
+         if (GameCanvas.gameState != 2) {
             return;
          }
 
@@ -860,7 +860,7 @@ final class Class_201 {
    }
 
    private static void sub_311() {
-      if (Class_1d4.var_205 == 2) {
+      if (GameCanvas.gameState == 2) {
          Class_17f.sub_ccb(0, var_228[11], var_228[12], true, false);
       }
 
@@ -868,7 +868,7 @@ final class Class_201 {
 
    private static boolean sub_32f(int var0) {
       int[] var10000;
-      if (Class_1d4.var_205 == 5) {
+      if (GameCanvas.gameState == 5) {
          if (var0 == 48) {
             if (var_228[11] != 0 && (sub_179c(var_228[18], 0, 8) & 1) != 0) {
                var_26c = var_228[18];
@@ -876,28 +876,28 @@ final class Class_201 {
                var10000 = var_228;
                var10000[3] |= 2;
             }
-         } else if (Class_1d4.var_205 == 5 && var0 == 42) {
+         } else if (GameCanvas.gameState == 5 && var0 == 42) {
             var10000 = var_228;
             var10000[3] |= 4;
          }
-      } else if (Class_1d4.var_205 == 7) {
+      } else if (GameCanvas.gameState == 7) {
          if (var0 == 8 || var0 == 53) {
             var10000 = var_228;
             var10000[3] |= 2;
          }
-      } else if (Class_1d4.var_205 == 2) {
+      } else if (GameCanvas.gameState == 2) {
          if (var0 == 35) {
             var10000 = var_228;
             var10000[3] |= 25165824;
             var_228[7] = 96;
          }
-      } else if (Class_1d4.var_205 == 12) {
+      } else if (GameCanvas.gameState == 12) {
          if (var0 == 8 && var_1311 == 2) {
-            Class_1d4.var_266 = -1;
-            Class_1d4.var_278 |= 1048576;
+            GameCanvas.nextState = -1;
+            GameCanvas.stateFlags |= 1048576;
             return true;
          }
-      } else if (Class_1d4.var_205 == 11) {
+      } else if (GameCanvas.gameState == 11) {
          if (var0 != 42 && var0 != 53) {
             if ((Class_17f.var_30f & 24) != 0) {
                switch(var_240[var_228[18]] & 255) {
@@ -924,7 +924,7 @@ final class Class_201 {
       int var3;
       int var5;
       int var6;
-      switch(Class_1d4.var_205) {
+      switch(GameCanvas.gameState) {
       case 2:
          Class_17f.sub_cf9(0, var0, 0, Class_17f.var_dd - Class_17f.var_cb6[5], false);
          var6 = Class_17f.sub_5a0(var_228[32]);
@@ -2134,7 +2134,7 @@ final class Class_201 {
       var_c04 = Class_17f.var_543;
       var_b22 = new Sprite[var_5ab.length];
       sub_15d4(0);
-      Class_1d4.var_278 &= -16385;
+      GameCanvas.stateFlags &= -16385;
       var_c45 = 0;
       var_9d8 = 1027;
       var_a0a = 0;
@@ -2484,8 +2484,8 @@ final class Class_201 {
    }
 
    static boolean sub_e55() {
-      if ((Class_1d4.var_278 & 65536) != 0 && (var_9d8 & 6144) != 6144 && sub_2f(Class_17f.var_d6b, 6)) {
-         Class_1d4.var_278 &= -65537;
+      if ((GameCanvas.stateFlags & 65536) != 0 && (var_9d8 & 6144) != 6144 && sub_2f(Class_17f.var_d6b, 6)) {
+         GameCanvas.stateFlags &= -65537;
       }
 
       int var0;
@@ -2521,8 +2521,8 @@ final class Class_201 {
          default:
             break;
          case 4:
-            Class_1d4.var_266 = 7;
-            Class_1d4.var_278 |= 16394;
+            GameCanvas.nextState = 7;
+            GameCanvas.stateFlags |= 16394;
             sub_b8b();
             return true;
          case 5:
@@ -2546,8 +2546,8 @@ final class Class_201 {
             return true;
          case 8:
             sub_c12();
-            Class_1d4.var_266 = 2;
-            Class_1d4.var_278 |= 10;
+            GameCanvas.nextState = 2;
+            GameCanvas.stateFlags |= 10;
             sub_b8b();
             return true;
          case 9:
@@ -2706,11 +2706,11 @@ final class Class_201 {
                break label93;
             }
 
-            if ((Class_1d4.var_278 & 524288) != 0) {
+            if ((GameCanvas.stateFlags & 524288) != 0) {
                var_d55 = 0;
             }
 
-            if ((var_9d8 & 128) == 0 || (Class_1d4.var_278 & 524288) != 0) {
+            if ((var_9d8 & 128) == 0 || (GameCanvas.stateFlags & 524288) != 0) {
                sub_fba(var0);
             }
 
@@ -4205,7 +4205,7 @@ final class Class_201 {
          var_129e = 1;
       }
 
-      sub_19ef(Class_1d4.var_22);
+      sub_19ef(GameCanvas.midlet);
    }
 
    static void sub_16cb() {
