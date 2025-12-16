@@ -64,12 +64,12 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
    }
 
    static void sub_36() {
-      GameEngine.sub_bdf();
+      GameEngine.forceGC();
       Class_17f.var_21 = Math.max(240, var_5e.getWidth());
       Class_17f.var_67 = var_5e.getHeight() - var_2fa.getHeight();
       Class_17f.sub_14a(Class_17f.var_21, Class_17f.var_67, false);
-      GameEngine.sub_45f(var_22, Class_17f.var_21, Class_17f.var_67, 36, 36, 1);
-      GameEngine.sub_b07(Class_17f.sub_ac4(437), (int[])null, (int[])null);
+      GameEngine.initialize(var_22, Class_17f.var_21, Class_17f.var_67, 36, 36, 1);
+      GameEngine.setTrigTables(Class_17f.sub_ac4(437), (int[])null, (int[])null);
       GameEngine.playerListener = var_5e;
       Class_201.sub_167e();
       Class_17f.sub_3d7(1);
@@ -87,7 +87,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       Class_201.sub_a7();
       sub_157();
       sub_1ef();
-      GameEngine.sub_4a7();
+      GameEngine.destroy();
       GameEngine.directGraphics = null;
       var_12d = true;
       var_5e = null;
@@ -195,7 +195,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       boolean var0 = false;
       var0 = Class_201.sub_50();
       if ((var_278 & 131072) != 0 && !var0) {
-         GameEngine.sub_bdf();
+         GameEngine.forceGC();
 
          try {
             Thread.sleep(2000L);
@@ -350,8 +350,8 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       }
 
       if ((var_278 & 8) == 0) {
-         Class_17f.sub_b2(var1 = GameEngine.sub_c2f(var_5e, var1), true);
-         if (var1 == 35 && !GameEngine.sub_37d()) {
+         Class_17f.sub_b2(var1 = GameEngine.translateKeyCode(var_5e, var1), true);
+         if (var1 == 35 && !GameEngine.toggleSound()) {
             sub_125(true);
          }
 
@@ -369,7 +369,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       }
 
       if ((var_278 & 8) == 0) {
-         Class_17f.sub_b2(GameEngine.sub_c2f(var_5e, var1), false);
+         Class_17f.sub_b2(GameEngine.translateKeyCode(var_5e, var1), false);
       }
    }
 
@@ -405,7 +405,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
    }
 
    static void sub_125(boolean var0) {
-      if (!GameEngine.sub_31a()) {
+      if (!GameEngine.isMuted()) {
          if (var_205 < 13 && var0 || var0) {
             var_278 |= 65536;
          }

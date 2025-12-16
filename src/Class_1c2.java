@@ -381,7 +381,7 @@ final class Class_1c2 extends Class_1ac {
          if (this.var_29d <= 0) {
             return false;
          } else {
-            GameEngine.sub_a1a();
+            GameEngine.nextRandom();
             boolean var6 = false;
             boolean var7 = false;
             if ((super.var_824 & 16) != 0) {
@@ -1022,8 +1022,8 @@ final class Class_1c2 extends Class_1ac {
 
                int var12;
                if (Class_201.var_a69.var_954 != 3 && ((Class_201.var_a69.var_824 & 3072) == 0 || (Class_201.var_a69.var_824 & 512) != 0)) {
-                  var13 = GameEngine.sub_9f9((super.var_591 >> 8) - (Class_201.var_a69.var_591 >> 8));
-                  var14 = GameEngine.sub_9f9((super.var_5d1 >> 8) - (Class_201.var_a69.var_5d1 >> 8));
+                  var13 = GameEngine.abs((super.var_591 >> 8) - (Class_201.var_a69.var_591 >> 8));
+                  var14 = GameEngine.abs((super.var_5d1 >> 8) - (Class_201.var_a69.var_5d1 >> 8));
                   int var4 = var13 * var13 + var14 * var14;
                   var12 = Class_201.var_49a[this.var_c4 * 17 + 2] & 255;
                   if (var4 < var12 * var12) {
@@ -1490,8 +1490,8 @@ final class Class_1c2 extends Class_1ac {
 
                var5 = (super.var_591 >> 8) / Class_17f.var_cb6[6];
                var6 = (super.var_5d1 >> 8) / Class_17f.var_cb6[7];
-               int var19 = GameEngine.sub_9f9(var5 - var17);
-               int var20 = GameEngine.sub_9f9(var6 - var18);
+               int var19 = GameEngine.abs(var5 - var17);
+               int var20 = GameEngine.abs(var6 - var18);
                if (var19 == 0 && var20 == 0) {
                   var10000 = this.sub_370(Class_201.var_a69.var_591, Class_201.var_a69.var_5d1);
                   break label243;

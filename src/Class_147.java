@@ -352,7 +352,7 @@ final class Class_147 extends Class_1ac {
          Class_17f.sub_344(Class_201.var_ff5, 2, (short)var3);
          Class_201.var_9d8 |= 2;
          if ((Class_201.var_129e & 1) != 0) {
-            GameEngine.sub_550();
+            GameEngine.vibrate();
          }
       }
 
@@ -1345,13 +1345,13 @@ final class Class_147 extends Class_1ac {
       label76: {
          this.var_26e = this.var_2c4;
          this.var_27f = this.var_2ed;
-         var2 = GameEngine.sub_abc(8192L, var4);
-         var3 = GameEngine.sub_acf(8192L, var4);
+         var2 = GameEngine.mulBySin(8192L, var4);
+         var3 = GameEngine.mulByCos(8192L, var4);
          if (var1) {
             var10000 = this;
             var10001 = var2;
          } else {
-            if ((var8 = GameEngine.sub_9f9(this.var_2c4 - var2 >> 2)) > 1536) {
+            if ((var8 = GameEngine.abs(this.var_2c4 - var2 >> 2)) > 1536) {
                var8 = 1536;
             }
 
@@ -1376,7 +1376,7 @@ final class Class_147 extends Class_1ac {
             var10000 = this;
             var10001 = var3;
          } else {
-            if ((var8 = GameEngine.sub_9f9(this.var_2ed - var3 >> 2)) > 1536) {
+            if ((var8 = GameEngine.abs(this.var_2ed - var3 >> 2)) > 1536) {
                var8 = 1536;
             }
 
