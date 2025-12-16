@@ -251,7 +251,7 @@ final class PlayerCharacter extends AnimatedSprite {
       } else {
          if (var6 != 8) {
             for(int var7 = 0; var7 < 16; ++var7) {
-               Entity var12 = (Entity) GameManager.var_670[1 + var7];
+               Entity var12 = (Entity) GameManager.entities[1 + var7];
                if ((var6 != 1 || (var12.statusFlags & 4194304) == 0) && (var6 == 7 || (var12.propertyFlags & 16) == 0) && var5 != var12 && (var12.statusFlags & 8) != 0 && ((var12.stateFlags & 8) != 0 || (var12.stateFlags & 32) != 0 && AnimatedSprite.sub_106(var12) || var6 == 3 || var6 == 5)) {
                   byte var10;
                   label188: {
@@ -502,7 +502,7 @@ final class PlayerCharacter extends AnimatedSprite {
 
       for(int var1 = 0; var1 < 16; ++var1) {
          Entity var8;
-         if (((var8 = (Entity) GameManager.var_670[1 + var1]).propertyFlags & 16) == 0 && (var8.statusFlags & 8) != 0 && AnimatedSprite.sub_106(var8) && var8.x + var8.transformedBounds[10] >= var2 && var8.y + var8.transformedBounds[11] >= var4 && var8.x + var8.transformedBounds[8] <= var3 && var8.y + var8.transformedBounds[9] <= var5) {
+         if (((var8 = (Entity) GameManager.entities[1 + var1]).propertyFlags & 16) == 0 && (var8.statusFlags & 8) != 0 && AnimatedSprite.sub_106(var8) && var8.x + var8.transformedBounds[10] >= var2 && var8.y + var8.transformedBounds[11] >= var4 && var8.x + var8.transformedBounds[8] <= var3 && var8.y + var8.transformedBounds[9] <= var5) {
             if ((super.statusFlags & 32) == 0 && (var8.stateFlags & 2) != 0) {
                this.damageDirection = var8.movementDirection;
                if ((super.statusFlags & 65536) == 0) {
@@ -516,7 +516,7 @@ final class PlayerCharacter extends AnimatedSprite {
 
                   for(var1 = 0; var1 < 16; ++var1) {
                      Entity var9;
-                     if ((var9 = (Entity) GameManager.var_670[1 + var1]).entityId == (var8.projectileData >> 26 & 63)) {
+                     if ((var9 = (Entity) GameManager.entities[1 + var1]).entityId == (var8.projectileData >> 26 & 63)) {
                         --var9.var_596;
                         break;
                      }
@@ -1066,7 +1066,7 @@ final class PlayerCharacter extends AnimatedSprite {
       if (var3) {
          for(int var4 = 0; var4 < 16; ++var4) {
             Entity var30;
-            if (((var30 = (Entity) GameManager.var_670[1 + var4]).animFlags & 2) != 0 && (var30.statusFlags & 8) != 0 && (var30.stateFlags & 1) != 0 && (var30.propertyFlags & 16) == 0 && var30.x + var30.transformedBounds[2] >= var11 && var30.y + var30.transformedBounds[3] >= var12 && var30.x + var30.transformedBounds[0] <= var13 && var30.y + var30.transformedBounds[1] <= var14) {
+            if (((var30 = (Entity) GameManager.entities[1 + var4]).animFlags & 2) != 0 && (var30.statusFlags & 8) != 0 && (var30.stateFlags & 1) != 0 && (var30.propertyFlags & 16) == 0 && var30.x + var30.transformedBounds[2] >= var11 && var30.y + var30.transformedBounds[3] >= var12 && var30.x + var30.transformedBounds[0] <= var13 && var30.y + var30.transformedBounds[1] <= var14) {
                if (var30.x + var30.transformedBounds[2] >= var35 && var30.y + var30.transformedBounds[3] >= var37 && var30.x + var30.transformedBounds[0] <= var36 && var30.y + var30.transformedBounds[1] <= var38) {
                   var28 -= var1;
                   var29 -= var2;
@@ -1440,7 +1440,7 @@ final class PlayerCharacter extends AnimatedSprite {
       int var2 = (super.statusFlags & 1024) != 0 ? 3 : 0;
       this.weaponSprite.animationData = super.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[var2]);
       if (GameManager.var_a0a != 9 && (super.statusFlags & 1) != 0) {
-         var1.drawImage(GameManager.var_686[0].images[0], GameManager.var_ccb + GameRenderer.viewOffsetX + ((super.transformedBounds[0] + super.transformedBounds[2] >> 1) + super.screenX >> 8) - 10, GameManager.var_d14 + GameRenderer.viewOffsetY + ((super.transformedBounds[1] + super.transformedBounds[3] >> 1) + super.screenY >> 8) - 4, 20);
+         var1.drawImage(GameManager.commonSprites[0].images[0], GameManager.var_ccb + GameRenderer.viewOffsetX + ((super.transformedBounds[0] + super.transformedBounds[2] >> 1) + super.screenX >> 8) - 10, GameManager.var_d14 + GameRenderer.viewOffsetY + ((super.transformedBounds[1] + super.transformedBounds[3] >> 1) + super.screenY >> 8) - 4, 20);
          super.pivotOffsetX = GameManager.var_ccb;
          super.pivotOffsetY = GameManager.var_d14;
          if (super.aiState != 3) {

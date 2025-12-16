@@ -426,7 +426,7 @@ final class Entity extends AnimatedSprite {
                if ((super.statusFlags & 512) != 0) {
                   for(int var5 = 0; var5 < 16; ++var5) {
                      Entity var9;
-                     if ((var9 = (Entity) GameManager.var_670[1 + var5]).mapObjectIndex == this.projectileData) {
+                     if ((var9 = (Entity) GameManager.entities[1 + var5]).mapObjectIndex == this.projectileData) {
                         var9.attackCooldown = 0;
                         --var9.var_596;
                         break;
@@ -846,7 +846,7 @@ final class Entity extends AnimatedSprite {
          case 14:
             if (AnimatedSprite.sub_240(this)) {
                for(var7 = 0; var7 < 16; ++var7) {
-                  if ((var10 = (Entity) GameManager.var_670[1 + var7]).entityId == (this.projectileData >> 26 & 63)) {
+                  if ((var10 = (Entity) GameManager.entities[1 + var7]).entityId == (this.projectileData >> 26 & 63)) {
                      --var10.var_596;
                      break;
                   }
@@ -860,7 +860,7 @@ final class Entity extends AnimatedSprite {
                this.sub_a4();
 
                for(var7 = 0; var7 < 16; ++var7) {
-                  if ((var10 = (Entity) GameManager.var_670[1 + var7]).entityId == (this.projectileData >> 26 & 63)) {
+                  if ((var10 = (Entity) GameManager.entities[1 + var7]).entityId == (this.projectileData >> 26 & 63)) {
                      --var10.var_596;
                      break;
                   }
@@ -932,7 +932,7 @@ final class Entity extends AnimatedSprite {
                GameManager.var_9d8 |= 512;
                if ((this.propertyFlags & 262144) != 0) {
                   for(var7 = 0; var7 < 16; ++var7) {
-                     if ((var10 = (Entity) GameManager.var_670[1 + var7]) != this && (var10.statusFlags & 8) != 0 && (var10.animationSetId == 1 || var10.animationSetId == 10 || var10.animationSetId == 11)) {
+                     if ((var10 = (Entity) GameManager.entities[1 + var7]) != this && (var10.statusFlags & 8) != 0 && (var10.animationSetId == 1 || var10.animationSetId == 10 || var10.animationSetId == 11)) {
                         GameManager.sub_1409(-1, var10);
                         var10.sub_105(true);
                      }
@@ -1927,7 +1927,7 @@ final class Entity extends AnimatedSprite {
          if ((this.behaviorFlags & 131072) != 0 && (super.animationSetId == 2 || super.health > 0)) {
             int var4 = GameRenderer.viewOffsetX + ((super.transformedBounds[8] + super.transformedBounds[10] >> 1) + super.screenX >> 8) - 10;
             int var5 = GameRenderer.viewOffsetY + ((super.transformedBounds[9] + super.transformedBounds[11] >> 1) + super.screenY >> 8) - 4;
-            var1.drawImage(GameManager.var_686[0].images[0], var4 + GameManager.var_ccb, var5 + GameManager.var_d14, 20);
+            var1.drawImage(GameManager.commonSprites[0].images[0], var4 + GameManager.var_ccb, var5 + GameManager.var_d14, 20);
          }
 
          super.pivotOffsetX += GameManager.var_ccb;

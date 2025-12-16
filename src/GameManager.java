@@ -31,8 +31,8 @@ final class GameManager {
    static int var_61f;
    static char[] var_634;
    static int[] var_64b;
-   static AnimatedSprite[] var_670;
-   static Sprite[] var_686;
+   static AnimatedSprite[] entities;
+   static Sprite[] commonSprites;
    static int[] var_6a4;
    static int[] var_6be;
    static int[] var_6d1;
@@ -1133,7 +1133,7 @@ final class GameManager {
 
       int var0;
       for(var0 = 0; var0 < 16; ++var0) {
-         var_670[1 + var0] = new Entity(1 + var0);
+          entities[1 + var0] = new Entity(1 + var0);
       }
 
       for(var0 = 0; var0 < var_788.length; ++var0) {
@@ -1153,10 +1153,10 @@ final class GameManager {
    }
 
    private static void sub_54c() {
-      var_686 = new Sprite[3];
+      commonSprites = new Sprite[3];
       var_6a4 = new int[4];
       var_6be = new int[16];
-      var_670 = new AnimatedSprite[17];
+      entities = new AnimatedSprite[17];
       var_6d1 = new int[35];
       var_788 = new byte[13];
       sub_55e();
@@ -1165,10 +1165,10 @@ final class GameManager {
 
    private static void sub_55e() {
       int var0;
-      if (var_686 != null) {
-         for(var0 = 0; var0 < var_686.length; ++var0) {
-            GameEngine.freeSprite(var_686[var0]);
-            var_686[var0] = null;
+      if (commonSprites != null) {
+         for(var0 = 0; var0 < commonSprites.length; ++var0) {
+            GameEngine.freeSprite(commonSprites[var0]);
+            commonSprites[var0] = null;
          }
       }
 
@@ -1194,19 +1194,19 @@ final class GameManager {
 
    private static void sub_5b5() {
       sub_9d1();
-      if (var_670 != null) {
-         for(int var0 = 0; var0 < var_670.length; ++var0) {
-            if (var_670[var0] != null) {
-               var_670[var0].sub_2a();
-               var_670[var0] = null;
+      if (entities != null) {
+         for(int var0 = 0; var0 < entities.length; ++var0) {
+            if (entities[var0] != null) {
+               entities[var0].sub_2a();
+               entities[var0] = null;
             }
          }
 
          sub_55e();
       }
 
-      var_670 = null;
-      var_686 = null;
+      entities = null;
+      commonSprites = null;
       var_6a4 = null;
       var_6be = null;
       var_6d1 = null;
@@ -1251,9 +1251,9 @@ final class GameManager {
    }
 
    private static void sub_644() {
-      var_686[0] = GameEngine.loadSpriteSet(82);
-      var_686[1] = GameEngine.loadSpriteSet(81);
-      var_686[2] = GameEngine.loadSpriteSet(40);
+      commonSprites[0] = GameEngine.loadSpriteSet(82);
+      commonSprites[1] = GameEngine.loadSpriteSet(81);
+      commonSprites[2] = GameEngine.loadSpriteSet(40);
       int var1 = 0;
 
       for(int var0 = 0; var0 < 4; ++var0) {
@@ -1510,7 +1510,7 @@ final class GameManager {
       for(var1 = 0; var1 < var_8e2.length; ++var1) {
          if ((var_8e2[var1] & 1) == 0 && (var_8e2[var1] & 2) != 0 && (var_8e2[var1] & 4) == 0) {
             var2 = var_96c[var1] & 255;
-            if (((var14 = (Entity)var_670[var2]).propertyFlags & 524288) == 0 && (var14.statusFlags & 1048576) == 0) {
+            if (((var14 = (Entity) entities[var2]).propertyFlags & 524288) == 0 && (var14.statusFlags & 1048576) == 0) {
                if (var14.aiState == 12) {
                   var14.x += var14.movementTimer * var14.knockbackVelocityX;
                   var14.y += var14.movementTimer * var14.knockbackVelocityY;
@@ -1542,7 +1542,7 @@ final class GameManager {
                   return;
                }
 
-               (var14 = (Entity)var_670[var2]).mapObjectIndex = (byte)var1;
+               (var14 = (Entity) entities[var2]).mapObjectIndex = (byte)var1;
                var14.zoneProgressId = var_9a9[var1];
                var14.health = var_96c[var1] >> 16;
                var10000 = var_96c;
@@ -1561,15 +1561,15 @@ final class GameManager {
       int var1;
       for(var1 = 1; var1 < 17; ++var1) {
          Entity var2;
-         if ((var2 = (Entity)var_670[var1]) != null) {
+         if ((var2 = (Entity) entities[var1]) != null) {
             var2.sub_5e(var0);
-            var_670[var1] = null;
+            entities[var1] = null;
          }
       }
 
       if (var0) {
-         ((PlayerCharacter)var_670[0]).reset(var0);
-         var_670[0] = null;
+         ((PlayerCharacter) entities[0]).reset(var0);
+         entities[0] = null;
       }
 
       for(var1 = var0 ? 0 : 4; var1 < var_6d1.length; ++var1) {
@@ -1585,9 +1585,9 @@ final class GameManager {
    }
 
    static void sub_76f(int var0, int var1, int var2) {
-      var_670[var1].animationSetId = var0;
-      var_670[var1].animationData = (byte[]) GameRenderer.getResource(var2);
-      var_670[var1].sub_14(-65536);
+      entities[var1].animationSetId = var0;
+      entities[var1].animationData = (byte[]) GameRenderer.getResource(var2);
+      entities[var1].sub_14(-65536);
    }
 
    static void sub_7c9() {
@@ -1650,7 +1650,7 @@ final class GameManager {
       var10000.statusFlags |= 512;
 
       for(int var0 = 0; var0 < 16; ++var0) {
-         Entity var2 = (Entity)var_670[1 + var0];
+         Entity var2 = (Entity) entities[1 + var0];
          var2.statusFlags |= 128;
       }
 
@@ -1661,7 +1661,7 @@ final class GameManager {
 
       for(int var1 = 0; var1 < 16; ++var1) {
          Entity var3;
-         if (((var3 = (Entity)var_670[1 + var1]).statusFlags & 8) != 0 && var3.animationSetId == var0) {
+         if (((var3 = (Entity) entities[1 + var1]).statusFlags & 8) != 0 && var3.animationSetId == var0) {
             ++var2;
          }
       }
@@ -1986,7 +1986,7 @@ final class GameManager {
             return;
          }
 
-         GameEngine.drawRegion(var0, var_686[1], var2, var3, 20, (GameRenderer.numberBuffer[var4] - 48) * 10, 0, 10, 12, 0);
+         GameEngine.drawRegion(var0, commonSprites[1], var2, var3, 20, (GameRenderer.numberBuffer[var4] - 48) * 10, 0, 10, 12, 0);
          var2 += 10;
       }
    }
@@ -2336,12 +2336,12 @@ final class GameManager {
    }
 
    private static void sub_d16() {
-      var_670[0] = new PlayerCharacter();
+      entities[0] = new PlayerCharacter();
       sub_76f(0, 0, var_6d1[0]);
       var_6a4[0] = 0;
       var_6a4[1] = 0;
-      var_670[0].initEntity(var_6a4);
-      var_a69 = (PlayerCharacter)var_670[0];
+      entities[0].initEntity(var_6a4);
+      var_a69 = (PlayerCharacter) entities[0];
       var_a69.initPlayer();
       var_9d8 |= 2;
       var_a69.currentWeaponId = var_ff5[5];
@@ -2593,7 +2593,7 @@ final class GameManager {
 
                for(var0 = 0; var0 < 16; ++var0) {
                   Entity var2;
-                  if (((var2 = (Entity)var_670[1 + var0]).statusFlags & 8) != 0) {
+                  if (((var2 = (Entity) entities[1 + var0]).statusFlags & 8) != 0) {
                      var2.sub_2d1();
                      if ((var2.statusFlags & 8) != 0) {
                         var2.screenX = GameRenderer.worldToScreenFixedX(0, var2.x);
@@ -2676,7 +2676,7 @@ final class GameManager {
             if ((var_9d8 & 67108864) == 0) {
                for(int var1 = 0; var1 < 16; ++var1) {
                   Entity var2;
-                  if (((var2 = (Entity)var_670[1 + var1]).statusFlags & 8) != 0 && var2.renderDepth >= 1024) {
+                  if (((var2 = (Entity) entities[1 + var1]).statusFlags & 8) != 0 && var2.renderDepth >= 1024) {
                      var2.sub_487(var0);
                   }
                }
@@ -2756,7 +2756,7 @@ final class GameManager {
          var5 = var4 >> 7 & 2047;
          var6 = var4 >> 18 & 2047;
          if (var3 < 17) {
-            var_670[var3].sub_487(var0);
+            entities[var3].sub_487(var0);
          } else if (var3 < 47) {
             sub_aa1(var0, var3 - 17, var5, var6);
          }
@@ -2842,7 +2842,7 @@ final class GameManager {
 
       var5 += 5;
       if (GameRenderer.frameCounter % 16 != 0) {
-         var0.drawImage(var_686[2].images[0], var4, var5, 20);
+         var0.drawImage(commonSprites[2].images[0], var4, var5, 20);
       }
 
       short var18;
@@ -2850,8 +2850,8 @@ final class GameManager {
       int var8;
       int var9;
       if (GameRenderer.frameCounter % 16 == 0) {
-         var8 = var_686[2].images[0].getWidth() - 3;
-         var9 = var_686[2].images[0].getHeight() - 3;
+         var8 = commonSprites[2].images[0].getWidth() - 3;
+         var9 = commonSprites[2].images[0].getHeight() - 3;
          ++var4;
          ++var5;
          var0.setColor(var22);
@@ -3432,7 +3432,7 @@ final class GameManager {
 
       for(int var3 = 0; var3 < 16; ++var3) {
          Entity var4;
-         if (((var4 = (Entity)var_670[1 + var3]).statusFlags & 8) != 0) {
+         if (((var4 = (Entity) entities[1 + var3]).statusFlags & 8) != 0) {
             int var10001;
             Entity var5;
             if (var0) {
@@ -3457,7 +3457,7 @@ final class GameManager {
    public static int sub_10f1(int var0, int var1, int var2, int var3, int var4, int var5, int var6) {
       for(int var7 = 0; var7 < 16; ++var7) {
          Entity var12;
-         if (((var12 = (Entity)var_670[1 + var7]).statusFlags & 8) == 0) {
+         if (((var12 = (Entity) entities[1 + var7]).statusFlags & 8) == 0) {
             switch(var2) {
             case 1:
                if (var6 == 0) {
@@ -3506,7 +3506,7 @@ final class GameManager {
 
    public static boolean sub_1146() {
       for(int var0 = 0; var0 < 16; ++var0) {
-         if ((((Entity)var_670[1 + var0]).statusFlags & 8) == 0) {
+         if ((((Entity) entities[1 + var0]).statusFlags & 8) == 0) {
             return true;
          }
       }
@@ -3518,7 +3518,7 @@ final class GameManager {
       int var1 = 0;
 
       for(int var0 = 0; var0 < 16; ++var0) {
-         if ((((Entity)var_670[1 + var0]).statusFlags & 520) == 520) {
+         if ((((Entity) entities[1 + var0]).statusFlags & 520) == 520) {
             ++var1;
          }
       }
@@ -3875,7 +3875,7 @@ final class GameManager {
    static void sub_144b() {
       for(int var0 = 0; var0 < 16; ++var0) {
          Entity var1;
-         if (((var1 = (Entity)var_670[1 + var0]).behaviorFlags & 16) != 0) {
+         if (((var1 = (Entity) entities[1 + var0]).behaviorFlags & 16) != 0) {
             var1.attackCooldown = Integer.MAX_VALUE;
             var1.sub_328();
          }
@@ -3903,7 +3903,7 @@ final class GameManager {
       while(var0 < 16) {
          int var2;
          Entity var4;
-         if ((var2 = (var4 = (Entity)var_670[1 + var0]).animationSetId) == 1) {
+         if ((var2 = (var4 = (Entity) entities[1 + var0]).animationSetId) == 1) {
             var2 = 1;
          }
 
@@ -4013,7 +4013,7 @@ final class GameManager {
                   var_9d8 |= 2;
                   if ((var6 = sub_10f1(var_a69.x, var_a69.y, 6, var3, 1028, 0, 0)) != -1) {
                      sub_1051(true, -1, true);
-                     ((Entity)var_670[var6]).sub_2b1();
+                     ((Entity) entities[var6]).sub_2b1();
                   }
 
                   if (var_ff5[var3 + 18] <= 0) {
