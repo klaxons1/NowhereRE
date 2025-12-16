@@ -232,7 +232,7 @@ class Class_1ac {
 
                int var17 = (this.var_99 & 2) != 0 ? var2 - (var15 + var12) : var2 + var15;
                int var18 = (this.var_99 & 1) != 0 ? var3 - (var16 + var13) : var3 + var16;
-               Class_ec.sub_58f(var1, var24, var17, var18, 20, var10, var11, var12, var13, var14);
+               GameEngine.sub_58f(var1, var24, var17, var18, 20, var10, var11, var12, var13, var14);
                var20 = 0;
                int var19 = 0;
                int var21 = var12;
@@ -245,7 +245,7 @@ class Class_1ac {
                   }
 
                   var21 = var12 << 1;
-                  Class_ec.sub_58f(var1, var24, var17 + var19, var18, 20, var10, var11, var12, var13, var14 ^ 2);
+                  GameEngine.sub_58f(var1, var24, var17 + var19, var18, 20, var10, var11, var12, var13, var14 ^ 2);
                }
 
                if ((this.var_11[var5 + 2] & 128) != 0) {
@@ -256,11 +256,11 @@ class Class_1ac {
                   }
 
                   var22 = var13 << 1;
-                  Class_ec.sub_58f(var1, var24, var17, var18 + var20, 20, var10, var11, var12, var13, var14 ^ 1);
+                  GameEngine.sub_58f(var1, var24, var17, var18 + var20, 20, var10, var11, var12, var13, var14 ^ 1);
                }
 
                if ((this.var_11[var5 + 2] & 192) == 192) {
-                  Class_ec.sub_58f(var1, var24, var17 + var19, var18 + var20, 20, var10, var11, var12, var13, var14 ^ 3);
+                  GameEngine.sub_58f(var1, var24, var17 + var19, var18 + var20, 20, var10, var11, var12, var13, var14 ^ 3);
                }
 
                if (var19 < 0) {

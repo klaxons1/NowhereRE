@@ -16,7 +16,7 @@ import javax.microedition.media.control.VolumeControl;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.rms.RecordStore;
 
-final class Class_ec {
+final class GameEngine {
    private static int[] var_13 = null;
    private static byte[] var_70 = null;
    private static int[] var_98;
@@ -39,7 +39,7 @@ final class Class_ec {
    protected static byte[] var_493;
    public static boolean var_4c1;
 
-   private static boolean sub_4a(MIDlet var0) {
+   private static boolean loadResourceFile(MIDlet var0) {
       if (var_70 == null) {
          DataInputStream var1 = new DataInputStream(var0.getClass().getResourceAsStream("/d"));
 
@@ -75,7 +75,7 @@ final class Class_ec {
       return true;
    }
 
-   private static void sub_7f() {
+   private static void unloadResources() {
       var_13 = null;
       var_70 = null;
    }
@@ -95,23 +95,23 @@ final class Class_ec {
       return var1;
    }
 
-   public static Class_9c sub_bc(int var0) {
-      return new Class_9c(sub_237(var0), var0);
+   public static BinaryReader sub_bc(int var0) {
+      return new BinaryReader(sub_237(var0), var0);
    }
 
-   public static int sub_109(Class_9c var0) {
-      return sub_1ff(var0.var_44);
+   public static int sub_109(BinaryReader var0) {
+      return sub_1ff(var0.resourceId);
    }
 
-   public static int sub_156(Class_9c var0) {
-      return (var0.var_a6[var0.var_101++] & 255) + ((var0.var_a6[var0.var_101++] & 255) << 8) + ((var0.var_a6[var0.var_101++] & 255) << 16) + ((var0.var_a6[var0.var_101++] & 255) << 24);
+   public static int sub_156(BinaryReader var0) {
+      return (var0.buffer[var0.position++] & 255) + ((var0.buffer[var0.position++] & 255) << 8) + ((var0.buffer[var0.position++] & 255) << 16) + ((var0.buffer[var0.position++] & 255) << 24);
    }
 
-   public static byte[] sub_1a1(Class_9c var0, int var1) {
+   public static byte[] sub_1a1(BinaryReader var0, int var1) {
       Object var2 = null;
       byte[] var3 = new byte[var1];
-      System.arraycopy(var0.var_a6, var0.var_101, var3, 0, var3.length);
-      var0.var_101 += var1;
+      System.arraycopy(var0.buffer, var0.position, var3, 0, var3.length);
+      var0.position += var1;
       return var3;
    }
 
@@ -328,7 +328,7 @@ final class Class_ec {
    }
 
    public static void sub_45f(MIDlet var0, int var1, int var2, int var3, int var4, int var5) {
-      if (sub_4a(var0)) {
+      if (loadResourceFile(var0)) {
          var_44f = new Random();
          sub_2f2();
          var_1e0 = var1;
@@ -343,7 +343,7 @@ final class Class_ec {
       var_493 = null;
       var_98 = null;
       sub_63c();
-      sub_7f();
+      unloadResources();
    }
 
    public static void sub_506(byte[] var0) {

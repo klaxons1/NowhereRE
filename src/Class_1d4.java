@@ -64,13 +64,13 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
    }
 
    static void sub_36() {
-      Class_ec.sub_bdf();
+      GameEngine.sub_bdf();
       Class_17f.var_21 = Math.max(240, var_5e.getWidth());
       Class_17f.var_67 = var_5e.getHeight() - var_2fa.getHeight();
       Class_17f.sub_14a(Class_17f.var_21, Class_17f.var_67, false);
-      Class_ec.sub_45f(var_22, Class_17f.var_21, Class_17f.var_67, 36, 36, 1);
-      Class_ec.sub_b07(Class_17f.sub_ac4(437), (int[])null, (int[])null);
-      Class_ec.var_1b9 = var_5e;
+      GameEngine.sub_45f(var_22, Class_17f.var_21, Class_17f.var_67, 36, 36, 1);
+      GameEngine.sub_b07(Class_17f.sub_ac4(437), (int[])null, (int[])null);
+      GameEngine.var_1b9 = var_5e;
       Class_201.sub_167e();
       Class_17f.sub_3d7(1);
       Class_17f.sub_485(0, 50, 473);
@@ -87,8 +87,8 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       Class_201.sub_a7();
       sub_157();
       sub_1ef();
-      Class_ec.sub_4a7();
-      Class_ec.var_224 = null;
+      GameEngine.sub_4a7();
+      GameEngine.var_224 = null;
       var_12d = true;
       var_5e = null;
       var_9d = null;
@@ -195,7 +195,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       boolean var0 = false;
       var0 = Class_201.sub_50();
       if ((var_278 & 131072) != 0 && !var0) {
-         Class_ec.sub_bdf();
+         GameEngine.sub_bdf();
 
          try {
             Thread.sleep(2000L);
@@ -228,7 +228,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
          }
 
          if (!var_12d) {
-            Class_ec.var_224 = DirectUtils.getDirectGraphics(var1);
+            GameEngine.var_224 = DirectUtils.getDirectGraphics(var1);
             var1.setClip(0, 0, Class_17f.var_21, Class_17f.var_67);
             if (sub_23e(var1) == 0) {
                if (var_205 < 13) {
@@ -350,8 +350,8 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       }
 
       if ((var_278 & 8) == 0) {
-         Class_17f.sub_b2(var1 = Class_ec.sub_c2f(var_5e, var1), true);
-         if (var1 == 35 && !Class_ec.sub_37d()) {
+         Class_17f.sub_b2(var1 = GameEngine.sub_c2f(var_5e, var1), true);
+         if (var1 == 35 && !GameEngine.sub_37d()) {
             sub_125(true);
          }
 
@@ -365,11 +365,11 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
       }
 
       if (var1 == -50) {
-         Class_ec.var_4c1 = false;
+         GameEngine.var_4c1 = false;
       }
 
       if ((var_278 & 8) == 0) {
-         Class_17f.sub_b2(Class_ec.sub_c2f(var_5e, var1), false);
+         Class_17f.sub_b2(GameEngine.sub_c2f(var_5e, var1), false);
       }
    }
 
@@ -405,7 +405,7 @@ public final class Class_1d4 extends FullCanvas implements Runnable, PlayerListe
    }
 
    static void sub_125(boolean var0) {
-      if (!Class_ec.sub_31a()) {
+      if (!GameEngine.sub_31a()) {
          if (var_205 < 13 && var0 || var0) {
             var_278 |= 65536;
          }

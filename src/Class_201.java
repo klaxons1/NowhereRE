@@ -107,7 +107,7 @@ final class Class_201 {
       if (var0 != -1) {
          var_1c = var0;
          var_4e |= 1;
-         Class_ec.var_18a = (var1 & 2) != 0;
+         GameEngine.var_18a = (var1 & 2) != 0;
          if ((var1 & 4) != 0) {
             var_3e = -1;
          }
@@ -119,12 +119,12 @@ final class Class_201 {
    }
 
    static boolean sub_50() {
-      if ((var_4e & 1) != 0 && var_1c != -1 && (!Class_ec.var_18a || var_1c != var_3e)) {
+      if ((var_4e & 1) != 0 && var_1c != -1 && (!GameEngine.var_18a || var_1c != var_3e)) {
          var_4e &= -2;
          var_3e = var_1c;
-         Class_ec.sub_41e();
+         GameEngine.sub_41e();
          StringBuffer var0 = (new StringBuffer(4)).append("/m").append(var_3e);
-         Class_ec.sub_3e6(Class_1d4.var_22, var0.toString());
+         GameEngine.sub_3e6(Class_1d4.var_22, var0.toString());
          return true;
       } else {
          return false;
@@ -132,8 +132,8 @@ final class Class_201 {
    }
 
    static void sub_a7() {
-      Class_ec.sub_41e();
-      Class_ec.var_18a = false;
+      GameEngine.sub_41e();
+      GameEngine.var_18a = false;
       var_3e = -1;
       var_1c = -1;
       var_4e &= -2;
@@ -207,8 +207,8 @@ final class Class_201 {
             var10002 = 3;
             break;
          case 5:
-            var_15b = Class_ec.sub_b1(46);
-            var_204 = Class_ec.sub_b1(49);
+            var_15b = GameEngine.sub_b1(46);
+            var_204 = GameEngine.sub_b1(49);
             var_228[3] = 4265216;
             var_228[18] = 0;
             var_228[14] = 3;
@@ -278,13 +278,13 @@ final class Class_201 {
 
    static void sub_11c() {
       var_2f1 = null;
-      Class_ec.sub_828(var_9f);
-      Class_ec.sub_828(var_15b);
-      Class_ec.sub_828(var_204);
+      GameEngine.sub_828(var_9f);
+      GameEngine.sub_828(var_15b);
+      GameEngine.sub_828(var_204);
       var_9f = null;
       var_15b = null;
       var_204 = null;
-      Class_ec.sub_828(var_b7);
+      GameEngine.sub_828(var_b7);
       var_b7 = null;
       if (var_111 != null) {
          var_111.sub_6f();
@@ -303,11 +303,11 @@ final class Class_201 {
       int var3 = (Class_17f.var_dd - 108) / var2 - 1;
       if (var_228 != null) {
          if ((var_228[3] & 4096) != 0) {
-            var_9f = Class_ec.sub_b1(52);
+            var_9f = GameEngine.sub_b1(52);
          }
 
          if ((var_228[3] & 8) != 0) {
-            var_b7 = (var_228[3] & 1073741824) != 0 ? (Class_de)Class_ec.sub_2ae(Class_1d4.var_22, var_1311 == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : Class_ec.sub_b1(var_228[6]);
+            var_b7 = (var_228[3] & 1073741824) != 0 ? (Class_de) GameEngine.sub_2ae(Class_1d4.var_22, var_1311 == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : GameEngine.sub_b1(var_228[6]);
             if ((var_228[3] & 128) != 0) {
                var_228[10] = -var_b7.var_8a[0].getHeight();
             }
@@ -562,7 +562,7 @@ final class Class_201 {
 
                for(int var1 = 0; var1 < var_240.length; ++var1) {
                   if (var1 == var_228[18]) {
-                     Class_ec.sub_58f(var0, var_9f, Class_17f.var_104 - 92 + var_228[16], Class_17f.var_13c + var3 - -13 + (var5 >> 1), 20, 0, 54, 108, 18, 0);
+                     GameEngine.sub_58f(var0, var_9f, Class_17f.var_104 - 92 + var_228[16], Class_17f.var_13c + var3 - -13 + (var5 >> 1), 20, 0, 54, 108, 18, 0);
                   }
 
                   Class_17f.sub_657(var0, var_240[var1] & 255, var_228[16] + 0, var3 + 22, 0, 0, 0, var_228[32]);
@@ -574,7 +574,7 @@ final class Class_201 {
                var3 = Class_17f.sub_657(var0, var_228[13], Class_17f.var_89 >> 1, var3 - 28, 11, Class_17f.var_89, 0, var_228[32]);
                var3 += 18;
                int var7 = (Class_17f.var_89 - Class_17f.sub_5f5(var_228[32], 2)) / 2 - 23;
-               Class_ec.sub_58f(var0, var_9f, Class_17f.var_104 + var7 - 0, Class_17f.var_13c + var3 + 0 + (var_228[18] == 0 ? 0 : 1) * (var5 + 18), 20, 108, 54, 18, 18, 0);
+               GameEngine.sub_58f(var0, var_9f, Class_17f.var_104 + var7 - 0, Class_17f.var_13c + var3 + 0 + (var_228[18] == 0 ? 0 : 1) * (var5 + 18), 20, 108, 54, 18, 18, 0);
                var7 += 23;
                Class_17f.sub_657(var0, 1, var7, var3, 0, 0, 0, var_228[32]);
                var3 += var5 + 18;
@@ -733,7 +733,7 @@ final class Class_201 {
                      sub_17b7();
                      var_228[0] = 5;
                   } else if (Class_1d4.var_205 == 10) {
-                     Class_ec.sub_38b(false);
+                     GameEngine.sub_38b(false);
                      Class_1d4.sub_125(true);
                   }
 
@@ -753,7 +753,7 @@ final class Class_201 {
                   break label52;
                }
 
-               Class_ec.sub_38b(true);
+               GameEngine.sub_38b(true);
                break;
             case 7:
             case 9:
@@ -775,7 +775,7 @@ final class Class_201 {
    private static void sub_2f5() {
       switch(Class_1d4.var_205) {
       case 2:
-         var_9f = Class_ec.sub_b1(48);
+         var_9f = GameEngine.sub_b1(48);
          var_228[19] = Class_17f.var_dd * 24 / 320;
          var_111 = new Class_1ac();
          var_11d = Class_17f.sub_97a(24, -1, 3);
@@ -784,7 +784,7 @@ final class Class_201 {
          Class_17f.sub_e12(160, -1, -1, -1);
          Class_17f.sub_c18(0, 0, Class_17f.var_89, Class_17f.var_dd);
          Class_17f.sub_c7b(0, Class_17f.var_89, Class_17f.var_dd, false);
-         Class_ec.sub_6fd(Class_17f.var_cd8[0], Class_17f.var_104, Class_17f.var_13c);
+         GameEngine.sub_6fd(Class_17f.var_cd8[0], Class_17f.var_104, Class_17f.var_13c);
          var_228[11] = Class_17f.var_cb6[4] - Class_17f.var_89 >> 1;
          var_228[12] = Class_17f.var_cb6[5] - Class_17f.var_dd;
          if (var_228[12] < 0) {
@@ -902,7 +902,7 @@ final class Class_201 {
             if ((Class_17f.var_30f & 24) != 0) {
                switch(var_240[var_228[18]] & 255) {
                case 3:
-                  if (!Class_ec.sub_37d()) {
+                  if (!GameEngine.sub_37d()) {
                      sub_2f(var_228[25], 6);
                   }
                   break;
@@ -965,7 +965,7 @@ final class Class_201 {
 
          for(var5 = 0; var5 < 3; ++var5) {
             if (var5 == var_228[18]) {
-               Class_ec.sub_58f(var0, var_9f, Class_17f.var_104 + var1 - 24, Class_17f.var_13c + var2, 20, 0, 54, 108, 18, 0);
+               GameEngine.sub_58f(var0, var_9f, Class_17f.var_104 + var1 - 24, Class_17f.var_13c + var2, 20, 0, 54, 108, 18, 0);
             }
 
             if (var_228[11] != 0 && (sub_179c(var5, 0, 8) & 1) != 0) {
@@ -1037,7 +1037,7 @@ final class Class_201 {
             var1 += 4;
             switch(var_240[var5]) {
             case 3:
-               var10 = !Class_ec.sub_31a() ? 1 : 2;
+               var10 = !GameEngine.sub_31a() ? 1 : 2;
                break;
             case 4:
                var10 = (var_129e & 1) != 0 ? 1 : 2;
@@ -1059,11 +1059,11 @@ final class Class_201 {
             int var5 = 0;
 
             for(int var4 = 0; var4 < var6; var5 += 18) {
-               Class_ec.sub_58f(var0, var_9f, Class_17f.var_104 + var5, Class_17f.var_13c + var2 - 54, 20, 252, 0, 18, 54, 1);
+               GameEngine.sub_58f(var0, var_9f, Class_17f.var_104 + var5, Class_17f.var_13c + var2 - 54, 20, 252, 0, 18, 54, 1);
                ++var4;
             }
          } else {
-            Class_ec.sub_58f(var0, var_9f, Class_17f.var_104 + var1 - 252, Class_17f.var_13c, 20, 0, 0, 252, 54, 0);
+            GameEngine.sub_58f(var0, var_9f, Class_17f.var_104 + var1 - 252, Class_17f.var_13c, 20, 0, 0, 252, 54, 0);
          }
 
       }
@@ -1167,7 +1167,7 @@ final class Class_201 {
       int var0;
       if (var_686 != null) {
          for(var0 = 0; var0 < var_686.length; ++var0) {
-            Class_ec.sub_828(var_686[var0]);
+            GameEngine.sub_828(var_686[var0]);
             var_686[var0] = null;
          }
       }
@@ -1251,9 +1251,9 @@ final class Class_201 {
    }
 
    private static void sub_644() {
-      var_686[0] = Class_ec.sub_b1(82);
-      var_686[1] = Class_ec.sub_b1(81);
-      var_686[2] = Class_ec.sub_b1(40);
+      var_686[0] = GameEngine.sub_b1(82);
+      var_686[1] = GameEngine.sub_b1(81);
+      var_686[2] = GameEngine.sub_b1(40);
       int var1 = 0;
 
       for(int var0 = 0; var0 < 4; ++var0) {
@@ -1965,7 +1965,7 @@ final class Class_201 {
                int var12 = var11 % var2;
                int var13 = var11 / var2;
                Class_17f.var_1064[var11] = (byte)(var11 + 1 << 2 | 0);
-               Class_ec.sub_69e(Class_17f.var_cd8[0], var12, var13, 44, 0, true);
+               GameEngine.sub_69e(Class_17f.var_cd8[0], var12, var13, 44, 0, true);
                sub_a29(var12 * 36 + 18, var13 * 36 + 18, 2, 92, 0, 4, 0);
                if (!Class_17f.sub_39b(var_ff5, Class_17f.var_cb6[var0 * 23 + 22], 1, 1, var_113c)) {
                   Class_17f.sub_3b0(var_ff5, Class_17f.var_cb6[var0 * 23 + 22], 1, 1, var_113c);
@@ -1986,7 +1986,7 @@ final class Class_201 {
             return;
          }
 
-         Class_ec.sub_58f(var0, var_686[1], var2, var3, 20, (Class_17f.var_4bb[var4] - 48) * 10, 0, 10, 12, 0);
+         GameEngine.sub_58f(var0, var_686[1], var2, var3, 20, (Class_17f.var_4bb[var4] - 48) * 10, 0, 10, 12, 0);
          var2 += 10;
       }
    }
@@ -2158,7 +2158,7 @@ final class Class_201 {
       Class_17f.sub_c0e();
       sub_749(var0);
       if (var_f1b != null) {
-         Class_ec.sub_828(var_f1b);
+         GameEngine.sub_828(var_f1b);
          var_f1b = null;
       }
 
@@ -2331,7 +2331,7 @@ final class Class_201 {
          var_eab = var_57c[var_ff5[8] * 8 + 3];
       }
 
-      var_f1b = (var_eab & 2) != 0 ? Class_ec.sub_b1(33) : ((var_eab & 128) != 0 ? Class_ec.sub_b1(33) : null);
+      var_f1b = (var_eab & 2) != 0 ? GameEngine.sub_b1(33) : ((var_eab & 128) != 0 ? GameEngine.sub_b1(33) : null);
       sub_15d4(var_eab);
    }
 
@@ -2789,7 +2789,7 @@ final class Class_201 {
       int var5 = var1 + var4 + 10;
       var5 = Class_17f.sub_645(var9 == 1 ? var0 : null, '³', var5, var6, 0, -1);
       var5 += 4;
-      int var7 = !Class_ec.sub_31a() ? 44 : 45;
+      int var7 = !GameEngine.sub_31a() ? 44 : 45;
       var5 = Class_17f.sub_657(var0, var7, var5, var6, 65536, 0, 0, 0);
       var5 += 4;
       Class_17f.sub_645(var9 == 1 ? var0 : null, '±', var5, var6, 0, -1);
@@ -3179,7 +3179,7 @@ final class Class_201 {
                      var_d55 = 0;
                      switch(var4) {
                      case 1:
-                        if (!Class_ec.sub_37d()) {
+                        if (!GameEngine.sub_37d()) {
                            sub_2f(Class_17f.var_d6b, 6);
                         }
                         break;
@@ -3624,7 +3624,7 @@ final class Class_201 {
                   if (var_5ab[var1] != -1) {
                      var10000 = var_b22;
                      var10001 = var1;
-                     var10002 = Class_ec.sub_b1(var_5ab[var1] & 255);
+                     var10002 = GameEngine.sub_b1(var_5ab[var1] & 255);
                   } else {
                      var10000 = var_b22;
                      var10001 = var1;
@@ -3710,7 +3710,7 @@ final class Class_201 {
                var7 = var10000;
             }
 
-            Class_ec.sub_58f(var0, var_b22[Class_17f.var_87e], Class_17f.var_104 + var_b72, Class_17f.var_13c + var1 - var3, 20, var6, 0, var7, var3, var4);
+            GameEngine.sub_58f(var0, var_b22[Class_17f.var_87e], Class_17f.var_104 + var_b72, Class_17f.var_13c + var1 - var3, 20, var6, 0, var7, var3, var4);
          } else {
             sub_1314(var0, var1);
          }
@@ -3740,7 +3740,7 @@ final class Class_201 {
    private static void sub_1354() {
       if (var_b22 != null) {
          for(int var0 = 0; var0 < var_b22.length; ++var0) {
-            Class_ec.sub_828(var_b22[var0]);
+            GameEngine.sub_828(var_b22[var0]);
             var_b22[var0] = null;
          }
       }
@@ -3891,7 +3891,7 @@ final class Class_201 {
             Class_17f.var_1064[var0] = (byte)(var1 + 1 << 2 | 0);
             int var3 = var0 / Class_17f.var_cb6[1];
             int var2 = var0 - var3 * Class_17f.var_cb6[1];
-            Class_ec.sub_69e(Class_17f.var_cd8[0], var2, var3, 44, 0, true);
+            GameEngine.sub_69e(Class_17f.var_cd8[0], var2, var3, 44, 0, true);
          }
       }
 
@@ -4064,8 +4064,8 @@ final class Class_201 {
       if (var_a69 != null) {
          int var3 = Class_17f.sub_cd(40960, 58880);
          int var4 = Class_17f.sub_cd(0, 256);
-         int var1 = Class_ec.sub_abc((long)var3, var4);
-         int var2 = Class_ec.sub_acf((long)var3, var4);
+         int var1 = GameEngine.sub_abc((long)var3, var4);
+         int var2 = GameEngine.sub_acf((long)var3, var4);
          var_ec9[var0 + 0] = var_a69.var_591 + var1;
          var_ec9[var0 + 1] = var_a69.var_5d1 + var2;
          var_ec9[var0 + 2] = -(var1 * Class_17f.sub_cd(0, 2) >> 8);
@@ -4090,7 +4090,7 @@ final class Class_201 {
                var10002 = var_ec9[var2 + 6]++;
                var4 = Class_17f.var_104 + (Class_17f.sub_d60(0, var_ec9[var2 + 0]) >> 8);
                var6 = Class_17f.var_13c + (Class_17f.sub_db8(0, var_ec9[var2 + 1]) >> 8);
-               Class_ec.sub_58f(var0, var_f1b, var4, var6, 20, 0, var_ec9[var2 + 6] / 3 * 72, 72, 72, 0);
+               GameEngine.sub_58f(var0, var_f1b, var4, var6, 20, 0, var_ec9[var2 + 6] / 3 * 72, 72, 72, 0);
                if (var_ec9[var2 + 6] > 27) {
                   sub_15f8(var2);
                   var_ec9[var2 + 6] = 0;
@@ -4154,7 +4154,7 @@ final class Class_201 {
          }
 
          if ((var_eab & 32) != 0 && (var_129e & 1) != 0 && Class_17f.var_3b7 % 16 == 0) {
-            Class_ec.sub_550();
+            GameEngine.sub_550();
          }
 
          if ((var_eab & 16) != 0) {
@@ -4173,15 +4173,15 @@ final class Class_201 {
    }
 
    static void sub_167e() {
-      Class_9c var0;
-      if ((var0 = Class_ec.sub_bc(31)) != null) {
-         var_fc7 = Class_ec.sub_1a1(var0, Class_ec.sub_109(var0));
-         var0.var_a6 = null;
-         Class_ec.sub_b47(var_fc7);
-         var_114a = Class_ec.sub_b95(8);
-         var_11c0 = Class_ec.sub_b95(8);
-         var_11d4 = Class_ec.sub_b95(16);
-         var_11ff = Class_ec.sub_b95(16);
+      BinaryReader var0;
+      if ((var0 = GameEngine.sub_bc(31)) != null) {
+         var_fc7 = GameEngine.sub_1a1(var0, GameEngine.sub_109(var0));
+         var0.buffer = null;
+         GameEngine.sub_b47(var_fc7);
+         var_114a = GameEngine.sub_b95(8);
+         var_11c0 = GameEngine.sub_b95(8);
+         var_11d4 = GameEngine.sub_b95(16);
+         var_11ff = GameEngine.sub_b95(16);
          var_1250 = 3;
          var_119e = 65;
       }
@@ -4215,13 +4215,13 @@ final class Class_201 {
    }
 
    private static boolean sub_170f() {
-      Class_ec.sub_b47(var_102a);
-      Class_ec.var_46b = 0;
-      byte var0 = (byte)Class_ec.sub_b95(8);
-      byte var1 = (byte)Class_ec.sub_b95(8);
-      byte var2 = (byte)Class_ec.sub_b95(8);
-      var_129e = (byte)Class_ec.sub_b95(8);
-      int var4 = (Class_ec.sub_b95(16) << 16) + Class_ec.sub_b95(16);
+      GameEngine.sub_b47(var_102a);
+      GameEngine.var_46b = 0;
+      byte var0 = (byte) GameEngine.sub_b95(8);
+      byte var1 = (byte) GameEngine.sub_b95(8);
+      byte var2 = (byte) GameEngine.sub_b95(8);
+      var_129e = (byte) GameEngine.sub_b95(8);
+      int var4 = (GameEngine.sub_b95(16) << 16) + GameEngine.sub_b95(16);
       if (var0 == 1 && var1 == 22 && var2 == -127) {
          return sub_186a(8, var_109c) == var4;
       } else {
@@ -4230,48 +4230,48 @@ final class Class_201 {
    }
 
    private static void sub_1757(int var0, int var1) {
-      Class_ec.sub_b47(var_102a);
-      Class_ec.var_46b = 8 + var0 * var_1068 << 3;
+      GameEngine.sub_b47(var_102a);
+      GameEngine.var_46b = 8 + var0 * var_1068 << 3;
       int var2;
       if (var1 == 0) {
          for(var2 = 0; var2 < var_1068; ++var2) {
-            var_ff5[var2] = (byte)Class_ec.sub_b95(8);
+            var_ff5[var2] = (byte) GameEngine.sub_b95(8);
          }
       } else if (var1 == 1) {
          for(var2 = 0; var2 < var_1068; ++var2) {
-            Class_ec.sub_bb3(var_ff5[var2] & 255, 8);
+            GameEngine.sub_bb3(var_ff5[var2] & 255, 8);
          }
       }
 
    }
 
    private static void sub_1765() {
-      Class_ec.sub_506(var_102a);
+      GameEngine.sub_506(var_102a);
    }
 
    private static int sub_179c(int var0, int var1, int var2) {
-      Class_ec.sub_b47(var_102a);
-      Class_ec.var_46b = 8 + var0 * var_1068 + var1 << 3;
-      return Class_ec.sub_b95(var2);
+      GameEngine.sub_b47(var_102a);
+      GameEngine.var_46b = 8 + var0 * var_1068 + var1 << 3;
+      return GameEngine.sub_b95(var2);
    }
 
    private static void sub_17a9(int var0, int var1, int var2, int var3) {
-      Class_ec.sub_b47(var_102a);
-      Class_ec.var_46b = 8 + var0 * var_1068 + var1 << 3;
-      Class_ec.sub_bb3(var2, var3);
+      GameEngine.sub_b47(var_102a);
+      GameEngine.var_46b = 8 + var0 * var_1068 + var1 << 3;
+      GameEngine.sub_bb3(var2, var3);
    }
 
    private static void sub_17b7() {
-      Class_ec.sub_b47(var_102a);
-      Class_ec.var_46b = 0;
-      Class_ec.sub_bb3(1, 8);
-      Class_ec.sub_bb3(22, 8);
-      Class_ec.sub_bb3(-127, 8);
-      Class_ec.sub_bb3(var_129e, 8);
+      GameEngine.sub_b47(var_102a);
+      GameEngine.var_46b = 0;
+      GameEngine.sub_bb3(1, 8);
+      GameEngine.sub_bb3(22, 8);
+      GameEngine.sub_bb3(-127, 8);
+      GameEngine.sub_bb3(var_129e, 8);
       int var0;
-      Class_ec.sub_bb3((var0 = sub_186a(8, var_109c)) >> 16, 16);
-      Class_ec.sub_bb3(var0 & '\uffff', 16);
-      Class_ec.sub_52a(var_102a);
+      GameEngine.sub_bb3((var0 = sub_186a(8, var_109c)) >> 16, 16);
+      GameEngine.sub_bb3(var0 & '\uffff', 16);
+      GameEngine.sub_52a(var_102a);
    }
 
    static void sub_1813() {
@@ -4291,21 +4291,21 @@ final class Class_201 {
    }
 
    private static boolean sub_1882(int var0) {
-      Class_ec.sub_b47(var_fc7);
-      Class_ec.var_46b = (6 + var_114a * 4 << 3) + (var0 - 262);
-      return Class_ec.sub_b95(1) != 0;
+      GameEngine.sub_b47(var_fc7);
+      GameEngine.var_46b = (6 + var_114a * 4 << 3) + (var0 - 262);
+      return GameEngine.sub_b95(1) != 0;
    }
 
    private static int sub_1890(int var0, int var1) {
-      Class_ec.sub_b47(var_fc7);
-      Class_ec.var_46b = 6 + var0 * 2 << 3;
-      return var1 + Class_ec.sub_b95(16);
+      GameEngine.sub_b47(var_fc7);
+      GameEngine.var_46b = 6 + var0 * 2 << 3;
+      return var1 + GameEngine.sub_b95(16);
    }
 
    private static int sub_18c9(int var0, int var1) {
-      Class_ec.sub_b47(var_fc7);
-      Class_ec.var_46b = 6 + var_114a * 2 + var0 * 2 << 3;
-      return var1 + Class_ec.sub_b95(16);
+      GameEngine.sub_b47(var_fc7);
+      GameEngine.var_46b = 6 + var_114a * 2 + var0 * 2 << 3;
+      return var1 + GameEngine.sub_b95(16);
    }
 
    static int sub_1914(int var0) {
