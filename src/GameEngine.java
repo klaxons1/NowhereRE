@@ -91,7 +91,7 @@ final class GameEngine {
          }
       }
 
-      var1.var_3b = var0;
+      var1.resourceId = var0;
       return var1;
    }
 
@@ -390,22 +390,22 @@ final class GameEngine {
       int var13 = var0.getClipHeight();
       var0.clipRect(var2, var3, var7, var8);
       if (var9 == 0) {
-         var0.drawImage(var1.var_8a[0], var2 - var5, var3 - var6, 20);
+         var0.drawImage(var1.images[0], var2 - var5, var3 - var6, 20);
       } else {
          int var14 = var5;
          int var15 = var6;
          int var17 = 0;
          if ((var9 & 2) != 0) {
             var17 = 8192;
-            var14 = var1.var_8a[0].getWidth() - (var5 + var7);
+            var14 = var1.images[0].getWidth() - (var5 + var7);
          }
 
          if ((var9 & 1) != 0) {
             var17 |= 16384;
-            var15 = var1.var_8a[0].getHeight() - (var6 + var8);
+            var15 = var1.images[0].getHeight() - (var6 + var8);
          }
 
-         directGraphics.drawImage(var1.var_8a[0], var2 - var14, var3 - var15, var4, var17);
+         directGraphics.drawImage(var1.images[0], var2 - var14, var3 - var15, var4, var17);
       }
 
       var0.setClip(var10, var11, var12, var13);
@@ -417,25 +417,25 @@ final class GameEngine {
       int var10 = 0;
       if ((var6 & 2) != 0) {
          var10 = 8192;
-         var7 = var1.var_8a[0].getWidth() - (var2 + var4);
+         var7 = var1.images[0].getWidth() - (var2 + var4);
       }
 
       if ((var6 & 1) != 0) {
          var10 |= 16384;
-         var8 = var1.var_8a[0].getHeight() - (var3 + var5);
+         var8 = var1.images[0].getHeight() - (var3 + var5);
       }
 
-      var0.drawImage(var1.var_8a[0], -var7, -var8, 20, var10);
+      var0.drawImage(var1.images[0], -var7, -var8, 20, var10);
    }
 
    private static void initTileBuffers(int var0, int var1) {
       if (mapBackBuffer == null) {
          tileBuffer = createEmptyImage(var0, var1);
-         tilebufferGraphics = DirectUtils.getDirectGraphics(tileBuffer.var_8a[0].getGraphics());
+         tilebufferGraphics = DirectUtils.getDirectGraphics(tileBuffer.images[0].getGraphics());
          backBufferWidth = (screenWidth / var0 + 2 + (screenWidth % var0 > 0 ? 1 : 0)) * var0;
          backBufferHeight = (screenHeight / var1 + 2 + (screenHeight % var1 > 0 ? 1 : 0)) * var1;
          mapBackBuffer = createEmptyImage(backBufferWidth, backBufferHeight);
-         backBufferGraphics = mapBackBuffer.var_8a[0].getGraphics();
+         backBufferGraphics = mapBackBuffer.images[0].getGraphics();
       }
 
    }
@@ -457,8 +457,8 @@ final class GameEngine {
    public static void setTile(TileMap var0, int var1, int var2, int var3, int var4, boolean var5) {
       var0.var_2f3[var2 * var0.var_344[0] + var1] = (short)((var4 & 255) << 8 | var3 & 255);
       if (var5 && var3 != 0) {
-         int var8 = mapBackBuffer.var_8a[0].getWidth();
-         int var9 = mapBackBuffer.var_8a[0].getHeight();
+         int var8 = mapBackBuffer.images[0].getWidth();
+         int var9 = mapBackBuffer.images[0].getHeight();
          int var10 = var0.var_344[2];
          int var11 = var0.var_344[3];
          var1 *= var10;
@@ -744,25 +744,25 @@ final class GameEngine {
          int var9 = var0.var_344[3];
          var1 = var1 / var8 * var8;
          var2 = var2 / var9 * var9;
-         int var5 = var0.var_2d1.var_8a[0].getWidth() / var8;
+         int var5 = var0.var_2d1.images[0].getWidth() / var8;
          int var6 = var3 / var5 * var8;
          int var7 = var3 % var5 * var9;
          drawTransformed(tilebufferGraphics, var0.var_2d1, var7, var6, var8, var9, var4);
-         backBufferGraphics.drawImage(tileBuffer.var_8a[0], var1, var2, 20);
+         backBufferGraphics.drawImage(tileBuffer.images[0], var1, var2, 20);
       }
    }
 
    private static void setImage(Sprite var0, int var1, Image var2) {
-      var0.var_8a[var1] = var2;
+      var0.images[var1] = var2;
    }
 
    public static void freeSprite(Sprite var0) {
-      if (var0 != null && var0.var_8a != null) {
-         for(int var1 = 0; var1 < var0.var_8a.length; ++var1) {
-            var0.var_8a[var1] = null;
+      if (var0 != null && var0.images != null) {
+         for(int var1 = 0; var1 < var0.images.length; ++var1) {
+            var0.images[var1] = null;
          }
 
-         var0.var_8a = null;
+         var0.images = null;
       }
 
    }
@@ -780,15 +780,15 @@ final class GameEngine {
    }
 
    public static byte[] getSpritePalette(Sprite var0) {
-      return extractPaletteData(var0.var_3b);
+      return extractPaletteData(var0.resourceId);
    }
 
    public static Sprite recolorSprite(Sprite var0, byte[] var1, int var2) {
       try {
-         Sprite var7 = new Sprite(var0.var_8a.length);
-         Object[] var3 = extractImageData(var0.var_3b);
+         Sprite var7 = new Sprite(var0.images.length);
+         Object[] var3 = extractImageData(var0.resourceId);
 
-         for(int var6 = 0; var6 < var0.var_8a.length; ++var6) {
+         for(int var6 = 0; var6 < var0.images.length; ++var6) {
             byte[] var5;
             if ((var5 = (byte[])var3[var6]) != null) {
                byte[] var4 = modifyPngPalette(var5, var1, var2);

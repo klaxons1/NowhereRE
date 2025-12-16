@@ -1,11 +1,11 @@
 import javax.microedition.lcdui.Image;
 
 final class Sprite {
-   protected int var_3b;
-   protected Image[] var_8a;
+   protected int resourceId;
+   protected Image[] images;
 
    protected Sprite(int var1) {
-      this.var_8a = new Image[var1];
-      this.var_3b = -1;
+      this.images = new Image[var1];
+      this.resourceId = -1;
    }
 }

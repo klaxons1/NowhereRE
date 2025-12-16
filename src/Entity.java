@@ -69,10 +69,10 @@ final class Entity extends AnimatedSprite {
          this.var_6ce = this.var_70b = -1;
          int var10001;
          if (super.animationSetId == 3) {
-            this.var_61 = GameManager.var_4e8[this.var_c4 * 5 + 0] & 255;
-            this.var_1b4 = GameManager.var_39b[this.var_c4 * 2 + 0];
-            this.var_21a = GameManager.var_39b[this.var_c4 * 2 + 1];
-            AnimatedSprite.sub_4dd(this, 63, GameManager.var_4e8[this.var_c4 * 5 + 2] & 255);
+            this.var_61 = GameManager.objectSpawnData[this.var_c4 * 5 + 0] & 255;
+            this.var_1b4 = GameManager.itemData[this.var_c4 * 2 + 0];
+            this.var_21a = GameManager.itemData[this.var_c4 * 2 + 1];
+            AnimatedSprite.sub_4dd(this, 63, GameManager.objectSpawnData[this.var_c4 * 5 + 2] & 255);
             var10000 = this;
             var10001 = 0;
          } else {
@@ -80,23 +80,23 @@ final class Entity extends AnimatedSprite {
                break label57;
             }
 
-            this.var_61 = GameManager.var_49a[this.var_c4 * 17 + 0] & 255;
-            this.var_1b4 = GameManager.var_343[this.var_c4 * 5 + 4];
-            this.var_21a = GameManager.var_343[this.var_c4 * 5 + 3];
-            AnimatedSprite.sub_4dd(this, 63, GameManager.var_49a[this.var_c4 * 17 + 11] & 255);
+            this.var_61 = GameManager.enemySpawnData[this.var_c4 * 17 + 0] & 255;
+            this.var_1b4 = GameManager.enemyData[this.var_c4 * 5 + 4];
+            this.var_21a = GameManager.enemyData[this.var_c4 * 5 + 3];
+            AnimatedSprite.sub_4dd(this, 63, GameManager.enemySpawnData[this.var_c4 * 17 + 11] & 255);
             if (super.animationSetId == 2) {
                var10000 = this;
                var10001 = -1;
             } else {
                var10000 = this;
-               var10001 = 1 * (GameManager.var_49a[this.var_c4 * 17 + 5] & 255) * ((GameManager.var_ff5[31] & 4) != 0 ? 2 : 1);
+               var10001 = 1 * (GameManager.enemySpawnData[this.var_c4 * 17 + 5] & 255) * ((GameManager.var_ff5[31] & 4) != 0 ? 2 : 1);
             }
 
             var10000.var_29d = var10001;
             super.statusFlags &= -5;
-            this.var_fa = 4 * (GameManager.var_49a[this.var_c4 * 17 + 1] & 255);
+            this.var_fa = 4 * (GameManager.enemySpawnData[this.var_c4 * 17 + 1] & 255);
             var10000 = this;
-            var10001 = (GameManager.var_49a[this.var_c4 * 17 + 12] & 255) * 4;
+            var10001 = (GameManager.enemySpawnData[this.var_c4 * 17 + 12] & 255) * 4;
          }
 
          var10000.var_151 = var10001;
@@ -141,7 +141,7 @@ final class Entity extends AnimatedSprite {
       }
 
       if ((this.var_1b4 & 16) != 0) {
-         this.var_2f9 = 32 * (GameManager.var_49a[this.var_c4 * 17 + 6] & 255);
+         this.var_2f9 = 32 * (GameManager.enemySpawnData[this.var_c4 * 17 + 6] & 255);
       }
 
    }
@@ -173,11 +173,11 @@ final class Entity extends AnimatedSprite {
          super.var_8fb = 0;
          super.aiState = 0;
          if (super.animationSetId == 3) {
-            byte var1 = GameManager.var_4e8[this.var_c4 * 5 + 1];
+            byte var1 = GameManager.objectSpawnData[this.var_c4 * 5 + 1];
             short var2;
-            if ((var2 = GameManager.var_3c4[var1]) != -1) {
+            if ((var2 = GameManager.animationResourceIds[var1]) != -1) {
                super.statusFlags &= -5;
-               this.sub_530((byte)(1 << super.facing), (byte) GameManager.var_412[this.var_151 + super.facing]);
+               this.sub_530((byte)(1 << super.facing), (byte) GameManager.animationIndices[this.var_151 + super.facing]);
                this.sub_292(var2);
             }
          } else if (super.animationSetId == 1 || super.animationSetId == 2) {
@@ -253,7 +253,7 @@ final class Entity extends AnimatedSprite {
                super.aiState = 9;
                super.var_8fb = 288;
                this.var_252 = 96;
-               var7 = GameManager.var_3c4[GameManager.var_4e8[this.var_329 * 5 + 1]];
+               var7 = GameManager.animationResourceIds[GameManager.objectSpawnData[this.var_329 * 5 + 1]];
                var12 = 4;
                break;
             case 7:
@@ -273,10 +273,10 @@ final class Entity extends AnimatedSprite {
                break;
             case 10:
             case 11:
-               var6 = GameManager.var_49a[(var5 >> 20 & 63) * 17 + 0] & 63;
+               var6 = GameManager.enemySpawnData[(var5 >> 20 & 63) * 17 + 0] & 63;
                super.aiState = 14;
                this.var_4f2 = var5;
-               this.var_fa = 4 * (GameManager.var_49a[(var5 >> 20 & 63) * 17 + 8] & 255);
+               this.var_fa = 4 * (GameManager.enemySpawnData[(var5 >> 20 & 63) * 17 + 8] & 255);
                this.var_151 = 0;
                super.statusFlags |= 2048;
                if (var1 == 11) {
@@ -351,11 +351,11 @@ final class Entity extends AnimatedSprite {
       int var10001;
       byte var10002;
       if (super.animationSetId != 1 && super.animationSetId != 2) {
-         var10000 = GameManager.var_4e8;
+         var10000 = GameManager.objectSpawnData;
          var10001 = var4;
          var10002 = 5;
       } else {
-         var10000 = GameManager.var_49a;
+         var10000 = GameManager.enemySpawnData;
          var10001 = var4;
          var10002 = 17;
       }
@@ -617,8 +617,8 @@ final class Entity extends AnimatedSprite {
             }
 
             this.var_63d = 0;
-            if (GameManager.var_49a[this.var_c4 * 17 + 13] != -1) {
-               this.sub_1ac(super.x, super.y, 1, GameManager.var_49a[this.var_c4 * 17 + 13]);
+            if (GameManager.enemySpawnData[this.var_c4 * 17 + 13] != -1) {
+               this.sub_1ac(super.x, super.y, 1, GameManager.enemySpawnData[this.var_c4 * 17 + 13]);
             } else {
                this.sub_105(false);
             }
@@ -630,10 +630,10 @@ final class Entity extends AnimatedSprite {
          int var18;
          if (this.var_63d > 0) {
             if ((this.var_1b4 & 268435456) != 0) {
-               if (GameManager.var_412[this.var_fa + 8 + super.facing] != -1 && (super.statusFlags & 16) == 0) {
+               if (GameManager.animationIndices[this.var_fa + 8 + super.facing] != -1 && (super.statusFlags & 16) == 0) {
                   this.var_28b = 64;
                   super.statusFlags |= 16;
-                  super.var_8fb = GameManager.var_49a[this.var_c4 * 17 + 16] & 255;
+                  super.var_8fb = GameManager.enemySpawnData[this.var_c4 * 17 + 16] & 255;
                   this.sub_385();
                }
 
@@ -984,7 +984,7 @@ final class Entity extends AnimatedSprite {
             if (super.animationSetId == 1 && (GameManager.var_9d8 & 512) == 0 && super.aiState != 19) {
                super.statusFlags &= -257;
                if ((this.var_1b4 & 16) != 0) {
-                  if (this.var_2f9 > 32 * (GameManager.var_49a[this.var_c4 * 17 + 6] & 255) && this.var_596 < (GameManager.var_49a[this.var_c4 * 17 + 13] & 255)) {
+                  if (this.var_2f9 > 32 * (GameManager.enemySpawnData[this.var_c4 * 17 + 6] & 255) && this.var_596 < (GameManager.enemySpawnData[this.var_c4 * 17 + 13] & 255)) {
                      if (super.aiState == 2) {
                         super.aiState = 6;
                      }
@@ -994,7 +994,7 @@ final class Entity extends AnimatedSprite {
                }
 
                if ((this.var_1b4 & 64) != 0 && ((this.var_21a & 8192) == 0 || (super.statusFlags & 1048576) != 0)) {
-                  if (this.var_2f9 > 32 * (GameManager.var_49a[this.var_c4 * 17 + 6] & 255) && this.var_596 < (GameManager.var_49a[this.var_c4 * 17 + 13] & 255)) {
+                  if (this.var_2f9 > 32 * (GameManager.enemySpawnData[this.var_c4 * 17 + 6] & 255) && this.var_596 < (GameManager.enemySpawnData[this.var_c4 * 17 + 13] & 255)) {
                      if (super.aiState == 2) {
                         super.aiState = 5;
                      }
@@ -1005,7 +1005,7 @@ final class Entity extends AnimatedSprite {
 
                if (super.aiState == 23 || super.aiState == 24) {
                   this.sub_385();
-                  if (AnimatedSprite.sub_240(this) || GameManager.var_412[this.var_fa + 20 + super.facing] == -1) {
+                  if (AnimatedSprite.sub_240(this) || GameManager.animationIndices[this.var_fa + 20 + super.facing] == -1) {
                      if (super.aiState == 24) {
                         super.aiState = 1;
                      }
@@ -1025,7 +1025,7 @@ final class Entity extends AnimatedSprite {
                   var13 = GameEngine.abs((super.x >> 8) - (GameManager.var_a69.x >> 8));
                   var14 = GameEngine.abs((super.y >> 8) - (GameManager.var_a69.y >> 8));
                   int var4 = var13 * var13 + var14 * var14;
-                  var12 = GameManager.var_49a[this.var_c4 * 17 + 2] & 255;
+                  var12 = GameManager.enemySpawnData[this.var_c4 * 17 + 2] & 255;
                   if (var4 < var12 * var12) {
                      label543: {
                         short var23;
@@ -1055,7 +1055,7 @@ final class Entity extends AnimatedSprite {
                      }
 
                      if ((GameManager.var_a69.statusFlags & 512) != 0) {
-                        var12 = GameManager.var_49a[this.var_c4 * 17 + 3] & 255;
+                        var12 = GameManager.enemySpawnData[this.var_c4 * 17 + 3] & 255;
                         if (var4 < var12 * var12) {
                            super.statusFlags |= 256;
                         }
@@ -1081,10 +1081,10 @@ final class Entity extends AnimatedSprite {
                      if (super.var_8fb <= 0) {
                         this.sub_3ad(this.var_19d);
                         if ((super.statusFlags & 2097152) != 0) {
-                           this.sub_530(super.collisionRadius, (byte) GameManager.var_412[this.var_151 + this.var_19d]);
-                           this.sub_292(GameManager.var_412[this.var_fa + 0 + this.var_19d]);
+                           this.sub_530(super.collisionRadius, (byte) GameManager.animationIndices[this.var_151 + this.var_19d]);
+                           this.sub_292(GameManager.animationIndices[this.var_fa + 0 + this.var_19d]);
                            super.statusFlags &= -2097153;
-                           super.var_8fb = GameManager.var_49a[this.var_c4 * 17 + 16] & 255;
+                           super.var_8fb = GameManager.enemySpawnData[this.var_c4 * 17 + 16] & 255;
                         } else {
                            super.aiState = 2;
                         }
@@ -1122,7 +1122,7 @@ final class Entity extends AnimatedSprite {
                      } else {
                         var16 = this;
                         var27 = this;
-                        var25 = GameManager.var_343[this.var_c4 * 5 + 2];
+                        var25 = GameManager.enemyData[this.var_c4 * 5 + 2];
                      }
 
                      var16.velocityX = var27.velocityY = var25;
@@ -1249,7 +1249,7 @@ final class Entity extends AnimatedSprite {
       --this.var_2f9;
       boolean var6 = false;
       if (this.var_2f9 <= 0 && GameManager.var_a69.aiState != 3 && ((GameManager.var_a69.statusFlags & 1024) == 0 || (GameManager.var_a69.statusFlags & 512) != 0)) {
-         this.var_2f9 = 32 * (GameManager.var_49a[this.var_c4 * 17 + 6] & 255);
+         this.var_2f9 = 32 * (GameManager.enemySpawnData[this.var_c4 * 17 + 6] & 255);
          if ((super.statusFlags & 256) != 0) {
             int var5 = 0;
             int var4 = 0;
@@ -1279,7 +1279,7 @@ final class Entity extends AnimatedSprite {
                   byte var10001;
                   switch(var3 >> (var1 % var5 << 3) & 255) {
                   case 1:
-                     if (GameManager.var_412[this.var_fa + 12 + this.var_19d] == -1) {
+                     if (GameManager.animationIndices[this.var_fa + 12 + this.var_19d] == -1) {
                         break label52;
                      }
 
@@ -1287,7 +1287,7 @@ final class Entity extends AnimatedSprite {
                      var10001 = 4;
                      break;
                   case 2:
-                     if (GameManager.var_412[this.var_fa + 16 + this.var_19d] != -1) {
+                     if (GameManager.animationIndices[this.var_fa + 16 + this.var_19d] != -1) {
                         var10000 = this;
                         var10001 = 6;
                         break;
@@ -1303,7 +1303,7 @@ final class Entity extends AnimatedSprite {
 
                this.sub_385();
             } else {
-               this.var_2f9 = GameManager.var_49a[this.var_c4 * 17 + 6] & 255;
+               this.var_2f9 = GameManager.enemySpawnData[this.var_c4 * 17 + 6] & 255;
             }
          }
 
@@ -1315,8 +1315,8 @@ final class Entity extends AnimatedSprite {
 
    private void sub_31c(int var1, int var2) {
       byte var4;
-      if ((var4 = GameManager.var_49a[this.var_c4 * 17 + 7]) != -1 && this.var_596 < (GameManager.var_49a[this.var_c4 * 17 + 13] & 255)) {
-         int var5 = (var5 = var4 & 255) | (GameManager.var_49a[this.var_c4 * 17 + 9] & 63) << 8 | (GameManager.var_49a[this.var_c4 * 17 + 10] & 63) << 14 | (this.var_c4 & 63) << 20 | (super.entityId & 63) << 26;
+      if ((var4 = GameManager.enemySpawnData[this.var_c4 * 17 + 7]) != -1 && this.var_596 < (GameManager.enemySpawnData[this.var_c4 * 17 + 13] & 255)) {
+         int var5 = (var5 = var4 & 255) | (GameManager.enemySpawnData[this.var_c4 * 17 + 9] & 63) << 8 | (GameManager.enemySpawnData[this.var_c4 * 17 + 10] & 63) << 14 | (this.var_c4 & 63) << 20 | (super.entityId & 63) << 26;
          GameManager.sub_10f1(var1, var2, 11, var5, 1028, 1028, 0);
          ++this.var_596;
       }
@@ -1326,8 +1326,8 @@ final class Entity extends AnimatedSprite {
 
    public final void sub_328() {
       if (GameManager.sub_1164() < 6) {
-         int var1 = GameManager.var_49a[this.var_c4 * 17 + 14];
-         byte var2 = GameManager.var_49a[this.var_c4 * 17 + 15];
+         int var1 = GameManager.enemySpawnData[this.var_c4 * 17 + 14];
+         byte var2 = GameManager.enemySpawnData[this.var_c4 * 17 + 15];
          if ((super.flipFlags & 2) != 0) {
             var1 = -var1;
          }
@@ -1356,7 +1356,7 @@ final class Entity extends AnimatedSprite {
             var1 = var10000;
          }
 
-         if (this.var_2f9 > 32 * (GameManager.var_49a[this.var_c4 * 17 + 6] & 255) && this.var_596 < (GameManager.var_49a[this.var_c4 * 17 + 13] & 255)) {
+         if (this.var_2f9 > 32 * (GameManager.enemySpawnData[this.var_c4 * 17 + 6] & 255) && this.var_596 < (GameManager.enemySpawnData[this.var_c4 * 17 + 13] & 255)) {
             GameManager.sub_10f1(var1, var3, 1, this.var_c4, -1, super.mapObjectIndex, 1);
             ++this.var_596;
          }
@@ -1450,12 +1450,12 @@ final class Entity extends AnimatedSprite {
 
       int var3 = ((super.statusFlags & 32) == 0 || (this.var_1b4 & 64) != 0 || (this.var_1b4 & 536870912) != 0) && (this.var_1b4 & 536870912) != 0 ? 1 : this.var_19d;
       short var2;
-      if ((var2 = GameManager.var_412[this.var_fa + var1 + var3]) == -1) {
-         var2 = GameManager.var_412[this.var_fa + 0 + var3];
+      if ((var2 = GameManager.animationIndices[this.var_fa + var1 + var3]) == -1) {
+         var2 = GameManager.animationIndices[this.var_fa + 0 + var3];
       }
 
-      if (AnimatedSprite.sub_22c(this) != var2 || super.flipFlags != GameManager.var_412[this.var_151 + var3]) {
-         this.sub_530(super.collisionRadius, (byte) GameManager.var_412[this.var_151 + var3]);
+      if (AnimatedSprite.sub_22c(this) != var2 || super.flipFlags != GameManager.animationIndices[this.var_151 + var3]) {
+         this.sub_530(super.collisionRadius, (byte) GameManager.animationIndices[this.var_151 + var3]);
          this.sub_292(var2);
       }
 
@@ -1629,10 +1629,10 @@ final class Entity extends AnimatedSprite {
                   }
                } while(!var22);
             } else {
-               var9 = GameManager.var_454[var1 + 0];
-               byte var10 = GameManager.var_454[var1 + 1];
-               byte var11 = GameManager.var_454[var1 + 2];
-               byte var12 = GameManager.var_454[var1 + 3];
+               var9 = GameManager.directionTable[var1 + 0];
+               byte var10 = GameManager.directionTable[var1 + 1];
+               byte var11 = GameManager.directionTable[var1 + 2];
+               byte var12 = GameManager.directionTable[var1 + 3];
                if ((var16 & 1 << var9) != 0) {
                   var10000 = (var16 & 1 << var10) == 0 ? var10 : ((var16 & 1 << var11) == 0 ? var11 : ((var16 & 1 << var12) == 0 ? var12 : -1));
                   break label243;
@@ -1656,7 +1656,7 @@ final class Entity extends AnimatedSprite {
       } else {
          if (var23 != this.var_19d && (super.statusFlags & 1048704) == 0 && (this.var_21a & 4096) == 0 && super.var_8fb <= 0) {
             super.aiState = 15;
-            super.var_8fb = GameManager.var_49a[this.var_c4 * 17 + 16] & 255;
+            super.var_8fb = GameManager.enemySpawnData[this.var_c4 * 17 + 16] & 255;
             if ((super.statusFlags & 2097152) == 0) {
                super.statusFlags |= 2097152;
                return;
@@ -1927,7 +1927,7 @@ final class Entity extends AnimatedSprite {
          if ((this.var_1b4 & 131072) != 0 && (super.animationSetId == 2 || super.health > 0)) {
             int var4 = GameRenderer.viewOffsetX + ((super.transformedBounds[8] + super.transformedBounds[10] >> 1) + super.screenX >> 8) - 10;
             int var5 = GameRenderer.viewOffsetY + ((super.transformedBounds[9] + super.transformedBounds[11] >> 1) + super.screenY >> 8) - 4;
-            var1.drawImage(GameManager.var_686[0].var_8a[0], var4 + GameManager.var_ccb, var5 + GameManager.var_d14, 20);
+            var1.drawImage(GameManager.var_686[0].images[0], var4 + GameManager.var_ccb, var5 + GameManager.var_d14, 20);
          }
 
          super.pivotOffsetX += GameManager.var_ccb;
@@ -1944,7 +1944,7 @@ final class Entity extends AnimatedSprite {
          super.var_8fb = 0;
          return this.var_4f2 >> 14 & 63;
       } else {
-         return GameManager.sub_13d2(GameManager.var_343[this.var_c4 * 5 + 1], 6);
+         return GameManager.sub_13d2(GameManager.enemyData[this.var_c4 * 5 + 1], 6);
       }
    }
 

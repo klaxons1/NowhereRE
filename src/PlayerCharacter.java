@@ -415,9 +415,9 @@ final class PlayerCharacter extends AnimatedSprite {
             return;
          }
       } else if ((var1.var_1b4 & '耀') != 0) {
-         byte var2 = GameManager.var_4e8[var1.var_c4 * 5 + 3];
-         byte var3 = GameManager.var_4e8[var1.var_c4 * 5 + 4];
-         short var6 = var2 != -2 ? GameManager.var_3c4[var3] : -1;
+         byte var2 = GameManager.objectSpawnData[var1.var_c4 * 5 + 3];
+         byte var3 = GameManager.objectSpawnData[var1.var_c4 * 5 + 4];
+         short var6 = var2 != -2 ? GameManager.animationResourceIds[var3] : -1;
          if (var2 == -2) {
             GameManager.var_aed = 290;
             return;
@@ -641,7 +641,7 @@ final class PlayerCharacter extends AnimatedSprite {
                this.currentWeaponId = GameManager.var_ff5[5];
                GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)this.maxHealth);
                this.updateMaxHealth();
-               if ((GameManager.var_57c[GameManager.var_ff5[8] * 8 + 3] & 8192) != 0 && (super.statusFlags & 1024) == 0) {
+               if ((GameManager.mapConfigs[GameManager.var_ff5[8] * 8 + 3] & 8192) != 0 && (super.statusFlags & 1024) == 0) {
                   --GameManager.var_e42;
                }
 
@@ -780,7 +780,7 @@ final class PlayerCharacter extends AnimatedSprite {
          case 5:
             super.statusFlags &= -17;
             super.statusFlags |= 32;
-            if (AnimatedSprite.sub_22c(this) == GameManager.var_412[232 + super.facing] && AnimatedSprite.sub_240(this)) {
+            if (AnimatedSprite.sub_22c(this) == GameManager.animationIndices[232 + super.facing] && AnimatedSprite.sub_240(this)) {
                super.statusFlags &= -97;
                super.aiState = 0;
             }
@@ -1310,14 +1310,14 @@ final class PlayerCharacter extends AnimatedSprite {
             var5 = var10000;
          }
 
-         short var3 = GameManager.var_412[var1 * 4 + super.facing];
-         short var4 = GameManager.var_412[var5 * 4 + super.facing];
+         short var3 = GameManager.animationIndices[var1 * 4 + super.facing];
+         short var4 = GameManager.animationIndices[var5 * 4 + super.facing];
          if (var3 == -1) {
-            var3 = GameManager.var_412[50 + super.facing];
+            var3 = GameManager.animationIndices[50 + super.facing];
          }
 
          if (var4 == -1) {
-            var4 = GameManager.var_412[35 + super.facing];
+            var4 = GameManager.animationIndices[35 + super.facing];
          }
 
          GameManager.sub_159c(this, var3, super.facing);
@@ -1326,7 +1326,7 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    public final void sub_42d(boolean var1) {
-      int var4 = GameManager.var_454[this.movementFlags + 40] & 255;
+      int var4 = GameManager.directionTable[this.movementFlags + 40] & 255;
       boolean var7 = false;
       int var2 = super.x + this.cameraOffsetX;
       int var3 = super.y + this.cameraOffsetY;
@@ -1440,7 +1440,7 @@ final class PlayerCharacter extends AnimatedSprite {
       int var2 = (super.statusFlags & 1024) != 0 ? 3 : 0;
       this.weaponSprite.animationData = super.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[var2]);
       if (GameManager.var_a0a != 9 && (super.statusFlags & 1) != 0) {
-         var1.drawImage(GameManager.var_686[0].var_8a[0], GameManager.var_ccb + GameRenderer.viewOffsetX + ((super.transformedBounds[0] + super.transformedBounds[2] >> 1) + super.screenX >> 8) - 10, GameManager.var_d14 + GameRenderer.viewOffsetY + ((super.transformedBounds[1] + super.transformedBounds[3] >> 1) + super.screenY >> 8) - 4, 20);
+         var1.drawImage(GameManager.var_686[0].images[0], GameManager.var_ccb + GameRenderer.viewOffsetX + ((super.transformedBounds[0] + super.transformedBounds[2] >> 1) + super.screenX >> 8) - 10, GameManager.var_d14 + GameRenderer.viewOffsetY + ((super.transformedBounds[1] + super.transformedBounds[3] >> 1) + super.screenY >> 8) - 4, 20);
          super.pivotOffsetX = GameManager.var_ccb;
          super.pivotOffsetY = GameManager.var_d14;
          if (super.aiState != 3) {

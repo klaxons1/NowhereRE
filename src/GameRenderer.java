@@ -81,8 +81,8 @@ final class GameRenderer {
       int var5;
       int var6;
       label31: {
-         var3 = var1.var_8a[0].getWidth();
-         int var4 = var1.var_8a[0].getHeight();
+         var3 = var1.images[0].getWidth();
+         int var4 = var1.images[0].getHeight();
          var5 = 0;
          var6 = 0;
          if ((var2 & 5) == 5) {
@@ -118,7 +118,7 @@ final class GameRenderer {
 
       var5 += viewOffsetX;
       var6 += viewOffsetY;
-      var0.drawImage(var1.var_8a[0], var5, var6, 20);
+      var0.drawImage(var1.images[0], var5, var6, 20);
    }
 
    static void drawTiledPattern(Graphics var0, int var1, int var2, int var3, int var4, Sprite var5, int var6, int var7, int var8) {
@@ -1983,7 +1983,7 @@ final class GameRenderer {
 
             if ((layerProperties[var6 * 23 + 0] & 2) != 0) {
                if (var14 == null) {
-                  var14 = GameEngine.extractPaletteData(var13.var_3b);
+                  var14 = GameEngine.extractPaletteData(var13.resourceId);
                }
 
                layerSprites[var6 * 2 + 1] = GameEngine.recolorSprite(var13, var14, var3);
@@ -2047,7 +2047,7 @@ final class GameRenderer {
          layerProperties[var19 + 3] = var5 * var6;
          layerProperties[var19 + 4] = var5 * var7;
          layerProperties[var19 + 5] = var6 * var8;
-         layerProperties[var19 + 14] = var2.var_8a[0].getWidth() / var7;
+         layerProperties[var19 + 14] = var2.images[0].getWidth() / var7;
          layerProperties[var19 + 16] = 0;
          layerProperties[var19 + 10] = 0;
          layerProperties[var19 + 11] = 0;
