@@ -1,7 +1,7 @@
 import javax.microedition.lcdui.Graphics;
 
-final class Class_147 extends Class_1ac {
-   int var_d;
+final class PlayerCharacter extends AnimatedSprite {
+   int maxHealth;
    int var_26;
    int var_87;
    int var_bf;
@@ -18,11 +18,11 @@ final class Class_147 extends Class_1ac {
    int var_27f;
    int var_2c4;
    int var_2ed;
-   Class_1ac var_30e;
+   AnimatedSprite var_30e;
 
-   Class_147() {
+   PlayerCharacter() {
       super.var_9b3 = 0;
-      this.var_30e = new Class_1ac();
+      this.var_30e = new AnimatedSprite();
       super.var_721 = 2;
    }
 
@@ -57,11 +57,11 @@ final class Class_147 extends Class_1ac {
       super.var_615 = super.var_640 = 0;
       super.var_679 = super.var_6c3 = 0;
       this.sub_e3();
-      Class_17f.sub_344(GameManager.var_ff5, 2, (short)this.var_d);
+      Class_17f.sub_344(GameManager.var_ff5, 2, (short)this.maxHealth);
    }
 
    final void sub_e3() {
-      this.var_d = GameManager.sub_1654(GameManager.var_ff5[1] & 255);
+      this.maxHealth = GameManager.sub_1654(GameManager.var_ff5[1] & 255);
    }
 
    public final void sub_133() {
@@ -93,7 +93,7 @@ final class Class_147 extends Class_1ac {
          ++var1;
       }
 
-      Class_147 var10000;
+      PlayerCharacter var10000;
       if (var5 != -1) {
          var2 = var5 * 5;
          int var10 = Class_17f.var_f81[var2++] >> 9 & 3;
@@ -130,7 +130,7 @@ final class Class_147 extends Class_1ac {
       if (!var13) {
          this.var_242 = 1 << super.var_721;
          short var15;
-         Class_147 var16;
+         PlayerCharacter var16;
          if ((this.var_242 & 8) != 0) {
             this.var_24f = 128;
             this.var_2c4 = this.var_26e = -8192;
@@ -182,7 +182,7 @@ final class Class_147 extends Class_1ac {
          int var2 = super.var_5d1 + super.var_409[5];
          int var3 = super.var_591 + super.var_409[6];
          int var4 = super.var_5d1 + super.var_409[7];
-         if (this.sub_1eb(var1, var2, var3, var4, (Class_1c2)null, 3)) {
+         if (this.sub_1eb(var1, var2, var3, var4, (Entity)null, 3)) {
             if (this.var_160 != 1 && this.var_160 != 7) {
                this.var_160 = 0;
             }
@@ -206,7 +206,7 @@ final class Class_147 extends Class_1ac {
             }
          }
 
-         if ((super.var_824 & 128) != 0 && Class_1ac.sub_240(this)) {
+         if ((super.var_824 & 128) != 0 && AnimatedSprite.sub_240(this)) {
             var7 = true;
          }
 
@@ -216,9 +216,9 @@ final class Class_147 extends Class_1ac {
          }
 
          this.sub_3fc();
-         if (Class_1ac.sub_1d8(this)) {
+         if (AnimatedSprite.sub_1d8(this)) {
             if (GameManager.var_607[this.var_160 * 9 + 1] == 1) {
-               GameManager.sub_8ea(GameManager.var_607[this.var_160 * 9 + 2], super.var_591, super.var_5d1, super.var_721, (Class_1c2)null, this.var_160, 0);
+               GameManager.sub_8ea(GameManager.var_607[this.var_160 * 9 + 2], super.var_591, super.var_5d1, super.var_721, (Entity)null, this.var_160, 0);
                GameManager.sub_1576(false);
             }
 
@@ -231,7 +231,7 @@ final class Class_147 extends Class_1ac {
          var2 = super.var_5d1 + super.var_409[9];
          var3 = super.var_591 + super.var_409[10];
          var4 = super.var_5d1 + super.var_409[11];
-         this.sub_1eb(var1, var2, var3, var4, (Class_1c2)null, 0);
+         this.sub_1eb(var1, var2, var3, var4, (Entity)null, 0);
          if (var7) {
             this.var_160 = GameManager.var_ff5[5];
             super.var_954 = 0;
@@ -244,15 +244,15 @@ final class Class_147 extends Class_1ac {
       }
    }
 
-   public final boolean sub_1eb(int var1, int var2, int var3, int var4, Class_1c2 var5, int var6) {
+   public final boolean sub_1eb(int var1, int var2, int var3, int var4, Entity var5, int var6) {
       boolean var11 = false;
       if (var1 == var3) {
          return false;
       } else {
          if (var6 != 8) {
             for(int var7 = 0; var7 < 16; ++var7) {
-               Class_1c2 var12 = (Class_1c2) GameManager.var_670[1 + var7];
-               if ((var6 != 1 || (var12.var_824 & 4194304) == 0) && (var6 == 7 || (var12.var_21a & 16) == 0) && var5 != var12 && (var12.var_824 & 8) != 0 && ((var12.var_873 & 8) != 0 || (var12.var_873 & 32) != 0 && Class_1ac.sub_106(var12) || var6 == 3 || var6 == 5)) {
+               Entity var12 = (Entity) GameManager.var_670[1 + var7];
+               if ((var6 != 1 || (var12.var_824 & 4194304) == 0) && (var6 == 7 || (var12.var_21a & 16) == 0) && var5 != var12 && (var12.var_824 & 8) != 0 && ((var12.var_873 & 8) != 0 || (var12.var_873 & 32) != 0 && AnimatedSprite.sub_106(var12) || var6 == 3 || var6 == 5)) {
                   byte var10;
                   label188: {
                      var10 = 0;
@@ -297,7 +297,7 @@ final class Class_147 extends Class_1ac {
                               ++GameManager.var_ff5[9];
                            }
                         } else if (var12.var_9a0 == 1) {
-                           Class_1c2 var15;
+                           Entity var15;
                            byte var10001;
                            if (var6 == 1) {
                               var15 = var12;
@@ -339,11 +339,11 @@ final class Class_147 extends Class_1ac {
             if ((var3 = Class_17f.sub_2e5(GameManager.var_ff5, 2) - var1) < 0) {
                var10000 = 0;
             } else {
-               if (var3 <= this.var_d) {
+               if (var3 <= this.maxHealth) {
                   break label41;
                }
 
-               var10000 = this.var_d;
+               var10000 = this.maxHealth;
             }
 
             var3 = var10000;
@@ -368,7 +368,7 @@ final class Class_147 extends Class_1ac {
          if (var2) {
             this.var_26 = this.var_87 = 0;
             byte var10001;
-            Class_147 var4;
+            PlayerCharacter var4;
             if (this.var_bf == 0) {
                this.var_87 = -2048;
                super.var_721 = 2;
@@ -402,7 +402,7 @@ final class Class_147 extends Class_1ac {
       }
    }
 
-   public final void sub_296(Class_1c2 var1) {
+   public final void sub_296(Entity var1) {
       if ((var1.var_1b4 & 67108864) != 0) {
          if ((super.var_824 & 65536) != 0) {
             var1.sub_105(false);
@@ -431,7 +431,7 @@ final class Class_147 extends Class_1ac {
                return;
             }
 
-            if (var6 == -1 || Class_1ac.sub_22c(var1) == (var6 & 255)) {
+            if (var6 == -1 || AnimatedSprite.sub_22c(var1) == (var6 & 255)) {
                return;
             }
 
@@ -443,7 +443,7 @@ final class Class_147 extends Class_1ac {
             var4 = Class_17f.sub_dd0(0, var1.var_591);
             var10000 = Class_17f.sub_dd0(0, var1.var_5d1);
          } else {
-            if (var6 == -1 || Class_1ac.sub_22c(var1) == (var6 & 255)) {
+            if (var6 == -1 || AnimatedSprite.sub_22c(var1) == (var6 & 255)) {
                return;
             }
 
@@ -462,7 +462,7 @@ final class Class_147 extends Class_1ac {
 
    }
 
-   private static int sub_2a0(Class_1c2 var0) {
+   private static int sub_2a0(Entity var0) {
       if (var0.var_355 != -1) {
          if (GameManager.var_ff5[26] == 0) {
             GameManager.var_ff5[26] = 1;
@@ -501,8 +501,8 @@ final class Class_147 extends Class_1ac {
       boolean var7 = false;
 
       for(int var1 = 0; var1 < 16; ++var1) {
-         Class_1c2 var8;
-         if (((var8 = (Class_1c2) GameManager.var_670[1 + var1]).var_21a & 16) == 0 && (var8.var_824 & 8) != 0 && Class_1ac.sub_106(var8) && var8.var_591 + var8.var_409[10] >= var2 && var8.var_5d1 + var8.var_409[11] >= var4 && var8.var_591 + var8.var_409[8] <= var3 && var8.var_5d1 + var8.var_409[9] <= var5) {
+         Entity var8;
+         if (((var8 = (Entity) GameManager.var_670[1 + var1]).var_21a & 16) == 0 && (var8.var_824 & 8) != 0 && AnimatedSprite.sub_106(var8) && var8.var_591 + var8.var_409[10] >= var2 && var8.var_5d1 + var8.var_409[11] >= var4 && var8.var_591 + var8.var_409[8] <= var3 && var8.var_5d1 + var8.var_409[9] <= var5) {
             if ((super.var_824 & 32) == 0 && (var8.var_873 & 2) != 0) {
                this.var_bf = var8.var_19d;
                if ((super.var_824 & 65536) == 0) {
@@ -515,8 +515,8 @@ final class Class_147 extends Class_1ac {
                   var8.sub_a4();
 
                   for(var1 = 0; var1 < 16; ++var1) {
-                     Class_1c2 var9;
-                     if ((var9 = (Class_1c2) GameManager.var_670[1 + var1]).var_9b3 == (var8.var_4f2 >> 26 & 63)) {
+                     Entity var9;
+                     if ((var9 = (Entity) GameManager.var_670[1 + var1]).var_9b3 == (var8.var_4f2 >> 26 & 63)) {
                         --var9.var_596;
                         break;
                      }
@@ -590,7 +590,7 @@ final class Class_147 extends Class_1ac {
 
          super.var_824 &= -7425;
          if (Class_17f.var_1013 != -1) {
-            Class_147 var11;
+            PlayerCharacter var11;
             int var10001;
             short var10002;
             switch(Class_17f.var_1013) {
@@ -629,7 +629,7 @@ final class Class_147 extends Class_1ac {
 
    public final int sub_37c() {
       boolean var10 = true;
-      if (Class_1ac.sub_43e(this)) {
+      if (AnimatedSprite.sub_43e(this)) {
          return 0;
       } else {
          boolean var8 = false;
@@ -639,7 +639,7 @@ final class Class_147 extends Class_1ac {
             if ((super.var_824 & 65536) != 0) {
                GameManager.var_ff5[5] = 7;
                this.var_160 = GameManager.var_ff5[5];
-               Class_17f.sub_344(GameManager.var_ff5, 2, (short)this.var_d);
+               Class_17f.sub_344(GameManager.var_ff5, 2, (short)this.maxHealth);
                this.sub_e3();
                if ((GameManager.var_57c[GameManager.var_ff5[8] * 8 + 3] & 8192) != 0 && (super.var_824 & 1024) == 0) {
                   --GameManager.var_e42;
@@ -676,7 +676,7 @@ final class Class_147 extends Class_1ac {
             this.var_1cc = 0;
          }
 
-         Class_147 var10000;
+         PlayerCharacter var10000;
          int var10001;
          label252: {
             if ((GameManager.var_9d8 & 512) != 0) {
@@ -697,7 +697,7 @@ final class Class_147 extends Class_1ac {
          }
 
          label277: {
-            if (Class_17f.sub_2e5(GameManager.var_ff5, 2) <= (short)(this.var_d >> 1) && super.var_954 != 3) {
+            if (Class_17f.sub_2e5(GameManager.var_ff5, 2) <= (short)(this.maxHealth >> 1) && super.var_954 != 3) {
                super.var_824 |= 16384;
                if (++this.var_1b2 <= 160) {
                   if (this.var_1b2 > 152) {
@@ -780,7 +780,7 @@ final class Class_147 extends Class_1ac {
          case 5:
             super.var_824 &= -17;
             super.var_824 |= 32;
-            if (Class_1ac.sub_22c(this) == GameManager.var_412[232 + super.var_721] && Class_1ac.sub_240(this)) {
+            if (AnimatedSprite.sub_22c(this) == GameManager.var_412[232 + super.var_721] && AnimatedSprite.sub_240(this)) {
                super.var_824 &= -97;
                super.var_954 = 0;
             }
@@ -791,7 +791,7 @@ final class Class_147 extends Class_1ac {
                int var2 = super.var_5d1 + super.var_409[9];
                int var3 = super.var_591 + super.var_409[10];
                int var4 = super.var_5d1 + super.var_409[11];
-               if (this.sub_1eb(var1, var2, var3, var4, (Class_1c2)null, 1)) {
+               if (this.sub_1eb(var1, var2, var3, var4, (Entity)null, 1)) {
                   label233: {
                      short var14;
                      switch(super.var_721) {
@@ -974,9 +974,9 @@ final class Class_147 extends Class_1ac {
    }
 
    private void sub_388() {
-      Class_147 var10000;
+      PlayerCharacter var10000;
       int var10001;
-      Class_147 var10002;
+      PlayerCharacter var10002;
       int var10003;
       if (this.var_160 != 5 && (super.var_824 & 256) == 0) {
          var10000 = this;
@@ -1065,8 +1065,8 @@ final class Class_147 extends Class_1ac {
       int var14 = var29 + super.var_409[3];
       if (var3) {
          for(int var4 = 0; var4 < 16; ++var4) {
-            Class_1c2 var30;
-            if (((var30 = (Class_1c2) GameManager.var_670[1 + var4]).var_52 & 2) != 0 && (var30.var_824 & 8) != 0 && (var30.var_873 & 1) != 0 && (var30.var_21a & 16) == 0 && var30.var_591 + var30.var_409[2] >= var11 && var30.var_5d1 + var30.var_409[3] >= var12 && var30.var_591 + var30.var_409[0] <= var13 && var30.var_5d1 + var30.var_409[1] <= var14) {
+            Entity var30;
+            if (((var30 = (Entity) GameManager.var_670[1 + var4]).var_52 & 2) != 0 && (var30.var_824 & 8) != 0 && (var30.var_873 & 1) != 0 && (var30.var_21a & 16) == 0 && var30.var_591 + var30.var_409[2] >= var11 && var30.var_5d1 + var30.var_409[3] >= var12 && var30.var_591 + var30.var_409[0] <= var13 && var30.var_5d1 + var30.var_409[1] <= var14) {
                if (var30.var_591 + var30.var_409[2] >= var35 && var30.var_5d1 + var30.var_409[3] >= var37 && var30.var_591 + var30.var_409[0] <= var36 && var30.var_5d1 + var30.var_409[1] <= var38) {
                   var28 -= var1;
                   var29 -= var2;
@@ -1339,7 +1339,7 @@ final class Class_147 extends Class_1ac {
          var4 -= 256;
       }
 
-      Class_147 var10000;
+      PlayerCharacter var10000;
       int var10001;
       int var8;
       label76: {
@@ -1445,7 +1445,7 @@ final class Class_147 extends Class_1ac {
          super.var_6c3 = GameManager.var_d14;
          if (super.var_954 != 3) {
             if ((super.var_824 & 256) == 0) {
-               Class_147 var10000;
+               PlayerCharacter var10000;
                int var10001;
                int var10002;
                if (this.var_30e.sub_3b3(0) == 0) {

@@ -1,6 +1,6 @@
 import javax.microedition.lcdui.Graphics;
 
-class Class_1ac {
+class AnimatedSprite {
    public byte[] var_11;
    public int var_52;
    public int var_99;
@@ -46,7 +46,7 @@ class Class_1ac {
    public int var_9b3;
    public int var_9dd;
 
-   public Class_1ac() {
+   public AnimatedSprite() {
       this.sub_be();
       this.var_409 = new int[14];
       this.var_814 = 4;
@@ -84,31 +84,31 @@ class Class_1ac {
       this.sub_14(0);
    }
 
-   public static boolean sub_106(Class_1ac var0) {
+   public static boolean sub_106(AnimatedSprite var0) {
       return (var0.var_11[var0.var_127 + 0] & 4) != 0;
    }
 
-   public static int sub_15e(Class_1ac var0) {
+   public static int sub_15e(AnimatedSprite var0) {
       return var0.var_11[var0.var_127 + 3] & 255;
    }
 
-   public static int sub_18e(Class_1ac var0, int var1) {
+   public static int sub_18e(AnimatedSprite var0, int var1) {
       return (var0.var_11[var0.var_393 + var1 * 3 + 0] & 1) != 0 ? -(var0.var_11[var0.var_393 + var1 * 3 + 1] & 255) : var0.var_11[var0.var_393 + var1 * 3 + 1] & 255;
    }
 
-   public static int sub_1c7(Class_1ac var0, int var1) {
+   public static int sub_1c7(AnimatedSprite var0, int var1) {
       return (var0.var_11[var0.var_393 + var1 * 3 + 0] & 2) != 0 ? -(var0.var_11[var0.var_393 + var1 * 3 + 2] & 255) : var0.var_11[var0.var_393 + var1 * 3 + 2] & 255;
    }
 
-   public static boolean sub_1d8(Class_1ac var0) {
+   public static boolean sub_1d8(AnimatedSprite var0) {
       return (var0.var_1ba >> 16 & 255) == var0.var_16e;
    }
 
-   public static int sub_22c(Class_1ac var0) {
+   public static int sub_22c(AnimatedSprite var0) {
       return var0.var_fc - (1 + (var0.var_11[0] << 1)) >> 2;
    }
 
-   public static boolean sub_240(Class_1ac var0) {
+   public static boolean sub_240(AnimatedSprite var0) {
       return (var0.var_52 & 1) != 0;
    }
 
@@ -127,7 +127,7 @@ class Class_1ac {
       var2 += var4 * 5;
       this.var_393 = var2;
       var2 += var5 * 3;
-      Class_1ac var10000;
+      AnimatedSprite var10000;
       int var10001;
       if ((this.var_132 & 2) != 0) {
          var10000 = this;
@@ -300,7 +300,7 @@ class Class_1ac {
       int var2 = this.var_11[this.var_fc + 1] & 255;
       int var1 = this.var_1ba >> 24 & 255;
       ++this.var_16e;
-      Class_1ac var10000;
+      AnimatedSprite var10000;
       boolean var7;
       if (this.var_16e > var1) {
          int var10001;
@@ -535,19 +535,19 @@ class Class_1ac {
       this.sub_14(-65536);
    }
 
-   public static boolean sub_43e(Class_1ac var0) {
+   public static boolean sub_43e(AnimatedSprite var0) {
       return (var0.var_824 & 2) != 0;
    }
 
-   public static void sub_469(Class_1ac var0) {
+   public static void sub_469(AnimatedSprite var0) {
       var0.var_824 |= 4;
    }
 
-   public static void sub_4a5(Class_1ac var0) {
+   public static void sub_4a5(AnimatedSprite var0) {
       var0.var_824 &= -5;
    }
 
-   public static void sub_4dd(Class_1ac var0, int var1, int var2) {
+   public static void sub_4dd(AnimatedSprite var0, int var1, int var2) {
       var0.var_873 = var0.var_873 & ~var1 | var2;
    }
 

@@ -1,6 +1,6 @@
 import javax.microedition.lcdui.Graphics;
 
-final class Class_1c2 extends Class_1ac {
+final class Entity extends AnimatedSprite {
    int var_61;
    int var_c4;
    int var_fa;
@@ -34,7 +34,7 @@ final class Class_1c2 extends Class_1ac {
    int var_70b;
    int var_719;
 
-   Class_1c2(int var1) {
+   Entity(int var1) {
       super.var_9b3 = var1;
    }
 
@@ -53,7 +53,7 @@ final class Class_1c2 extends Class_1ac {
    }
 
    public final void sub_14(int[] var1) {
-      Class_1c2 var10000;
+      Entity var10000;
       label57: {
          super.var_591 = var1[0];
          super.var_5d1 = var1[1];
@@ -72,7 +72,7 @@ final class Class_1c2 extends Class_1ac {
             this.var_61 = GameManager.var_4e8[this.var_c4 * 5 + 0] & 255;
             this.var_1b4 = GameManager.var_39b[this.var_c4 * 2 + 0];
             this.var_21a = GameManager.var_39b[this.var_c4 * 2 + 1];
-            Class_1ac.sub_4dd(this, 63, GameManager.var_4e8[this.var_c4 * 5 + 2] & 255);
+            AnimatedSprite.sub_4dd(this, 63, GameManager.var_4e8[this.var_c4 * 5 + 2] & 255);
             var10000 = this;
             var10001 = 0;
          } else {
@@ -83,7 +83,7 @@ final class Class_1c2 extends Class_1ac {
             this.var_61 = GameManager.var_49a[this.var_c4 * 17 + 0] & 255;
             this.var_1b4 = GameManager.var_343[this.var_c4 * 5 + 4];
             this.var_21a = GameManager.var_343[this.var_c4 * 5 + 3];
-            Class_1ac.sub_4dd(this, 63, GameManager.var_49a[this.var_c4 * 17 + 11] & 255);
+            AnimatedSprite.sub_4dd(this, 63, GameManager.var_49a[this.var_c4 * 17 + 11] & 255);
             if (super.var_9a0 == 2) {
                var10000 = this;
                var10001 = -1;
@@ -106,7 +106,7 @@ final class Class_1c2 extends Class_1ac {
       if (super.var_9a0 != 1 && super.var_9a0 != 2) {
          super.var_721 = this.var_19d = 2;
       } else {
-         Class_1c2 var2;
+         Entity var2;
          byte var10002;
          if ((this.var_21a & 128) != 0) {
             var10000 = this;
@@ -182,7 +182,7 @@ final class Class_1c2 extends Class_1ac {
             }
          } else if (super.var_9a0 == 1 || super.var_9a0 == 2) {
             label43: {
-               Class_1c2 var10000;
+               Entity var10000;
                byte var10001;
                if ((this.var_1b4 & 4) != 0) {
                   if ((super.var_591 != Class_17f.sub_dd0(0, super.var_591) || super.var_5d1 != Class_17f.sub_de9(0, super.var_5d1)) && (this.var_21a & 65536) == 0) {
@@ -231,7 +231,7 @@ final class Class_1c2 extends Class_1ac {
       short var7;
       byte var9;
       int var10;
-      Class_1c2 var10000;
+      Entity var10000;
       int var10001;
       label46: {
          int var11;
@@ -309,7 +309,7 @@ final class Class_1c2 extends Class_1ac {
       GameManager.sub_76f(var1, super.var_9b3, GameManager.var_6d1[var6]);
       super.var_743 = Class_17f.sub_d60(0, super.var_591);
       super.var_77c = Class_17f.sub_db8(0, super.var_5d1);
-      Class_1ac.sub_4dd(this, 63, var9);
+      AnimatedSprite.sub_4dd(this, 63, var9);
       this.sub_14(-65536);
       if ((super.var_824 & 2048) != 0) {
          this.sub_385();
@@ -388,7 +388,7 @@ final class Class_1c2 extends Class_1ac {
                var1 = 0;
             }
 
-            Class_1c2 var10000;
+            Entity var10000;
             int var10001;
             label109: {
                super.var_899 -= var1;
@@ -425,8 +425,8 @@ final class Class_1c2 extends Class_1ac {
                this.var_719 = GameManager.var_a69.var_160;
                if ((super.var_824 & 512) != 0) {
                   for(int var5 = 0; var5 < 16; ++var5) {
-                     Class_1c2 var9;
-                     if ((var9 = (Class_1c2) GameManager.var_670[1 + var5]).var_9dd == this.var_4f2) {
+                     Entity var9;
+                     if ((var9 = (Entity) GameManager.var_670[1 + var5]).var_9dd == this.var_4f2) {
                         var9.var_2f9 = 0;
                         --var9.var_596;
                         break;
@@ -487,14 +487,14 @@ final class Class_1c2 extends Class_1ac {
                if (GameManager.var_a69.var_721 != 0 && GameManager.var_a69.var_721 != 2) {
                   var11 = (GameManager.var_a69.var_5d1 >> 8) + GameManager.var_a69.var_6c3;
                   var10 = GameManager.var_a69.var_721 == 1 ? var10 + (super.var_591 >> 8) : (super.var_591 >> 8) - var10;
-                  if (Class_1ac.sub_15e(GameManager.var_a69) > 0) {
-                     var11 += Class_1ac.sub_1c7(GameManager.var_a69, 0);
+                  if (AnimatedSprite.sub_15e(GameManager.var_a69) > 0) {
+                     var11 += AnimatedSprite.sub_1c7(GameManager.var_a69, 0);
                   }
                } else {
                   var10 = GameManager.var_a69.var_591 >> 8;
                   var11 += super.var_5d1 >> 8;
-                  if (Class_1ac.sub_15e(GameManager.var_a69) > 0) {
-                     var10 += Class_1ac.sub_18e(GameManager.var_a69, 0);
+                  if (AnimatedSprite.sub_15e(GameManager.var_a69) > 0) {
+                     var10 += AnimatedSprite.sub_18e(GameManager.var_a69, 0);
                   }
                }
 
@@ -520,7 +520,7 @@ final class Class_1c2 extends Class_1ac {
          this.var_3cd = Class_17f.var_cb6[7] << 8;
       } else {
          label22: {
-            Class_1c2 var10000;
+            Entity var10000;
             int var10001;
             if (var1 == 8) {
                var10000 = this;
@@ -577,7 +577,7 @@ final class Class_1c2 extends Class_1ac {
          }
 
          byte var10003;
-         if (GameManager.var_a0a == 9 && (this.var_21a & 32) != 0 && Class_1ac.sub_240(this)) {
+         if (GameManager.var_a0a == 9 && (this.var_21a & 32) != 0 && AnimatedSprite.sub_240(this)) {
             if ((this.var_21a & 64) != 0) {
                GameManager.var_9d8 |= 64;
                GameManager.var_a0a = 4;
@@ -609,7 +609,7 @@ final class Class_1c2 extends Class_1ac {
          }
 
          int var17;
-         if ((this.var_1b4 & 1048576) != 0 && Class_1ac.sub_240(this)) {
+         if ((this.var_1b4 & 1048576) != 0 && AnimatedSprite.sub_240(this)) {
             if ((super.var_824 & 512) == 0) {
                int[] var15 = GameManager.var_8e2;
                var17 = super.var_9dd;
@@ -626,7 +626,7 @@ final class Class_1c2 extends Class_1ac {
 
          int var13;
          int var14;
-         Class_1c2 var16;
+         Entity var16;
          int var18;
          if (this.var_63d > 0) {
             if ((this.var_1b4 & 268435456) != 0) {
@@ -647,7 +647,7 @@ final class Class_1c2 extends Class_1ac {
                }
 
                var16.var_615 = var17;
-               Class_1ac.sub_469(this);
+               AnimatedSprite.sub_469(this);
                boolean var3 = false;
                boolean var2 = false;
                byte var19;
@@ -672,7 +672,7 @@ final class Class_1c2 extends Class_1ac {
                --this.var_63d;
                if (this.var_63d <= 0) {
                   this.var_63d = 0;
-                  Class_1ac.sub_4a5(this);
+                  AnimatedSprite.sub_4a5(this);
                }
             }
          } else {
@@ -720,33 +720,33 @@ final class Class_1c2 extends Class_1ac {
          }
 
          int var7;
-         Class_1c2 var10;
-         Class_147 var22;
+         Entity var10;
+         PlayerCharacter var22;
          switch(super.var_954) {
          case 4:
             this.sub_385();
-            if (Class_1ac.sub_240(this)) {
+            if (AnimatedSprite.sub_240(this)) {
                super.var_954 = 2;
                this.sub_385();
             }
             break;
          case 5:
             this.sub_385();
-            if (Class_1ac.sub_240(this)) {
+            if (AnimatedSprite.sub_240(this)) {
                super.var_954 = 2;
                this.sub_385();
-            } else if (Class_1ac.sub_1d8(this) && Class_1ac.sub_15e(this) != 0) {
-               for(var7 = 0; var7 < Class_1ac.sub_15e(this); ++var7) {
-                  this.sub_31c((Class_1ac.sub_18e(this, var7) << 8) + super.var_591, (Class_1ac.sub_1c7(this, var7) << 8) + super.var_5d1);
+            } else if (AnimatedSprite.sub_1d8(this) && AnimatedSprite.sub_15e(this) != 0) {
+               for(var7 = 0; var7 < AnimatedSprite.sub_15e(this); ++var7) {
+                  this.sub_31c((AnimatedSprite.sub_18e(this, var7) << 8) + super.var_591, (AnimatedSprite.sub_1c7(this, var7) << 8) + super.var_5d1);
                }
             }
             break;
          case 6:
             this.sub_385();
-            if (Class_1ac.sub_240(this)) {
+            if (AnimatedSprite.sub_240(this)) {
                super.var_954 = 2;
                this.sub_385();
-            } else if (Class_1ac.sub_1d8(this)) {
+            } else if (AnimatedSprite.sub_1d8(this)) {
                this.sub_328();
             }
          case 7:
@@ -757,7 +757,7 @@ final class Class_1c2 extends Class_1ac {
          default:
             break;
          case 8:
-            if (Class_1ac.sub_240(this)) {
+            if (AnimatedSprite.sub_240(this)) {
                this.sub_a4();
             }
             break;
@@ -844,9 +844,9 @@ final class Class_1c2 extends Class_1ac {
 
             return 0;
          case 14:
-            if (Class_1ac.sub_240(this)) {
+            if (AnimatedSprite.sub_240(this)) {
                for(var7 = 0; var7 < 16; ++var7) {
-                  if ((var10 = (Class_1c2) GameManager.var_670[1 + var7]).var_9b3 == (this.var_4f2 >> 26 & 63)) {
+                  if ((var10 = (Entity) GameManager.var_670[1 + var7]).var_9b3 == (this.var_4f2 >> 26 & 63)) {
                      --var10.var_596;
                      break;
                   }
@@ -860,7 +860,7 @@ final class Class_1c2 extends Class_1ac {
                this.sub_a4();
 
                for(var7 = 0; var7 < 16; ++var7) {
-                  if ((var10 = (Class_1c2) GameManager.var_670[1 + var7]).var_9b3 == (this.var_4f2 >> 26 & 63)) {
+                  if ((var10 = (Entity) GameManager.var_670[1 + var7]).var_9b3 == (this.var_4f2 >> 26 & 63)) {
                      --var10.var_596;
                      break;
                   }
@@ -870,7 +870,7 @@ final class Class_1c2 extends Class_1ac {
             this.var_4af = 1028;
             return 0;
          case 17:
-            if (Class_1ac.sub_240(this)) {
+            if (AnimatedSprite.sub_240(this)) {
                this.sub_a4();
             }
             break;
@@ -932,7 +932,7 @@ final class Class_1c2 extends Class_1ac {
                GameManager.var_9d8 |= 512;
                if ((this.var_21a & 262144) != 0) {
                   for(var7 = 0; var7 < 16; ++var7) {
-                     if ((var10 = (Class_1c2) GameManager.var_670[1 + var7]) != this && (var10.var_824 & 8) != 0 && (var10.var_9a0 == 1 || var10.var_9a0 == 10 || var10.var_9a0 == 11)) {
+                     if ((var10 = (Entity) GameManager.var_670[1 + var7]) != this && (var10.var_824 & 8) != 0 && (var10.var_9a0 == 1 || var10.var_9a0 == 10 || var10.var_9a0 == 11)) {
                         GameManager.sub_1409(-1, var10);
                         var10.sub_105(true);
                      }
@@ -941,7 +941,7 @@ final class Class_1c2 extends Class_1ac {
 
                var22 = GameManager.var_a69;
                var22.var_824 |= 2;
-               Class_1ac.sub_4dd(this, 63, 0);
+               AnimatedSprite.sub_4dd(this, 63, 0);
                super.var_954 = 13;
                GameManager.sub_1051(true, -1, true);
                super.var_824 &= -7;
@@ -950,7 +950,7 @@ final class Class_1c2 extends Class_1ac {
                this.var_252 = 128;
                super.var_824 |= 4;
             } else if ((this.var_1b4 & 262144) != 0) {
-               Class_1ac.sub_4dd(this, 63, 0);
+               AnimatedSprite.sub_4dd(this, 63, 0);
                super.var_954 = 19;
                super.var_8fb = 0;
                this.var_2ae = 1;
@@ -958,7 +958,7 @@ final class Class_1c2 extends Class_1ac {
                this.var_61a = 4608;
             } else {
                boolean var24;
-               if ((this.var_21a & 8) != 0 && Class_1ac.sub_240(this)) {
+               if ((this.var_21a & 8) != 0 && AnimatedSprite.sub_240(this)) {
                   var16 = this;
                   var24 = false;
                } else {
@@ -1005,7 +1005,7 @@ final class Class_1c2 extends Class_1ac {
 
                if (super.var_954 == 23 || super.var_954 == 24) {
                   this.sub_385();
-                  if (Class_1ac.sub_240(this) || GameManager.var_412[this.var_fa + 20 + super.var_721] == -1) {
+                  if (AnimatedSprite.sub_240(this) || GameManager.var_412[this.var_fa + 20 + super.var_721] == -1) {
                      if (super.var_954 == 24) {
                         super.var_954 = 1;
                      }
@@ -1114,7 +1114,7 @@ final class Class_1c2 extends Class_1ac {
                      var14 = 0;
                      var13 = 0;
                      int var25;
-                     Class_1c2 var27;
+                     Entity var27;
                      if (this.var_63d > 0) {
                         var16 = this;
                         var27 = this;
@@ -1275,7 +1275,7 @@ final class Class_1c2 extends Class_1ac {
             if (var5 > 0) {
                label52: {
                   var6 = true;
-                  Class_1c2 var10000;
+                  Entity var10000;
                   byte var10001;
                   switch(var3 >> (var1 % var5 << 3) & 255) {
                   case 1:
@@ -1438,7 +1438,7 @@ final class Class_1c2 extends Class_1ac {
             }
          } else if (super.var_954 != 23 && super.var_954 != 24) {
             var1 = 8;
-            if (Class_1ac.sub_240(this)) {
+            if (AnimatedSprite.sub_240(this)) {
                super.var_824 &= -17;
             }
          }
@@ -1454,7 +1454,7 @@ final class Class_1c2 extends Class_1ac {
          var2 = GameManager.var_412[this.var_fa + 0 + var3];
       }
 
-      if (Class_1ac.sub_22c(this) != var2 || super.var_99 != GameManager.var_412[this.var_151 + var3]) {
+      if (AnimatedSprite.sub_22c(this) != var2 || super.var_99 != GameManager.var_412[this.var_151 + var3]) {
          this.sub_530(super.var_814, (byte) GameManager.var_412[this.var_151 + var3]);
          this.sub_292(var2);
       }
@@ -1669,7 +1669,7 @@ final class Class_1c2 extends Class_1ac {
    }
 
    private boolean sub_3c2() {
-      Class_1c2 var10000;
+      Entity var10000;
       short var10001;
       label150: {
          super.var_7c3 = super.var_7d4 = 0;
@@ -1891,7 +1891,7 @@ final class Class_1c2 extends Class_1ac {
    }
 
    private int sub_444() {
-      Class_1c2 var10000;
+      Entity var10000;
       int var2;
       label15: {
          byte var10001;
