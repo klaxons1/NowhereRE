@@ -107,7 +107,7 @@ final class GameManager {
       if (var0 != -1) {
          currentMusicId = var0;
          musicFlags |= 1;
-         GameEngine.isLoopEnabled = (var1 & 2) != 0;
+         AudioPlayer.isLoopEnabled = (var1 & 2) != 0;
          if ((var1 & 4) != 0) {
             lastPlayedMusicId = -1;
          }
@@ -119,12 +119,12 @@ final class GameManager {
    }
 
    static boolean playPendingMusic() {
-      if ((musicFlags & 1) != 0 && currentMusicId != -1 && (!GameEngine.isLoopEnabled || currentMusicId != lastPlayedMusicId)) {
+      if ((musicFlags & 1) != 0 && currentMusicId != -1 && (!AudioPlayer.isLoopEnabled || currentMusicId != lastPlayedMusicId)) {
          musicFlags &= -2;
          lastPlayedMusicId = currentMusicId;
-         GameEngine.stopMusic();
+         AudioPlayer.stopMusic();
          StringBuffer var0 = (new StringBuffer(4)).append("/m").append(lastPlayedMusicId);
-         GameEngine.playMusic(GameCanvas.midlet, var0.toString());
+         AudioPlayer.playMusic(GameCanvas.midlet, var0.toString());
          return true;
       } else {
          return false;
@@ -132,8 +132,8 @@ final class GameManager {
    }
 
    static void stopAllMusic() {
-      GameEngine.stopMusic();
-      GameEngine.isLoopEnabled = false;
+      AudioPlayer.stopMusic();
+      AudioPlayer.isLoopEnabled = false;
       lastPlayedMusicId = -1;
       currentMusicId = -1;
       musicFlags &= -2;
@@ -733,7 +733,7 @@ final class GameManager {
                      sub_17b7();
                      menuState[0] = 5;
                   } else if (GameCanvas.gameState == 10) {
-                     GameEngine.setMuted(false);
+                     AudioPlayer.setMuted(false);
                      GameCanvas.handleMusicLoop(true);
                   }
 
@@ -753,7 +753,7 @@ final class GameManager {
                   break label52;
                }
 
-               GameEngine.setMuted(true);
+               AudioPlayer.setMuted(true);
                break;
             case 7:
             case 9:
@@ -902,7 +902,7 @@ final class GameManager {
             if ((GameRenderer.inputState & 24) != 0) {
                switch(menuItems[menuState[18]] & 255) {
                case 3:
-                  if (!GameEngine.toggleSound()) {
+                  if (!AudioPlayer.toggleSound()) {
                      requestMusic(menuState[25], 6);
                   }
                   break;
@@ -1037,7 +1037,7 @@ final class GameManager {
             var1 += 4;
             switch(menuItems[var5]) {
             case 3:
-               var10 = !GameEngine.isMuted() ? 1 : 2;
+               var10 = !AudioPlayer.isMuted() ? 1 : 2;
                break;
             case 4:
                var10 = (vibrationEnabled & 1) != 0 ? 1 : 2;
@@ -2789,7 +2789,7 @@ final class GameManager {
       int var5 = var1 + var4 + 10;
       var5 = GameRenderer.drawCharacter(var9 == 1 ? var0 : null, '³', var5, var6, 0, -1);
       var5 += 4;
-      int var7 = !GameEngine.isMuted() ? 44 : 45;
+      int var7 = !AudioPlayer.isMuted() ? 44 : 45;
       var5 = GameRenderer.drawString(var0, var7, var5, var6, 65536, 0, 0, 0);
       var5 += 4;
       GameRenderer.drawCharacter(var9 == 1 ? var0 : null, '±', var5, var6, 0, -1);
@@ -3179,7 +3179,7 @@ final class GameManager {
                      var_d55 = 0;
                      switch(var4) {
                      case 1:
-                        if (!GameEngine.toggleSound()) {
+                        if (!AudioPlayer.toggleSound()) {
                            requestMusic(GameRenderer.mapFlags, 6);
                         }
                         break;

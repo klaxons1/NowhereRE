@@ -70,7 +70,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
       GameRenderer.setViewDimensions(GameRenderer.screenWidth, GameRenderer.screenHeight, false);
       GameEngine.initialize(midlet, GameRenderer.screenWidth, GameRenderer.screenHeight, 36, 36, 1);
       GameEngine.setTrigTables(GameRenderer.loadIntArray(437), (int[])null, (int[])null);
-      GameEngine.playerListener = instance;
+      AudioPlayer.playerListener = instance;
       GameManager.initSaveSystem();
       GameRenderer.initFontSystem(1);
       GameRenderer.loadFont(0, 50, 473);
@@ -351,7 +351,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
 
       if ((stateFlags & 8) == 0) {
          GameRenderer.handleKeyPress(var1 = GameEngine.translateKeyCode(instance, var1), true);
-         if (var1 == 35 && !GameEngine.toggleSound()) {
+         if (var1 == 35 && !AudioPlayer.toggleSound()) {
             handleMusicLoop(true);
          }
 
@@ -405,7 +405,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
    }
 
    static void handleMusicLoop(boolean var0) {
-      if (!GameEngine.isMuted()) {
+      if (!AudioPlayer.isMuted()) {
          if (gameState < 13 && var0 || var0) {
             stateFlags |= 65536;
          }
