@@ -382,7 +382,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
          var10000[3] |= 96;
       }
 
-      if ((GameManager.var_9d8 & 128) != 0) {
+      if ((GameManager.gameStateFlags & 128) != 0) {
          GameRenderer.dialogFlags |= 1;
       }
 

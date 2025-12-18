@@ -306,7 +306,7 @@ final class Entity extends AnimatedSprite {
          var10 = var11;
       }
 
-      GameManager.sub_76f(var1, super.entityId, GameManager.var_6d1[var6]);
+      GameManager.sub_76f(var1, super.entityId, GameManager.animationHandles[var6]);
       super.screenX = GameRenderer.worldToScreenFixedX(0, super.x);
       super.screenY = GameRenderer.worldToScreenFixedY(0, super.y);
       AnimatedSprite.sub_4dd(this, 63, var9);
@@ -365,7 +365,7 @@ final class Entity extends AnimatedSprite {
 
       for(int var5 = 0; var5 < GameManager.var_788.length; ++var5) {
          if (GameManager.var_788[var5] == var7) {
-            GameManager.sub_76f(super.animationSetId, super.entityId, GameManager.var_6d1[var7]);
+            GameManager.sub_76f(super.animationSetId, super.entityId, GameManager.animationHandles[var7]);
             this.sub_13b();
             return;
          }
@@ -408,7 +408,7 @@ final class Entity extends AnimatedSprite {
             }
 
             if ((this.behaviorFlags & 2) != 0) {
-               GameManager.var_9d8 |= 2;
+               GameManager.gameStateFlags |= 2;
             }
 
             if (var1 > 0) {
@@ -579,7 +579,7 @@ final class Entity extends AnimatedSprite {
          byte var10003;
          if (GameManager.var_a0a == 9 && (this.propertyFlags & 32) != 0 && AnimatedSprite.sub_240(this)) {
             if ((this.propertyFlags & 64) != 0) {
-               GameManager.var_9d8 |= 64;
+               GameManager.gameStateFlags |= 64;
                GameManager.var_a0a = 4;
                byte[] var10000;
                byte var10001;
@@ -600,7 +600,7 @@ final class Entity extends AnimatedSprite {
                GameManager.var_ff5[32] = 1;
                GameManager.sub_1813();
             } else {
-               GameManager.var_9d8 |= 524288;
+               GameManager.gameStateFlags |= 524288;
                int var6 = GameManager.sub_1914(6);
                GameManager.sub_1506(6, var6);
             }
@@ -810,10 +810,10 @@ final class Entity extends AnimatedSprite {
             if (this.deathEffectCounter >= this.deathAnimDuration) {
                GameManager.sub_1051(false, 0, false);
                GameManager.sub_1409(-1, this);
-               GameManager.var_9d8 &= -513;
+               GameManager.gameStateFlags &= -513;
                var22 = GameManager.var_a69;
                var22.statusFlags &= -35;
-               GameManager.var_9d8 |= 4096;
+               GameManager.gameStateFlags |= 4096;
                this.sub_105(false);
                if (this.animationResourceIndex == 10) {
                   GameManager.sub_11a8(343);
@@ -878,10 +878,10 @@ final class Entity extends AnimatedSprite {
             ++this.deathEffectCounter;
             if (this.deathEffectCounter >= this.deathAnimDuration >> 1) {
                GameManager.sub_1409(-1, this);
-               GameManager.var_9d8 &= -513;
+               GameManager.gameStateFlags &= -513;
                var22 = GameManager.var_a69;
                var22.statusFlags &= -35;
-               GameManager.var_9d8 |= 4096;
+               GameManager.gameStateFlags |= 4096;
                this.sub_105(false);
             } else {
                var13 = super.x + GameRenderer.randomInRange(super.transformedBounds[8], super.transformedBounds[10]) >> 8;
@@ -929,7 +929,7 @@ final class Entity extends AnimatedSprite {
             }
 
             if ((this.behaviorFlags & 2048) != 0) {
-               GameManager.var_9d8 |= 512;
+               GameManager.gameStateFlags |= 512;
                if ((this.propertyFlags & 262144) != 0) {
                   for(var7 = 0; var7 < 16; ++var7) {
                      if ((var10 = (Entity) GameManager.entities[1 + var7]) != this && (var10.statusFlags & 8) != 0 && (var10.animationSetId == 1 || var10.animationSetId == 10 || var10.animationSetId == 11)) {
@@ -981,7 +981,7 @@ final class Entity extends AnimatedSprite {
             GameManager.var_a69.sub_296(this);
             return 0;
          } else {
-            if (super.animationSetId == 1 && (GameManager.var_9d8 & 512) == 0 && super.aiState != 19) {
+            if (super.animationSetId == 1 && (GameManager.gameStateFlags & 512) == 0 && super.aiState != 19) {
                super.statusFlags &= -257;
                if ((this.behaviorFlags & 16) != 0) {
                   if (this.attackCooldown > 32 * (GameManager.enemySpawnData[this.dataId * 17 + 6] & 255) && this.var_596 < (GameManager.enemySpawnData[this.dataId * 17 + 13] & 255)) {

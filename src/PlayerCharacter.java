@@ -52,7 +52,7 @@ final class PlayerCharacter extends AnimatedSprite {
    public final void initPlayer() {
       super.statusFlags |= 1;
       super.aiState = 0;
-      this.weaponSprite.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[0]);
+      this.weaponSprite.animationData = (byte[]) GameRenderer.getResource(GameManager.animationHandles[0]);
       this.weaponSprite.sub_14(-65536);
       super.renderOffsetX = super.renderOffsetY = 0;
       super.pivotOffsetX = super.pivotOffsetY = 0;
@@ -65,7 +65,7 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    public final void spawnOnMap() {
-      int var11 = GameManager.var_c45 >> 9 & 3;
+      int var11 = GameManager.targetMapId >> 9 & 3;
       int var12 = GameManager.sub_1914(7);
       super.var_8fb = 0;
       super.statusFlags &= -545;
@@ -316,8 +316,8 @@ final class PlayerCharacter extends AnimatedSprite {
             }
          }
 
-         if (var6 != 3 && GameRenderer.findTilesInRect(0, GameManager.var_6be, var1, var2, var3, var4) > 0) {
-            int var13 = GameManager.var_6be[0] >> 8;
+         if (var6 != 3 && GameRenderer.findTilesInRect(0, GameManager.entitySlotData, var1, var2, var3, var4) > 0) {
+            int var13 = GameManager.entitySlotData[0] >> 8;
             int var9 = GameRenderer.collisionMap[var13] >> 2;
             if ((this.currentWeaponId == 3 || this.currentWeaponId == 7) && (var9 == 3 || var9 == 27) || (this.currentWeaponId == 5 || this.currentWeaponId == 7) && (var9 == 5 || var9 == 18)) {
                GameManager.sub_93e(0, var13);
@@ -350,7 +350,7 @@ final class PlayerCharacter extends AnimatedSprite {
          }
 
          GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short)var3);
-         GameManager.var_9d8 |= 2;
+         GameManager.gameStateFlags |= 2;
          if ((GameManager.vibrationEnabled & 1) != 0) {
             GameEngine.vibrate();
          }
@@ -358,11 +358,11 @@ final class PlayerCharacter extends AnimatedSprite {
 
       GameManager.sub_1576(true);
       if (GameRenderer.readInt16LE(GameManager.var_ff5, 2) <= 0) {
-         GameManager.var_9d8 |= 16;
+         GameManager.gameStateFlags |= 16;
          GameManager.sub_c12();
          super.var_8fb = 64;
          super.aiState = 3;
-         GameManager.var_9d8 |= 67108864;
+         GameManager.gameStateFlags |= 67108864;
          return true;
       } else {
          if (var2) {
@@ -538,7 +538,7 @@ final class PlayerCharacter extends AnimatedSprite {
 
    private boolean sub_33f(int var1, int var2, int var3, int var4) {
       if (GameRenderer.detectZonesAtPos(var1, var2, var3, var4) != 0) {
-         if (GameRenderer.foundTriggerZone != -1 && (GameManager.var_9d8 & 128) == 0 && ((GameRenderer.foundTriggerZone & '\uffff') >> 0 & 4096) != 0) {
+         if (GameRenderer.foundTriggerZone != -1 && (GameManager.gameStateFlags & 128) == 0 && ((GameRenderer.foundTriggerZone & '\uffff') >> 0 & 4096) != 0) {
             label76: {
                GameManager.var_b02 = 0;
                GameManager.var_aed = ((GameRenderer.foundTriggerZone & '\uffff') >> 0 & 4095) + 262;
@@ -679,7 +679,7 @@ final class PlayerCharacter extends AnimatedSprite {
          PlayerCharacter var10000;
          int var10001;
          label252: {
-            if ((GameManager.var_9d8 & 512) != 0) {
+            if ((GameManager.gameStateFlags & 512) != 0) {
                super.statusFlags &= -65;
                var10000 = this;
                var10001 = super.statusFlags | 32;
@@ -762,7 +762,7 @@ final class PlayerCharacter extends AnimatedSprite {
          case 3:
             super.statusFlags &= -8561;
             super.facing = 1;
-            GameManager.var_9d8 = super.var_8fb >= 64 ? GameManager.var_9d8 & -67108865 : GameManager.var_9d8 | 67108864;
+            GameManager.gameStateFlags = super.var_8fb >= 64 ? GameManager.gameStateFlags & -67108865 : GameManager.gameStateFlags | 67108864;
             if (super.var_8fb <= 0) {
                GameManager.sub_11a8(291);
             }
@@ -1438,7 +1438,7 @@ final class PlayerCharacter extends AnimatedSprite {
 
    public final void sub_487(Graphics var1) {
       int var2 = (super.statusFlags & 1024) != 0 ? 3 : 0;
-      this.weaponSprite.animationData = super.animationData = (byte[]) GameRenderer.getResource(GameManager.var_6d1[var2]);
+      this.weaponSprite.animationData = super.animationData = (byte[]) GameRenderer.getResource(GameManager.animationHandles[var2]);
       if (GameManager.var_a0a != 9 && (super.statusFlags & 1) != 0) {
          var1.drawImage(GameManager.commonSprites[0].images[0], GameManager.var_ccb + GameRenderer.viewOffsetX + ((super.transformedBounds[0] + super.transformedBounds[2] >> 1) + super.screenX >> 8) - 10, GameManager.var_d14 + GameRenderer.viewOffsetY + ((super.transformedBounds[1] + super.transformedBounds[3] >> 1) + super.screenY >> 8) - 4, 20);
          super.pivotOffsetX = GameManager.var_ccb;

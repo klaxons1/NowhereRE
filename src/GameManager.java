@@ -34,9 +34,9 @@ final class GameManager {
    static AnimatedSprite[] entities;
    static Sprite[] commonSprites;
    static int[] playerInitParams;
-   static int[] var_6be;
-   static int[] var_6d1;
-   static short[] var_710;
+   static int[] entitySlotData;
+   static int[] animationHandles;
+   static short[] effectPositionX;
    static short[] var_71a;
    static int[] var_72a;
    static int var_769;
@@ -51,7 +51,7 @@ final class GameManager {
    static int[] var_8e2;
    static int[] var_96c;
    static int[] var_9a9;
-   static int var_9d8;
+   static int gameStateFlags;
    static int var_a0a;
    static int var_a45;
    static PlayerCharacter var_a69;
@@ -63,7 +63,7 @@ final class GameManager {
    static int var_b72;
    static char[] var_bd6;
    static int[] var_c04;
-   static int var_c45;
+   static int targetMapId;
    static int var_c83;
    static int var_cba;
    static int var_ccb = 0;
@@ -93,7 +93,7 @@ final class GameManager {
    static int var_10f1;
    static int var_112a;
    static int var_113c;
-   static int var_114a;
+   static int totalDialogCount;
    static int var_119e;
    static int var_11c0;
    static int var_11d4;
@@ -1155,9 +1155,9 @@ final class GameManager {
    private static void sub_54c() {
       commonSprites = new Sprite[3];
       playerInitParams = new int[4];
-      var_6be = new int[16];
+      entitySlotData = new int[16];
       entities = new AnimatedSprite[17];
-      var_6d1 = new int[35];
+      animationHandles = new int[35];
       var_788 = new byte[13];
       sub_55e();
       sub_9ae(30);
@@ -1178,15 +1178,15 @@ final class GameManager {
          }
       }
 
-      if (var_6be != null) {
-         for(var0 = 0; var0 < var_6be.length; ++var0) {
-            var_6be[var0] = 0;
+      if (entitySlotData != null) {
+         for(var0 = 0; var0 < entitySlotData.length; ++var0) {
+            entitySlotData[var0] = 0;
          }
       }
 
-      if (var_6d1 != null) {
-         for(var0 = 0; var0 < var_6d1.length; ++var0) {
-            var_6d1[var0] = -1;
+      if (animationHandles != null) {
+         for(var0 = 0; var0 < animationHandles.length; ++var0) {
+            animationHandles[var0] = -1;
          }
       }
 
@@ -1208,8 +1208,8 @@ final class GameManager {
       entities = null;
       commonSprites = null;
       playerInitParams = null;
-      var_6be = null;
-      var_6d1 = null;
+      entitySlotData = null;
+      animationHandles = null;
       var_788 = null;
    }
 
@@ -1257,7 +1257,7 @@ final class GameManager {
       int var1 = 0;
 
       for(int var0 = 0; var0 < 4; ++var0) {
-         var_6d1[var0] = GameRenderer.loadResource(animationResourceIds[var1 + 0], animationResourceIds[var1 + 1], 3);
+         animationHandles[var0] = GameRenderer.loadResource(animationResourceIds[var1 + 0], animationResourceIds[var1 + 1], 3);
          var1 += 2;
       }
 
@@ -1311,15 +1311,15 @@ final class GameManager {
                            var9 = (var14 & 31) >> 0;
                            var9 = sub_18c9(sub_1914(6) - 153, var9);
                            if ((enemyData[var16 * 5 + 4] & 2) != 0) {
-                              var_9d8 |= 2048;
+                              gameStateFlags |= 2048;
                            }
 
                            if (!GameRenderer.getBitInArray(var_ff5, var9, 0, 1, var_10f1)) {
                               break label79;
                            }
 
-                           if ((var_9d8 & 2048) != 0) {
-                              var_9d8 |= 4096;
+                           if ((gameStateFlags & 2048) != 0) {
+                              gameStateFlags |= 4096;
                            }
 
                            var10000 = true;
@@ -1408,7 +1408,7 @@ final class GameManager {
          if (!var6) {
             short var14 = animationResourceIds[var15 * 2 + 1];
             short var12 = animationResourceIds[var15 * 2 + 0];
-            var_6d1[var15] = GameRenderer.loadResource(var12, var14, 3);
+            animationHandles[var15] = GameRenderer.loadResource(var12, var14, 3);
          }
 
          var_7d8[var15] = (byte)var_805;
@@ -1572,9 +1572,9 @@ final class GameManager {
          entities[0] = null;
       }
 
-      for(var1 = var0 ? 0 : 4; var1 < var_6d1.length; ++var1) {
-         GameRenderer.freeResource(var_6d1[var1], 3);
-         var_6d1[var1] = -1;
+      for(var1 = var0 ? 0 : 4; var1 < animationHandles.length; ++var1) {
+         GameRenderer.freeResource(animationHandles[var1], 3);
+         animationHandles[var1] = -1;
       }
 
       var_8e2 = null;
@@ -1992,14 +1992,14 @@ final class GameManager {
    }
 
    private static void sub_9ae(int var0) {
-      var_710 = new short[var0];
+      effectPositionX = new short[var0];
       var_71a = new short[var0];
       var_72a = new int[var0];
       sub_9f3();
    }
 
    private static void sub_9d1() {
-      var_710 = null;
+      effectPositionX = null;
       var_71a = null;
       var_72a = null;
    }
@@ -2024,7 +2024,7 @@ final class GameManager {
             }
          }
 
-         var_710[var8] = (short)var0;
+         effectPositionX[var8] = (short)var0;
          var_71a[var8] = (short)var1;
          var_72a[var8] = (var4 & 127) << 0 | (var2 & 31) << 7 | (var3 & 511) << 12 | (var6 & 255) << 21 | (var5 & 7) << 29;
          ++var_769;
@@ -2038,7 +2038,7 @@ final class GameManager {
                break;
             }
 
-            var_aab[var0++] = (var_710[var1] & 2047) << 7 | (var_71a[var1] & 2047) << 18 | (var1 + 17 & 127) << 0 | (var_72a[var1] >> 29 & 7 & 7) << 29;
+            var_aab[var0++] = (effectPositionX[var1] & 2047) << 7 | (var_71a[var1] & 2047) << 18 | (var1 + 17 & 127) << 0 | (var_72a[var1] >> 29 & 7 & 7) << 29;
          }
       }
 
@@ -2061,7 +2061,7 @@ final class GameManager {
                int var3 = var1 >> 29 & 7;
                int var7 = var1 >> 21 & 255;
                int var6;
-               if ((var3 & 4) != 0 && (var6 = GameRenderer.getAnimationSpriteCount(var4, var5, (byte[]) GameRenderer.getResource(var_6d1[var2]))) != -1) {
+               if ((var3 & 4) != 0 && (var6 = GameRenderer.getAnimationSpriteCount(var4, var5, (byte[]) GameRenderer.getResource(animationHandles[var2]))) != -1) {
                   ++var7;
                   if (var7 < var6) {
                      var10000 = var_72a;
@@ -2076,7 +2076,7 @@ final class GameManager {
                }
 
                ++var4;
-               if (var4 >= GameRenderer.getAnimationFrameCount(var5, (byte[]) GameRenderer.getResource(var_6d1[var2]))) {
+               if (var4 >= GameRenderer.getAnimationFrameCount(var5, (byte[]) GameRenderer.getResource(animationHandles[var2]))) {
                   if ((var3 & 2) == 0) {
                      var_72a[var0] = -1;
                      --var_769;
@@ -2109,7 +2109,7 @@ final class GameManager {
          int var8 = var6 >> 12 & 511;
          int var4 = GameRenderer.worldToScreenX(0, var2);
          int var5 = GameRenderer.worldToScreenY(0, var3);
-         GameRenderer.drawCompositeSprite(var0, var4, var5, var8, var9, -1, true, 0, (byte[]) GameRenderer.getResource(var_6d1[var7]));
+         GameRenderer.drawCompositeSprite(var0, var4, var5, var8, var9, -1, true, 0, (byte[]) GameRenderer.getResource(animationHandles[var7]));
       }
    }
 
@@ -2135,8 +2135,8 @@ final class GameManager {
       var_b22 = new Sprite[portraitSpriteIds.length];
       sub_15d4(0);
       GameCanvas.stateFlags &= -16385;
-      var_c45 = 0;
-      var_9d8 = 1027;
+      targetMapId = 0;
+      gameStateFlags = 1027;
       var_a0a = 0;
       loadingPhase = 0;
       var_ac5 = 0;
@@ -2162,13 +2162,13 @@ final class GameManager {
          var_f1b = null;
       }
 
-      var_9d8 |= 1024;
+      gameStateFlags |= 1024;
       return sub_c12();
    }
 
    static boolean sub_c12() {
-      if ((var_9d8 & '耀') != 0) {
-         var_9d8 &= -32769;
+      if ((gameStateFlags & '耀') != 0) {
+         gameStateFlags &= -32769;
          sub_1813();
          return true;
       } else {
@@ -2181,21 +2181,21 @@ final class GameManager {
       int var2 = var0 >> 9 & 3;
       int var10000;
       if (var1) {
-         if ((var_9d8 & 524288) == 0) {
+         if ((gameStateFlags & 524288) == 0) {
             return true;
          }
 
-         var10000 = var_9d8 | 33554432;
+         var10000 = gameStateFlags | 33554432;
       } else {
-         var10000 = var_9d8 & -33554433;
+         var10000 = gameStateFlags & -33554433;
       }
 
-      var_9d8 = var10000;
+      gameStateFlags = var10000;
       int var3;
-      var_c45 = (var3 = sub_1539(7, var0 & 511)) >= 0 ? var3 : var0 & 511;
-      var_c45 |= (var2 & 3) << 9;
-      var_9d8 |= 1032;
-      var_9d8 &= -536577;
+      targetMapId = (var3 = sub_1539(7, var0 & 511)) >= 0 ? var3 : var0 & 511;
+      targetMapId |= (var2 & 3) << 9;
+      gameStateFlags |= 1032;
+      gameStateFlags &= -536577;
       PlayerCharacter var4 = var_a69;
       var4.statusFlags &= -17;
       return false;
@@ -2204,7 +2204,7 @@ final class GameManager {
    private static void sub_ca3() {
       if (sub_1914(6) != -1) {
          sub_9f3();
-         var_9d8 &= -67635713;
+         gameStateFlags &= -67635713;
          sub_1506(3, sub_1914(6));
          sub_1506(4, sub_1914(7));
          var_ff5[9] = 0;
@@ -2337,13 +2337,13 @@ final class GameManager {
 
    private static void sub_d16() {
       entities[0] = new PlayerCharacter();
-      sub_76f(0, 0, var_6d1[0]);
+      sub_76f(0, 0, animationHandles[0]);
       playerInitParams[0] = 0;
       playerInitParams[1] = 0;
       entities[0].initEntity(playerInitParams);
       var_a69 = (PlayerCharacter) entities[0];
       var_a69.initPlayer();
-      var_9d8 |= 2;
+      gameStateFlags |= 2;
       var_a69.currentWeaponId = var_ff5[5];
       var_e42 = 0;
    }
@@ -2406,8 +2406,8 @@ final class GameManager {
 
    private static void sub_e06() {
       var_cba = 0;
-      var_9d8 &= -4194309;
-      var_9d8 |= 2;
+      gameStateFlags &= -4194309;
+      gameStateFlags |= 2;
       var_aab = new int[51];
       var_ac5 = 0;
       var_a69.spawnOnMap();
@@ -2416,20 +2416,20 @@ final class GameManager {
       var_f43 = -1;
       sub_119c();
       sub_9f3();
-      if ((var_9d8 & 1) != 0) {
+      if ((gameStateFlags & 1) != 0) {
          GameRenderer.inputState = 0;
       }
 
-      var_9d8 &= -2;
+      gameStateFlags &= -2;
       if (GameRenderer.mapFlags != -1) {
          requestMusic(GameRenderer.mapFlags, 2);
       } else {
          stopAllMusic();
       }
 
-      if ((var_9d8 & 4096) != 0) {
+      if ((gameStateFlags & 4096) != 0) {
          sub_14a1();
-         var_9d8 |= 524288;
+         gameStateFlags |= 524288;
       }
 
       if (GameRenderer.getBitInArray(var_ff5, GameRenderer.layerProperties[22], 1, 1, var_113c)) {
@@ -2441,14 +2441,14 @@ final class GameManager {
    private static void sub_e26() {
       if (GameRenderer.inputChanged) {
          GameRenderer.inputChanged = false;
-         if ((var_9d8 & 128) != 0) {
+         if ((gameStateFlags & 128) != 0) {
             GameRenderer.handleDialogInput(GameRenderer.lastKeyCode);
          } else if (var_a0a == 11) {
             sub_ff6(GameRenderer.lastKeyCode, false);
          } else {
             if (var_a0a == 1 || var_a0a == 10) {
                if (GameRenderer.lastKeyCode == 48 && var_a0a != 9 && GameRenderer.var_481 != 2 && var_a69.aiState != 3) {
-                  if ((mapConfigs[var_ff5[8] * 8 + 3] & 512) != 0 && (var_9d8 & 128) == 0) {
+                  if ((mapConfigs[var_ff5[8] * 8 + 3] & 512) != 0 && (gameStateFlags & 128) == 0) {
                      var_b02 = 0;
                      var_aed = 280;
                      return;
@@ -2460,7 +2460,7 @@ final class GameManager {
                   return;
                }
 
-               if (GameRenderer.lastKeyCode == 8 && GameRenderer.foundTriggerZone != -1 && (var_9d8 & 128) == 0 && (var_9d8 & 2097152) != 0 && var_d22 <= 0 && var_aed == -1) {
+               if (GameRenderer.lastKeyCode == 8 && GameRenderer.foundTriggerZone != -1 && (gameStateFlags & 128) == 0 && (gameStateFlags & 2097152) != 0 && var_d22 <= 0 && var_aed == -1) {
                   var_b02 = 0;
                   var_aed = 262 + ((GameRenderer.foundTriggerZone & '\uffff') >> 0 & 4095);
                   int var0;
@@ -2484,7 +2484,7 @@ final class GameManager {
    }
 
    static boolean sub_e55() {
-      if ((GameCanvas.stateFlags & 65536) != 0 && (var_9d8 & 6144) != 6144 && requestMusic(GameRenderer.mapFlags, 6)) {
+      if ((GameCanvas.stateFlags & 65536) != 0 && (gameStateFlags & 6144) != 6144 && requestMusic(GameRenderer.mapFlags, 6)) {
          GameCanvas.stateFlags &= -65537;
       }
 
@@ -2496,7 +2496,7 @@ final class GameManager {
       }
 
       sub_e26();
-      if ((var_9d8 & 128) != 0) {
+      if ((gameStateFlags & 128) != 0) {
          if (!GameRenderer.updateDialog()) {
             GameRenderer.setCurrentFont(var_bd6, var_c04);
             if (GameRenderer.dialogState == 31) {
@@ -2510,7 +2510,7 @@ final class GameManager {
          }
       }
 
-      if ((var_9d8 & 128) == 0 || (var_9d8 & 128) != 0 && (GameRenderer.dialogFlags & 1) != 0) {
+      if ((gameStateFlags & 128) == 0 || (gameStateFlags & 128) != 0 && (GameRenderer.dialogFlags & 1) != 0) {
          switch(var_a0a) {
          case 0:
             sub_4d1();
@@ -2534,13 +2534,13 @@ final class GameManager {
             var_a69.initPlayer();
             sub_49a(1);
             var_a0a = 0;
-            var_9d8 &= -17;
+            gameStateFlags &= -17;
             return true;
          case 7:
-            var_9d8 &= -9;
+            gameStateFlags &= -9;
             sub_bde(false);
             sub_1959(7, sub_1914(6));
-            sub_1959(6, var_c45 & 511);
+            sub_1959(6, targetMapId & 511);
             sub_49a(1);
             var_a0a = 0;
             return true;
@@ -2551,10 +2551,10 @@ final class GameManager {
             sub_b8b();
             return true;
          case 9:
-            var_9d8 |= 262144;
+            gameStateFlags |= 262144;
          case 1:
          case 10:
-            if ((var_9d8 & 4) == 0) {
+            if ((gameStateFlags & 4) == 0) {
                if (var_d22 > 0) {
                   --var_d22;
                }
@@ -2563,16 +2563,16 @@ final class GameManager {
                --var_b02;
                if (var_b02 <= 0) {
                   var_b02 = 0;
-                  if ((var_9d8 & 514) == 0) {
+                  if ((gameStateFlags & 514) == 0) {
                      sub_11fa();
                   }
                }
 
-               if ((var_9d8 & 128) != 0) {
+               if ((gameStateFlags & 128) != 0) {
                   return false;
                }
 
-               if ((var_9d8 & 16) != 0) {
+               if ((gameStateFlags & 16) != 0) {
                   --var_a45;
                   if (var_a45 == 0) {
                      var_a45 = 0;
@@ -2581,7 +2581,7 @@ final class GameManager {
                }
 
                var_ac5 = 0;
-               if ((var_9d8 & 4) == 0) {
+               if ((gameStateFlags & 4) == 0) {
                   var_a69.sub_37c();
                }
 
@@ -2615,8 +2615,8 @@ final class GameManager {
                   }
                }
 
-               var_9d8 |= 64;
-               if ((var_9d8 & 8) != 0) {
+               gameStateFlags |= 64;
+               if ((gameStateFlags & 8) != 0) {
                   var_a0a = 7;
                }
             }
@@ -2649,21 +2649,21 @@ final class GameManager {
 
    static void sub_ed9(Graphics var0) {
       GameRenderer.setCurrentFont(var_bd6, var_c04);
-      if ((var_9d8 & 1024) != 0) {
-         var_9d8 &= -1025;
+      if ((gameStateFlags & 1024) != 0) {
+         gameStateFlags &= -1025;
          var0.setColor(var_e34);
          var0.fillRect(GameRenderer.viewOffsetX, GameRenderer.viewOffsetY, GameRenderer.viewWidth, GameRenderer.viewHeight);
-         var_9d8 |= 2097152;
+         gameStateFlags |= 2097152;
       }
 
-      if ((var_9d8 & 128) != 0) {
+      if ((gameStateFlags & 128) != 0) {
          GameRenderer.dialogFlags |= 1;
       }
 
       label93: {
          int var10000;
-         if ((var_a0a == 1 || var_a0a == 9 || var_a0a == 10) && (var_9d8 & 64) != 0) {
-            if ((var_9d8 & 67108864) != 0) {
+         if ((var_a0a == 1 || var_a0a == 9 || var_a0a == 10) && (gameStateFlags & 64) != 0) {
+            if ((gameStateFlags & 67108864) != 0) {
                var0.setColor(var_e34);
                var0.fillRect(GameRenderer.viewOffsetX, GameRenderer.viewOffsetY, GameRenderer.viewWidth, GameRenderer.viewHeight);
                sub_f50(var0, 1);
@@ -2673,7 +2673,7 @@ final class GameManager {
             GameRenderer.drawMapLayer(0, var0, var_ccb, var_d14, false);
             var_ac5 = sub_a3d(var_ac5);
             sub_f50(var0, var_ac5);
-            if ((var_9d8 & 67108864) == 0) {
+            if ((gameStateFlags & 67108864) == 0) {
                for(int var1 = 0; var1 < 16; ++var1) {
                   Entity var2;
                   if (((var2 = (Entity) entities[1 + var1]).statusFlags & 8) != 0 && var2.renderDepth >= 1024) {
@@ -2690,8 +2690,8 @@ final class GameManager {
             var_ccb = 0;
             sub_161f(var0, 0);
             GameRenderer.drawViewportBorders(var0, var_e34);
-            if ((var_9d8 & 16777216) != 0) {
-               var_9d8 &= -16777217;
+            if ((gameStateFlags & 16777216) != 0) {
+               gameStateFlags &= -16777217;
                var0.setColor(var_e34);
                var0.fillRect(GameRenderer.viewOffsetX, GameRenderer.viewOffsetY, GameRenderer.viewWidth, GameRenderer.viewHeight);
             }
@@ -2700,7 +2700,7 @@ final class GameManager {
                sub_dd2(var0, var_e42, (GameRenderer.viewWidth >> 1) - 15, GameRenderer.viewportTop);
             }
 
-            var10000 = var_9d8;
+            var10000 = gameStateFlags;
          } else {
             if (var_a0a != 11) {
                break label93;
@@ -2710,17 +2710,17 @@ final class GameManager {
                var_d55 = 0;
             }
 
-            if ((var_9d8 & 128) == 0 || (GameCanvas.stateFlags & 524288) != 0) {
+            if ((gameStateFlags & 128) == 0 || (GameCanvas.stateFlags & 524288) != 0) {
                sub_fba(var0);
             }
 
-            var10000 = var_9d8;
+            var10000 = gameStateFlags;
          }
 
-         var_9d8 = var10000 & -3;
+         gameStateFlags = var10000 & -3;
       }
 
-      if ((var_9d8 & 128) != 0) {
+      if ((gameStateFlags & 128) != 0) {
          GameRenderer.drawDialog(var0, 0, GameRenderer.viewHeight - GameRenderer.dialogHeight, 0);
          GameRenderer.setCurrentFont(var_bd6, var_c04);
          sub_12ef(var0);
@@ -2865,7 +2865,7 @@ final class GameManager {
       if ((var_d55 & 16) == 0) {
          var_d55 |= 16;
          GameRenderer.drawString(var0, 36, var4 + 77, var5, 0, 0, 0, 0);
-         GameRenderer.drawCompositeSprite(var0, var4 + 84, var5 + 26, 98, var_ff5[5], -1, true, 0, (byte[]) GameRenderer.getResource(var_6d1[1]));
+         GameRenderer.drawCompositeSprite(var0, var4 + 84, var5 + 26, 98, var_ff5[5], -1, true, 0, (byte[]) GameRenderer.getResource(animationHandles[1]));
       }
 
       if ((var_d55 & 32) == 0) {
@@ -2874,7 +2874,7 @@ final class GameManager {
             var_ff5[25] = 15;
          }
 
-         GameRenderer.drawCompositeSprite(var0, var4 + 84, var5 + 26 + 30, 98, var_ff5[25], -1, true, 0, (byte[]) GameRenderer.getResource(var_6d1[1]));
+         GameRenderer.drawCompositeSprite(var0, var4 + 84, var5 + 26 + 30, 98, var_ff5[25], -1, true, 0, (byte[]) GameRenderer.getResource(animationHandles[1]));
       }
 
       if ((var_d55 & 64) == 0) {
@@ -2892,7 +2892,7 @@ final class GameManager {
                var0.setColor(16711680);
                var0.fillRect(GameRenderer.viewOffsetX + var4 + 1, GameRenderer.viewOffsetY + var5, 99, var9 + 1);
                if ((inventoryState & 268435456) == 0) {
-                  GameRenderer.drawCompositeSprite(var0, var4 + 4, var5 + 0, 0, 0, -1, true, 0, (byte[]) GameRenderer.getResource(var_6d1[1]));
+                  GameRenderer.drawCompositeSprite(var0, var4 + 4, var5 + 0, 0, 0, -1, true, 0, (byte[]) GameRenderer.getResource(animationHandles[1]));
                }
             }
 
@@ -2960,11 +2960,11 @@ final class GameManager {
                         var0.drawLine(var4, var5, var4 + var10, var5);
                         var0.drawLine(var4, var5 + 36 - 1, var4 + var10, var5 + 36 - 1);
                         if (var16 > sub_1011(var16, var17, -1, var15, 0)) {
-                           GameRenderer.drawCompositeSprite(var0, var10 - 7 - 10, var5 - GameRenderer.viewOffsetY, 0, 1, -1, true, 0, (byte[]) GameRenderer.getResource(var_6d1[1]));
+                           GameRenderer.drawCompositeSprite(var0, var10 - 7 - 10, var5 - GameRenderer.viewOffsetY, 0, 1, -1, true, 0, (byte[]) GameRenderer.getResource(animationHandles[1]));
                         }
 
                         if (var16 < sub_1011(var16, var17, 1, var15, 0)) {
-                           GameRenderer.drawCompositeSprite(var0, var10 - 7 - 10, var5 + 20 - GameRenderer.viewOffsetY, 0, 2, -1, true, 0, (byte[]) GameRenderer.getResource(var_6d1[1]));
+                           GameRenderer.drawCompositeSprite(var0, var10 - 7 - 10, var5 + 20 - GameRenderer.viewOffsetY, 0, 2, -1, true, 0, (byte[]) GameRenderer.getResource(animationHandles[1]));
                         }
                      } else {
                         var0.setColor((var5 / 36 & 1) == 0 ? 3158064 : 4210752);
@@ -2972,7 +2972,7 @@ final class GameManager {
                      }
 
                      label201: {
-                        GameRenderer.drawCompositeSprite(var0, var4 + 4 - GameRenderer.viewOffsetX, var5 + 4 + 0 - GameRenderer.viewOffsetY, 98, var1, -1, true, 0, (byte[]) GameRenderer.getResource(var_6d1[1]));
+                        GameRenderer.drawCompositeSprite(var0, var4 + 4 - GameRenderer.viewOffsetX, var5 + 4 + 0 - GameRenderer.viewOffsetY, 98, var1, -1, true, 0, (byte[]) GameRenderer.getResource(animationHandles[1]));
                         GameRenderer.drawString(var0, 6 + var1, var4 + 36 + 4 - GameRenderer.viewOffsetX, var5 + 0 - GameRenderer.viewOffsetY, 0, 0, 0, 0);
                         int var2;
                         byte var10001;
@@ -3297,8 +3297,8 @@ final class GameManager {
 
                         GameRenderer.writeInt16LE(var_ff5, var6, (short)var7);
                         --var_ff5[var4 - 8 + 18];
-                        var_9d8 |= 2;
-                        var_9d8 |= 2;
+                        gameStateFlags |= 2;
+                        gameStateFlags |= 2;
                         var_d55 &= -3;
                         var_d55 |= 1;
                         return;
@@ -3415,19 +3415,19 @@ final class GameManager {
          }
 
          var_a45 = var1;
-         var_9d8 |= 16;
+         gameStateFlags |= 16;
          if (var2 && (var_a69.statusFlags & 2) == 0) {
-            var_9d8 |= 32;
+            gameStateFlags |= 32;
             var10000 = var_a69;
             var10000.statusFlags |= 2;
          }
       } else {
-         if ((var_9d8 & 32) != 0) {
+         if ((gameStateFlags & 32) != 0) {
             var10000 = var_a69;
             var10000.statusFlags &= -3;
          }
 
-         var_9d8 &= -49;
+         gameStateFlags &= -49;
       }
 
       for(int var3 = 0; var3 < 16; ++var3) {
@@ -3548,7 +3548,7 @@ final class GameManager {
       sub_1051(true, -1, true);
       PlayerCharacter var10000 = var_a69;
       var10000.statusFlags &= -17;
-      var_9d8 |= 128;
+      gameStateFlags |= 128;
       GameRenderer.initDialog(var0, -1, GameRenderer.viewWidth, 0, 0, 0);
    }
 
@@ -3560,22 +3560,22 @@ final class GameManager {
 
       if (GameRenderer.stringId == 291) {
          var_a0a = 5;
-      } else if ((var_9d8 & 65536) != 0) {
+      } else if ((gameStateFlags & 65536) != 0) {
          var_eab = 0;
          var_a0a = 8;
-         var_9d8 &= -65537;
+         gameStateFlags &= -65537;
       }
 
-      var_9d8 &= -129;
-      var_9d8 |= 1024;
+      gameStateFlags &= -129;
+      gameStateFlags |= 1024;
       var_d22 = 32;
       sub_1354();
-      if ((var_9d8 & 4194304) == 0) {
+      if ((gameStateFlags & 4194304) == 0) {
          sub_1506(0, GameRenderer.stringId);
          sub_14bb();
       }
 
-      var_9d8 &= -2097153;
+      gameStateFlags &= -2097153;
       if (var_a0a == 11) {
          var_d55 = 0;
       }
@@ -3715,8 +3715,8 @@ final class GameManager {
             sub_1314(var0, var1);
          }
 
-         if (GameRenderer.currentIconId >= 0 && GameRenderer.currentIconId < var_b22.length && (var_9d8 & 8192) == 0 && (GameRenderer.currentIconId == 7 || GameRenderer.currentIconId == 6)) {
-            var_9d8 |= 8192;
+         if (GameRenderer.currentIconId >= 0 && GameRenderer.currentIconId < var_b22.length && (gameStateFlags & 8192) == 0 && (GameRenderer.currentIconId == 7 || GameRenderer.currentIconId == 6)) {
+            gameStateFlags |= 8192;
          }
 
       }
@@ -3749,7 +3749,7 @@ final class GameManager {
 
    private static void sub_1365(int var0, int var1, int var2, boolean var3) {
       boolean var16 = false;
-      var_9d8 |= 4194304;
+      gameStateFlags |= 4194304;
       int var13 = (var0 - 272) * 16;
       byte var4 = shopDialogData[0 + var13];
       byte var5 = shopDialogData[1 + var13];
@@ -3799,7 +3799,7 @@ final class GameManager {
                var17[var18] = var20;
             }
 
-            var_9d8 &= -4194305;
+            gameStateFlags &= -4194305;
          } else {
             var16 = false;
          }
@@ -3809,13 +3809,13 @@ final class GameManager {
                byte var19;
                switch(var_cba) {
                case 0:
-                  var_9d8 |= 65536;
+                  gameStateFlags |= 65536;
                   break label87;
                case 1:
-                  var_9d8 |= 65536;
+                  gameStateFlags |= 65536;
                case 3:
                   sub_1813();
-                  var_9d8 &= -4194433;
+                  gameStateFlags &= -4194433;
                   sub_11e5(false);
                   if (var_a0a != 1 && var_a0a != 10) {
                      break label87;
@@ -3826,7 +3826,7 @@ final class GameManager {
                case 2:
                default:
                   sub_11e5(false);
-                  var_9d8 &= -4194433;
+                  gameStateFlags &= -4194433;
                   if (var4 != 0 || var_a0a != 1 && var_a0a != 10) {
                      break label87;
                   }
@@ -3863,7 +3863,7 @@ final class GameManager {
       if (var1 != null && var0 < 0 && (var1.behaviorFlags & 524288) != 0) {
          GameRenderer.setBitInArray(var_ff5, var1.zoneProgressId, 0, 1, var_10f1);
          ++var_ff5[4];
-         var_9d8 |= 4096;
+         gameStateFlags |= 4096;
          sub_14a1();
          sub_1506(1, var1.dataId);
          sub_7c9();
@@ -3939,14 +3939,14 @@ final class GameManager {
                var10000 = var_ff5;
                var10000[8] = (byte)(var10000[8] + var4);
                ++var_ff5[4];
-               var_9d8 |= 524288;
+               gameStateFlags |= 524288;
                return;
             }
 
             if (var4 <= 0) {
                var10000 = var_ff5;
                var10000[8] = (byte)(var10000[8] - var4);
-               var_9d8 |= 524288;
+               gameStateFlags |= 524288;
             }
          }
       }
@@ -4010,7 +4010,7 @@ final class GameManager {
 
                   GameRenderer.writeInt16LE(var_ff5, var4, (short)var6);
                   --var_ff5[var3 + 18];
-                  var_9d8 |= 2;
+                  gameStateFlags |= 2;
                   if ((var6 = sub_10f1(var_a69.x, var_a69.y, 6, var3, 1028, 0, 0)) != -1) {
                      sub_1051(true, -1, true);
                      ((Entity) entities[var6]).sub_2b1();
@@ -4162,7 +4162,7 @@ final class GameManager {
          }
 
          if ((var_eab & 256) != 0 && GameRenderer.randomInRange(0, 1) + GameRenderer.randomInRange(0, 2) == 0) {
-            var_9d8 |= 16777216;
+            gameStateFlags |= 16777216;
          }
 
       }
@@ -4178,7 +4178,7 @@ final class GameManager {
          var_fc7 = GameEngine.readBytes(var0, GameEngine.getStreamSize(var0));
          var0.buffer = null;
          GameEngine.initBitReader(var_fc7);
-         var_114a = GameEngine.readBits(8);
+         totalDialogCount = GameEngine.readBits(8);
          var_11c0 = GameEngine.readBits(8);
          var_11d4 = GameEngine.readBits(16);
          var_11ff = GameEngine.readBits(16);
@@ -4193,7 +4193,7 @@ final class GameManager {
       var_1068 += 1 * var_11ff + 7 >> 3;
       var_1068 += 2 * var_1250 + 7 >> 3;
       var_112a = var_1068;
-      var_1068 += 1 * var_114a + 7 >> 3;
+      var_1068 += 1 * totalDialogCount + 7 >> 3;
       var_113c = var_1068;
       var_1068 += 1 * var_119e + 7 >> 3;
       var_109c = 3 * var_1068;
@@ -4292,7 +4292,7 @@ final class GameManager {
 
    private static boolean sub_1882(int var0) {
       GameEngine.initBitReader(var_fc7);
-      GameEngine.bitPosition = (6 + var_114a * 4 << 3) + (var0 - 262);
+      GameEngine.bitPosition = (6 + totalDialogCount * 4 << 3) + (var0 - 262);
       return GameEngine.readBits(1) != 0;
    }
 
@@ -4304,7 +4304,7 @@ final class GameManager {
 
    private static int sub_18c9(int var0, int var1) {
       GameEngine.initBitReader(var_fc7);
-      GameEngine.bitPosition = 6 + var_114a * 2 + var0 * 2 << 3;
+      GameEngine.bitPosition = 6 + totalDialogCount * 2 + var0 * 2 << 3;
       return var1 + GameEngine.readBits(16);
    }
 
