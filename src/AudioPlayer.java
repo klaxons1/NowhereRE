@@ -1,4 +1,4 @@
-﻿import javax.microedition.media.Manager;
+import javax.microedition.media.Manager;
 import javax.microedition.media.Player;
 import javax.microedition.media.PlayerListener;
 import javax.microedition.media.control.VolumeControl;
