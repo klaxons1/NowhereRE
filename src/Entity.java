@@ -342,11 +342,11 @@ final class Entity extends AnimatedSprite {
    public final void sub_1ac(int var1, int var2, int var3, int var4) {
       boolean var6 = false;
       this.var_63d = 0;
-      GameManager.var_6a4[0] = var1;
-      GameManager.var_6a4[1] = var2;
-      GameManager.var_6a4[2] = var3;
-      GameManager.var_6a4[3] = var4;
-      this.initEntity(GameManager.var_6a4);
+      GameManager.playerInitParams[0] = var1;
+      GameManager.playerInitParams[1] = var2;
+      GameManager.playerInitParams[2] = var3;
+      GameManager.playerInitParams[3] = var4;
+      this.initEntity(GameManager.playerInitParams);
       byte[] var10000;
       int var10001;
       byte var10002;
@@ -438,7 +438,7 @@ final class Entity extends AnimatedSprite {
                this.sub_385();
                if ((this.propertyFlags & 4) != 0) {
                   ++GameManager.var_ff5[1];
-                  GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short) GameManager.sub_1654(GameManager.var_ff5[1] & 255));
+                  GameRenderer.writeInt16LE(GameManager.var_ff5, 2, (short) GameManager.calculateMaxHealth(GameManager.var_ff5[1] & 255));
                   GameManager.var_a69.updateMaxHealth();
                }
             } else {

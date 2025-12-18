@@ -18,8 +18,8 @@ final class GameRenderer {
    public static boolean inputChanged;
    public static int lastKeyCode;
    public static int frameCounter;
-   static int var_418;
-   static int var_43a;
+   static int globalRenderOffsetX;
+   static int globalRenderOffsetY;
    public static int var_481 = 0;
    public static char[] numberBuffer;
    public static Sprite iconSprite;

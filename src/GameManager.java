@@ -25,15 +25,15 @@ final class GameManager {
    static byte[] objectSpawnData;
    static short[] levelProgression;
    static short[] mapConfigs;
-   static byte[] var_5ab;
-   static byte[] var_5fa;
-   static byte[] var_607;
-   static int var_61f;
-   static char[] var_634;
-   static int[] var_64b;
+   static byte[] portraitSpriteIds;
+   static byte[] shopDialogData;
+   static byte[] weaponItemData;
+   static int loadingPhase;
+   static char[] gameFontChars;
+   static int[] gameStringTable;
    static AnimatedSprite[] entities;
    static Sprite[] commonSprites;
-   static int[] var_6a4;
+   static int[] playerInitParams;
    static int[] var_6be;
    static int[] var_6d1;
    static short[] var_710;
@@ -100,8 +100,8 @@ final class GameManager {
    static int var_11ff;
    static int var_1250;
    static int vibrationEnabled;
-   static String var_12dd = null;
-   static int var_1311;
+   static String wapLinkUrl = null;
+   static int wapLinkState;
 
    static boolean requestMusic(int var0, int var1) {
       if (var0 != -1) {
@@ -254,7 +254,7 @@ final class GameManager {
             menuState[3] = 1077936392;
             menuState[4] = 2;
             menuState[22] = 3;
-            if (var_1311 == 2) {
+            if (wapLinkState == 2) {
                menuState[21] = 2;
                var10000 = menuState;
                var10001 = 20;
@@ -307,7 +307,7 @@ final class GameManager {
          }
 
          if ((menuState[3] & 8) != 0) {
-            backgroundSprite = (menuState[3] & 1073741824) != 0 ? (Sprite) GameEngine.loadExternalFile(GameCanvas.midlet, var_1311 == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : GameEngine.loadSpriteSet(menuState[6]);
+            backgroundSprite = (menuState[3] & 1073741824) != 0 ? (Sprite) GameEngine.loadExternalFile(GameCanvas.midlet, wapLinkState == 2 ? "/WapLink1.png" : "/NoWapLink1.png", 2) : GameEngine.loadSpriteSet(menuState[6]);
             if ((menuState[3] & 128) != 0) {
                menuState[10] = -backgroundSprite.images[0].getHeight();
             }
@@ -668,7 +668,7 @@ final class GameManager {
 
    private static void sub_26f() {
       byte var0 = 0;
-      boolean var1 = var_1311 != 0;
+      boolean var1 = wapLinkState != 0;
       if (GameCanvas.gameState == 3) {
          menuItems = new short[5];
          int var2 = var0 + 1;
@@ -892,7 +892,7 @@ final class GameManager {
             menuState[7] = 96;
          }
       } else if (GameCanvas.gameState == 12) {
-         if (var0 == 8 && var_1311 == 2) {
+         if (var0 == 8 && wapLinkState == 2) {
             GameCanvas.nextState = -1;
             GameCanvas.stateFlags |= 1048576;
             return true;
@@ -1101,14 +1101,14 @@ final class GameManager {
    }
 
    private static void sub_49a(int var0) {
-      var_61f = var0;
+      loadingPhase = var0;
    }
 
    private static void sub_4d1() {
-      switch(var_61f) {
+      switch(loadingPhase) {
       case 0:
          sub_54c();
-         sub_644();
+         loadCommonSprites();
          sub_d16();
          break;
       case 1:
@@ -1125,7 +1125,7 @@ final class GameManager {
          sub_e06();
       }
 
-      ++var_61f;
+      ++loadingPhase;
    }
 
    private static void sub_524() {
@@ -1154,7 +1154,7 @@ final class GameManager {
 
    private static void sub_54c() {
       commonSprites = new Sprite[3];
-      var_6a4 = new int[4];
+      playerInitParams = new int[4];
       var_6be = new int[16];
       entities = new AnimatedSprite[17];
       var_6d1 = new int[35];
@@ -1172,9 +1172,9 @@ final class GameManager {
          }
       }
 
-      if (var_6a4 != null) {
-         for(var0 = 0; var0 < var_6a4.length; ++var0) {
-            var_6a4[var0] = 0;
+      if (playerInitParams != null) {
+         for(var0 = 0; var0 < playerInitParams.length; ++var0) {
+            playerInitParams[var0] = 0;
          }
       }
 
@@ -1207,7 +1207,7 @@ final class GameManager {
 
       entities = null;
       commonSprites = null;
-      var_6a4 = null;
+      playerInitParams = null;
       var_6be = null;
       var_6d1 = null;
       var_788 = null;
@@ -1223,13 +1223,13 @@ final class GameManager {
       objectSpawnData = GameRenderer.loadByteArray(446);
       levelProgression = GameRenderer.loadShortArray(442);
       mapConfigs = GameRenderer.loadShortArray(441);
-      var_5fa = GameRenderer.loadByteArray(438);
-      var_607 = GameRenderer.loadByteArray(450);
+      shopDialogData = GameRenderer.loadByteArray(438);
+      weaponItemData = GameRenderer.loadByteArray(450);
       stateConfigs = GameRenderer.loadShortArray(445);
-      var_5ab = GameRenderer.loadByteArray(443);
+      portraitSpriteIds = GameRenderer.loadByteArray(443);
       GameRenderer.loadStringTable(263);
-      var_634 = GameRenderer.fontChars;
-      var_64b = GameRenderer.stringTable;
+      gameFontChars = GameRenderer.fontChars;
+      gameStringTable = GameRenderer.stringTable;
    }
 
    private static void sub_5fd() {
@@ -1240,17 +1240,17 @@ final class GameManager {
       directionTable = null;
       enemySpawnData = null;
       objectSpawnData = null;
-      var_5ab = null;
+      portraitSpriteIds = null;
       levelProgression = null;
       mapConfigs = null;
-      var_5fa = null;
-      var_607 = null;
+      shopDialogData = null;
+      weaponItemData = null;
       stateConfigs = null;
-      var_634 = null;
-      var_64b = null;
+      gameFontChars = null;
+      gameStringTable = null;
    }
 
-   private static void sub_644() {
+   private static void loadCommonSprites() {
       commonSprites[0] = GameEngine.loadSpriteSet(82);
       commonSprites[1] = GameEngine.loadSpriteSet(81);
       commonSprites[2] = GameEngine.loadSpriteSet(40);
@@ -1356,14 +1356,14 @@ final class GameManager {
                   var13 >>= 1;
                   int var15 = var14 - 1;
                   if (sub_68a(var17, var16, var13, var15, true, var9, var2) && var0) {
-                     --var_61f;
+                     --loadingPhase;
                      return;
                   }
 
                   if (var_82a != -1) {
                      if (sub_68a(1, var_82a, 0, 0, false, var9, var2) && var0) {
                         var_82a = -1;
-                        --var_61f;
+                        --loadingPhase;
                         return;
                      }
 
@@ -1794,8 +1794,8 @@ final class GameManager {
       byte var13 = directionTable[16 + var3 * 6 + 0 + 0];
       byte var14 = directionTable[16 + var3 * 6 + 0 + 1];
       if (var4 == null) {
-         var1 += var_607[72 + var3 * 2 + 0];
-         var2 += var_607[72 + var3 * 2 + 1];
+         var1 += weaponItemData[72 + var3 * 2 + 0];
+         var2 += weaponItemData[72 + var3 * 2 + 1];
       }
 
       int var8 = (var1 >> 8) / var15;
@@ -1858,8 +1858,8 @@ final class GameManager {
          }
 
          var10 = var4 == null ? 72 : 80;
-         var13 = var_607[var10 + var3 * 2 + 0];
-         var14 = var_607[var10 + var3 * 2 + 1];
+         var13 = weaponItemData[var10 + var3 * 2 + 0];
+         var14 = weaponItemData[var10 + var3 * 2 + 1];
          var20 += var13;
          var21 += var14;
          var22 += var13;
@@ -2126,19 +2126,19 @@ final class GameManager {
       var_ec9 = null;
    }
 
-   static void sub_b34() {
+   static void initLevel() {
       var_aed = -1;
       var_a69 = null;
       GameRenderer.loadStringTable(265);
       var_bd6 = GameRenderer.fontChars;
       var_c04 = GameRenderer.stringTable;
-      var_b22 = new Sprite[var_5ab.length];
+      var_b22 = new Sprite[portraitSpriteIds.length];
       sub_15d4(0);
       GameCanvas.stateFlags &= -16385;
       var_c45 = 0;
       var_9d8 = 1027;
       var_a0a = 0;
-      var_61f = 0;
+      loadingPhase = 0;
       var_ac5 = 0;
       var_f43 = -1;
    }
@@ -2338,9 +2338,9 @@ final class GameManager {
    private static void sub_d16() {
       entities[0] = new PlayerCharacter();
       sub_76f(0, 0, var_6d1[0]);
-      var_6a4[0] = 0;
-      var_6a4[1] = 0;
-      entities[0].initEntity(var_6a4);
+      playerInitParams[0] = 0;
+      playerInitParams[1] = 0;
+      entities[0].initEntity(playerInitParams);
       var_a69 = (PlayerCharacter) entities[0];
       var_a69.initPlayer();
       var_9d8 |= 2;
@@ -2810,7 +2810,7 @@ final class GameManager {
       int var19 = GameRenderer.getFontHeight(0);
       int var1;
       if ((inventoryState & 134217728) == 0) {
-         for(var1 = 0; var1 < 6 && var_607[123 + var1] >= 0; ++var1) {
+         for(var1 = 0; var1 < 6 && weaponItemData[123 + var1] >= 0; ++var1) {
          }
 
          inventoryState = 134217728 | var1 << 16 | var1 << 8;
@@ -2896,7 +2896,7 @@ final class GameManager {
                }
             }
 
-            GameRenderer.drawString(var0, 0 + var_607[123 + var1], var4 + 28, var5 + 0, 0, 0, 0, 0);
+            GameRenderer.drawString(var0, 0 + weaponItemData[123 + var1], var4 + 28, var5 + 0, 0, 0, 0, 0);
             ++var1;
          }
       }
@@ -2979,7 +2979,7 @@ final class GameManager {
                         int var10002;
                         Graphics var23;
                         if (var1 < 8) {
-                           if (var_607[var1 * 9 + 6] == -1) {
+                           if (weaponItemData[var1 * 9 + 6] == -1) {
                               break label201;
                            }
 
@@ -2987,9 +2987,9 @@ final class GameManager {
                            var10001 = 38;
                            var10002 = var4 + var10 - var8;
                         } else {
-                           if (var1 < 7 && var_607[88 + var1 * 5 + 1] >= 10) {
+                           if (var1 < 7 && weaponItemData[88 + var1 * 5 + 1] >= 10) {
                               var2 = GameRenderer.drawString(var0, 38, var4 + var10 - var8 - GameRenderer.viewOffsetX, var5 + 36 - var19 - 1 - GameRenderer.viewOffsetY, 65536, 0, 0, 0);
-                              sub_96e(var0, var_607[88 + var1 * 5 + 2], var2 + GameRenderer.viewOffsetX + 3, var5 + 36 - var19 - -3);
+                              sub_96e(var0, weaponItemData[88 + var1 * 5 + 2], var2 + GameRenderer.viewOffsetX + 3, var5 + 36 - var19 - -3);
                            }
 
                            if (10 + var1 >= 21) {
@@ -3249,7 +3249,7 @@ final class GameManager {
                   } else {
                      var_d55 |= 2;
                      byte var6;
-                     if (var4 < 8 || var_ff5[var4 + 10] == 0 || (var6 = var_607[(var4 - 8) * 5 + 88 + 1]) == 12 && (var_ff5[0] & 4) == 0) {
+                     if (var4 < 8 || var_ff5[var4 + 10] == 0 || (var6 = weaponItemData[(var4 - 8) * 5 + 88 + 1]) == 12 && (var_ff5[0] & 4) == 0) {
                         return;
                      }
 
@@ -3278,13 +3278,13 @@ final class GameManager {
 
                         label307: {
                            if (var6 >= 10 && var6 < 18) {
-                              var11 = var_607[(var4 - 8) * 5 + 88 + 2];
+                              var11 = weaponItemData[(var4 - 8) * 5 + 88 + 2];
                            } else {
                               if (var6 != 2) {
                                  break label307;
                               }
 
-                              var11 = var_a69.maxHealth * var_607[100] / 99;
+                              var11 = var_a69.maxHealth * weaponItemData[100] / 99;
                            }
 
                            var8 = var11;
@@ -3621,10 +3621,10 @@ final class GameManager {
                   Sprite[] var10000;
                   int var10001;
                   Sprite var10002;
-                  if (var_5ab[var1] != -1) {
+                  if (portraitSpriteIds[var1] != -1) {
                      var10000 = var_b22;
                      var10001 = var1;
-                     var10002 = GameEngine.loadSpriteSet(var_5ab[var1] & 255);
+                     var10002 = GameEngine.loadSpriteSet(portraitSpriteIds[var1] & 255);
                   } else {
                      var10000 = var_b22;
                      var10001 = var1;
@@ -3638,11 +3638,11 @@ final class GameManager {
 
          if (GameRenderer.stringId >= 272 && GameRenderer.stringId < 285) {
             int var2 = (GameRenderer.stringId - 272) * 16;
-            int var3 = var_5fa[0 + var2] & 255;
-            int var4 = var_5fa[2 + var2] & 255;
-            byte var5 = var_5fa[7 + var2];
-            int var6 = var_5fa[5 + var2] & 255;
-            int var7 = var_5fa[3 + var2] & 255;
+            int var3 = shopDialogData[0 + var2] & 255;
+            int var4 = shopDialogData[2 + var2] & 255;
+            byte var5 = shopDialogData[7 + var2];
+            int var6 = shopDialogData[5 + var2] & 255;
+            int var7 = shopDialogData[3 + var2] & 255;
             int var8 = var5 == -1 ? 1 : var_ff5[var5] & 255;
             GameRenderer.insertValueInText(0, 0, var6 * var8, (char[])null, 0, 0);
             if (var3 == 3) {
@@ -3723,8 +3723,8 @@ final class GameManager {
    }
 
    private static void sub_1314(Graphics var0, int var1) {
-      if (var_64b != null && GameRenderer.currentIconId < var_64b.length) {
-         GameRenderer.setCurrentFont(var_634, var_64b);
+      if (gameStringTable != null && GameRenderer.currentIconId < gameStringTable.length) {
+         GameRenderer.setCurrentFont(gameFontChars, gameStringTable);
          int var2 = GameRenderer.getFontHeight(0) - 2 + 3;
          var1 -= var2;
          var0.setColor(4737080);
@@ -3751,27 +3751,27 @@ final class GameManager {
       boolean var16 = false;
       var_9d8 |= 4194304;
       int var13 = (var0 - 272) * 16;
-      byte var4 = var_5fa[0 + var13];
-      byte var5 = var_5fa[1 + var13];
+      byte var4 = shopDialogData[0 + var13];
+      byte var5 = shopDialogData[1 + var13];
       byte var6 = var_ff5[var5];
-      byte var7 = var_5fa[2 + var13];
+      byte var7 = shopDialogData[2 + var13];
       byte var8 = var_ff5[var7];
-      byte var14 = var_5fa[3 + var13];
-      int var9 = var_5fa[4 + var13] & 255;
-      int var10 = var_5fa[5 + var13] & 255;
-      byte var11 = var_5fa[6 + var13];
-      byte var12 = (var12 = var_5fa[7 + (GameRenderer.stringId - 272) * 16]) == -1 ? 1 : var_ff5[var12];
+      byte var14 = shopDialogData[3 + var13];
+      int var9 = shopDialogData[4 + var13] & 255;
+      int var10 = shopDialogData[5 + var13] & 255;
+      byte var11 = shopDialogData[6 + var13];
+      byte var12 = (var12 = shopDialogData[7 + (GameRenderer.stringId - 272) * 16]) == -1 ? 1 : var_ff5[var12];
       int var15 = (var1 - 1) * 2 + var13;
       int var10000;
       byte[] var10001;
       byte var10002;
       if (var3) {
          var10000 = var_cba;
-         var10001 = var_5fa;
+         var10001 = shopDialogData;
          var10002 = 8;
       } else {
          var10000 = var_cba;
-         var10001 = var_5fa;
+         var10001 = shopDialogData;
          var10002 = 9;
       }
 
@@ -3856,7 +3856,7 @@ final class GameManager {
    }
 
    public static int sub_13d2(int var0, int var1) {
-      return var1 != 6 && var1 != 5 ? var_607[var_a69.currentWeaponId * 9 + 4] : var0;
+      return var1 != 6 && var1 != 5 ? weaponItemData[var_a69.currentWeaponId * 9 + 4] : var0;
    }
 
    static void sub_1409(int var0, Entity var1) {
@@ -3972,7 +3972,7 @@ final class GameManager {
          if (var_ff5[25] >= 8 && var_ff5[25] <= 11) {
             int var3 = var_ff5[25] - 8;
             byte var4;
-            if (((var4 = var_607[var3 * 5 + 88 + 1]) != 12 || (var_ff5[0] & 4) != 0) && (var4 != 14 || (var_ff5[0] & 16) != 0)) {
+            if (((var4 = weaponItemData[var3 * 5 + 88 + 1]) != 12 || (var_ff5[0] & 4) != 0) && (var4 != 14 || (var_ff5[0] & 16) != 0)) {
                byte var1;
                int var2;
                label100: {
@@ -3980,7 +3980,7 @@ final class GameManager {
                   var2 = 0;
                   int var10000;
                   if (var4 >= 10 && var4 < 18) {
-                     var10000 = var_607[(var4 - 10) * 9 + 6];
+                     var10000 = weaponItemData[(var4 - 10) * 9 + 6];
                   } else {
                      if (var4 != 2) {
                         break label100;
@@ -3995,13 +3995,13 @@ final class GameManager {
                if (var1 <= 0) {
                   int var6;
                   if (var4 >= 10 && var4 < 18 && !var0) {
-                     var6 = var1 + var_607[var3 * 5 + 88 + 2];
+                     var6 = var1 + weaponItemData[var3 * 5 + 88 + 2];
                   } else {
                      if (var4 != 2 || !var0) {
                         return;
                      }
 
-                     var6 = var1 + var_a69.maxHealth * var_607[100] / 99;
+                     var6 = var1 + var_a69.maxHealth * weaponItemData[100] / 99;
                   }
 
                   if (var6 > var2) {
@@ -4168,11 +4168,11 @@ final class GameManager {
       }
    }
 
-   static int sub_1654(int var0) {
+   static int calculateMaxHealth(int var0) {
       return var0 + 3;
    }
 
-   static void sub_167e() {
+   static void initSaveSystem() {
       BinaryReader var0;
       if ((var0 = GameEngine.openDataStream(31)) != null) {
          var_fc7 = GameEngine.readBytes(var0, GameEngine.getStreamSize(var0));
@@ -4330,27 +4330,27 @@ final class GameManager {
       sub_1959(6, 154);
       sub_1959(7, -1);
       var_ff5[8] = 0;
-      GameRenderer.writeInt16LE(var_ff5, 2, (short)sub_1654(var_ff5[1] & 255));
+      GameRenderer.writeInt16LE(var_ff5, 2, (short) calculateMaxHealth(var_ff5[1] & 255));
    }
 
    private static void parseAppProperties(MIDlet var0) {
-      var_12dd = var0.getAppProperty("WAP-LINK");
-      if (var_12dd != null && !var_12dd.equals("")) {
-         if (var_12dd.toLowerCase().equals("NO".toLowerCase())) {
-            var_1311 = 1;
+      wapLinkUrl = var0.getAppProperty("WAP-LINK");
+      if (wapLinkUrl != null && !wapLinkUrl.equals("")) {
+         if (wapLinkUrl.toLowerCase().equals("NO".toLowerCase())) {
+             wapLinkState = 1;
          } else {
-            var_1311 = 2;
-            var_12dd = "http://".concat(var_12dd);
+            wapLinkState = 2;
+            wapLinkUrl = "http://".concat(wapLinkUrl);
          }
       } else {
-         var_1311 = 0;
+         wapLinkState = 0;
       }
    }
 
-   public static boolean sub_1a34(MIDlet var0) {
+   public static boolean openWapLink(MIDlet var0) {
       try {
          boolean var1 = false;
-         var0.platformRequest(var_12dd);
+         var0.platformRequest(wapLinkUrl);
          return true;
       } catch (Exception var2) {
          return false;

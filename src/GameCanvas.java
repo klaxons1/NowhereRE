@@ -71,7 +71,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
       GameEngine.initialize(midlet, GameRenderer.screenWidth, GameRenderer.screenHeight, 36, 36, 1);
       GameEngine.setTrigTables(GameRenderer.loadIntArray(437), (int[])null, (int[])null);
       GameEngine.playerListener = instance;
-      GameManager.sub_167e();
+      GameManager.initSaveSystem();
       GameRenderer.initFontSystem(1);
       GameRenderer.loadFont(0, 50, 473);
       loadFont();
@@ -125,7 +125,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
                if ((stateFlags & 256) != 0) {
                   if ((stateFlags & 1048576) != 0) {
                      stateFlags &= -1048577;
-                     GameManager.sub_1a34(midlet);
+                     GameManager.openWapLink(midlet);
                   }
 
                   isRunning = false;
@@ -421,7 +421,7 @@ public final class GameCanvas extends FullCanvas implements Runnable, PlayerList
          GameManager.initMenuState();
          stateFlags &= -131073;
       } else {
-         GameManager.sub_b34();
+         GameManager.initLevel();
       }
    }
 

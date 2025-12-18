@@ -61,7 +61,7 @@ final class PlayerCharacter extends AnimatedSprite {
    }
 
    final void updateMaxHealth() {
-      this.maxHealth = GameManager.sub_1654(GameManager.var_ff5[1] & 255);
+      this.maxHealth = GameManager.calculateMaxHealth(GameManager.var_ff5[1] & 255);
    }
 
    public final void spawnOnMap() {
@@ -190,7 +190,7 @@ final class PlayerCharacter extends AnimatedSprite {
             var7 = true;
          }
 
-         if (GameManager.var_607[this.currentWeaponId * 9 + 6] != -1 && (super.statusFlags & 128) == 0) {
+         if (GameManager.weaponItemData[this.currentWeaponId * 9 + 6] != -1 && (super.statusFlags & 128) == 0) {
             if (GameManager.var_ff5[10 + GameManager.var_ff5[5]] == 0) {
                GameManager.sub_1576(false);
             }
@@ -217,12 +217,12 @@ final class PlayerCharacter extends AnimatedSprite {
 
          this.sub_3fc();
          if (AnimatedSprite.sub_1d8(this)) {
-            if (GameManager.var_607[this.currentWeaponId * 9 + 1] == 1) {
-               GameManager.sub_8ea(GameManager.var_607[this.currentWeaponId * 9 + 2], super.x, super.y, super.facing, (Entity)null, this.currentWeaponId, 0);
+            if (GameManager.weaponItemData[this.currentWeaponId * 9 + 1] == 1) {
+               GameManager.sub_8ea(GameManager.weaponItemData[this.currentWeaponId * 9 + 2], super.x, super.y, super.facing, (Entity)null, this.currentWeaponId, 0);
                GameManager.sub_1576(false);
             }
 
-            if (GameManager.var_607[this.currentWeaponId * 9 + 8] != 0) {
+            if (GameManager.weaponItemData[this.currentWeaponId * 9 + 8] != 0) {
                GameManager.sub_81a();
             }
          }
@@ -308,7 +308,7 @@ final class PlayerCharacter extends AnimatedSprite {
                            }
 
                            var15.var_63d = var10001;
-                           var12.sub_20a(GameManager.sub_13d2(0, var6), this.currentWeaponId >= 0, -GameManager.var_607[this.currentWeaponId * 9 + 5] << 8, var12.sub_370(super.x, super.y));
+                           var12.sub_20a(GameManager.sub_13d2(0, var6), this.currentWeaponId >= 0, -GameManager.weaponItemData[this.currentWeaponId * 9 + 5] << 8, var12.sub_370(super.x, super.y));
                         }
                      }
                   }
@@ -473,13 +473,13 @@ final class PlayerCharacter extends AnimatedSprite {
       }
 
       for(int var1 = 0; var1 < 7; ++var1) {
-         if (GameManager.var_607[88 + var1 * 5 + 0] == var0.dataId) {
+         if (GameManager.weaponItemData[88 + var1 * 5 + 0] == var0.dataId) {
             ++GameManager.var_ff5[var1 + 18];
             GameManager.var_f43 = GameManager.var_ff5[var1 + 18];
             break;
          }
 
-         if (GameManager.var_607[var1 * 9 + 0] == var0.dataId) {
+         if (GameManager.weaponItemData[var1 * 9 + 0] == var0.dataId) {
             ++GameManager.var_ff5[var1 + 10];
             GameManager.sub_13a3();
             break;

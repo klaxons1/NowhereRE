@@ -559,8 +559,8 @@ class AnimatedSprite {
 
    public void sub_487(Graphics var1) {
       if ((this.statusFlags & 1) != 0) {
-         int var2 = (this.screenX + this.renderOffsetX >> 8) + this.pivotOffsetX + GameRenderer.var_418;
-         int var3 = (this.screenY + this.renderOffsetY >> 8) + this.pivotOffsetY + GameRenderer.var_43a;
+         int var2 = (this.screenX + this.renderOffsetX >> 8) + this.pivotOffsetX + GameRenderer.globalRenderOffsetX;
+         int var3 = (this.screenY + this.renderOffsetY >> 8) + this.pivotOffsetY + GameRenderer.globalRenderOffsetY;
          this.render(var1, var2, var3);
       }
 
